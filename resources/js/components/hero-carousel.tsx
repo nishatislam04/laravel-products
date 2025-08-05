@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -117,16 +118,16 @@ export default function HeroCarousel({ className = "" }: HeroCarouselProps) {
                     align: "start",
                     loop: true,
                 }}
-                // plugins={[
-                //     Autoplay({
-                //         delay: 5000,
-                //     }),
-                // ]}
+                plugins={[
+                    Autoplay({
+                        delay: 5000,
+                    }),
+                ]}
             >
                 <CarouselContent>
                     {slides.map((slide, index) => (
                         <CarouselItem key={slide.id}>
-                            <div className={`relative h-60 w-full md:h-80 ${slide.backgroundColor} overflow-hidden text-white`}>
+                            <div className={`relative h-80 w-full md:h-90 ${slide.backgroundColor} overflow-hidden text-white`}>
                                 {/*container  */}
                                 <div className="absolute inset-0 flex w-full items-center justify-between px-8 pr-0 md:px-16 md:pr-0">
                                     {/* Left Content */}

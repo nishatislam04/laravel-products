@@ -122,7 +122,7 @@ function SidebarProvider({
                             ...style,
                         } as React.CSSProperties
                     }
-                    className={cn("group/sidebar-wrapper flex h-0 w-full has-data-[variant=inset]:bg-sidebar", className)}
+                    className={cn("group/sidebar-wrapper flex h-fit w-full has-data-[variant=inset]:bg-sidebar", className)}
                     {...props}
                 >
                     {children}
@@ -148,7 +148,11 @@ function Sidebar({
 
     if (collapsible === "none") {
         return (
-            <div data-slot="sidebar" className={cn("flex h-0 w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground", className)} {...props}>
+            <div
+                data-slot="sidebar"
+                className={cn("flex h-fit w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground", className)}
+                {...props}
+            >
                 {children}
             </div>
         );
@@ -203,7 +207,7 @@ function Sidebar({
             <div
                 data-slot="sidebar-container"
                 className={cn(
-                    "fixed inset-y-0 z-10 hidden h-0 w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex",
+                    "z-10 hidden h-fit w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex",
                     side === "left"
                         ? "left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]"
                         : "right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
@@ -218,7 +222,7 @@ function Sidebar({
                 <div
                     data-sidebar="sidebar"
                     data-slot="sidebar-inner"
-                    className="flex h-full w-full flex-col bg-white group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow-sm"
+                    className="flex h-fit w-full flex-col bg-white group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow-sm"
                 >
                     {children}
                 </div>

@@ -9,7 +9,7 @@ interface AppLayoutProps {
 
 // export default ({ children, ...props }: AppLayoutProps) => <div {...props}>{children}</div>;
 export default ({ children, ...props }: AppLayoutProps) => (
-    <div {...props} id="app-layout" className="mx-20 min-h-screen">
+    <div {...props} id="app-layout">
         <Header />
         <SidebarProvider>
             <AppSidebar />

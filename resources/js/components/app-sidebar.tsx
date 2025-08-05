@@ -83,9 +83,9 @@ const items = [
 
 export function AppSidebar() {
     return (
-        <Sidebar className="mx-20 pt-20">
+        <Sidebar className="ml-20">
             <ScrollArea className="h-100 w-full rounded-none border-r-2">
-                <SidebarContent>
+                <SidebarContent className="pt-4">
                     <SidebarGroup>
                         <SidebarGroupContent>
                             <SidebarMenu className="pt-4">

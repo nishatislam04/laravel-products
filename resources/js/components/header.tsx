@@ -10,7 +10,7 @@ interface HeaderProps {
 // ! add active nav link design
 export default function Header({ className = "" }: HeaderProps) {
     return (
-        <header className={`border-b-2 border-gray-200 bg-white pt-2 ${className}`}>
+        <header className={`mx-20 border-b-2 border-gray-200 bg-white pt-4 ${className}`}>
             <div className="max-w-8xl mx-auto">
                 <div className="flex h-16 w-full items-center">
                     {/* Logo/Brand */}
