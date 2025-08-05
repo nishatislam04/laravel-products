@@ -8,11 +8,11 @@ import {
     SidebarMenuItem,
     SidebarMenuSub,
     SidebarMenuSubItem,
-} from '@/components/ui/sidebar';
-import { Link } from '@inertiajs/react';
-import { ChevronDown } from 'lucide-react';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
-import { ScrollArea } from './ui/scroll-area';
+} from "@/components/ui/sidebar";
+import { Link } from "@inertiajs/react";
+import { ChevronDown } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./ui/collapsible";
+import { ScrollArea } from "./ui/scroll-area";
 
 const items = [
     {
@@ -21,15 +21,15 @@ const items = [
         subMenu: [
             {
                 title: "Women's fashion 1",
-                url: '#',
+                url: "#",
             },
             {
                 title: "Women's fashion 2",
-                url: '#',
+                url: "#",
             },
             {
                 title: "Women's fashion 3",
-                url: '#',
+                url: "#",
             },
         ],
     },
@@ -39,62 +39,62 @@ const items = [
         subMenu: [
             {
                 title: "Man's fashion 1",
-                url: '#',
+                url: "#",
             },
             {
                 title: "Man's fashion 2",
-                url: '#',
+                url: "#",
             },
             {
                 title: "Man's fashion 3",
-                url: '#',
+                url: "#",
             },
         ],
     },
     {
-        title: 'Electronics',
-        url: '#',
+        title: "Electronics",
+        url: "#",
     },
     {
-        title: 'Home & lifestyle',
-        url: '#',
+        title: "Home & lifestyle",
+        url: "#",
     },
     {
-        title: 'Medicine',
-        url: '#',
+        title: "Medicine",
+        url: "#",
     },
     {
-        title: 'Sports & outdoor',
-        url: '#',
+        title: "Sports & outdoor",
+        url: "#",
     },
     {
-        title: 'Baby & toys',
-        url: '#',
+        title: "Baby & toys",
+        url: "#",
     },
     {
-        title: 'Groceries & pets',
-        url: '#',
+        title: "Groceries & pets",
+        url: "#",
     },
     {
-        title: 'Health & beauty',
-        url: '#',
+        title: "Health & beauty",
+        url: "#",
     },
 ];
 
 export function AppSidebar() {
     return (
-        <Sidebar>
-            <ScrollArea className="h-100 w-full rounded-md border p-4">
+        <Sidebar className="mx-20 pt-20">
+            <ScrollArea className="h-100 w-full rounded-none border-r-2">
                 <SidebarContent>
                     <SidebarGroup>
                         <SidebarGroupContent>
-                            <SidebarMenu>
+                            <SidebarMenu className="pt-4">
                                 {items.map((item) =>
                                     item.containSubMenu ? (
                                         <Collapsible key={item.title} className="group/collapsible">
                                             <SidebarMenuItem>
                                                 <CollapsibleTrigger asChild>
-                                                    <SidebarMenuButton className="flex w-full items-center justify-between">
+                                                    <SidebarMenuButton className="flex w-full items-center justify-between rounded-none pl-0">
                                                         <span>{item.title}</span>
                                                         <ChevronDown className="ml-auto h-4 w-4 transition-transform duration-300 group-data-[state=open]/collapsible:rotate-180" />
                                                     </SidebarMenuButton>
@@ -117,7 +117,7 @@ export function AppSidebar() {
                                     ) : (
                                         <SidebarMenuItem key={item.title}>
                                             <SidebarMenuButton asChild>
-                                                <Link href={item.url ?? '#'}>
+                                                <Link href={item.url ?? "#"} className="rounded-none pl-0">
                                                     <span>{item.title}</span>
                                                 </Link>
                                             </SidebarMenuButton>

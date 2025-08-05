@@ -1,6 +1,7 @@
-import { AppSidebar } from '@/components/app-sidebar';
-import { SidebarProvider } from '@/components/ui/sidebar';
-import { type ReactNode } from 'react';
+import { AppSidebar } from "@/components/app-sidebar";
+import Header from "@/components/header";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { type ReactNode } from "react";
 
 interface AppLayoutProps {
     children: ReactNode;
@@ -8,7 +9,8 @@ interface AppLayoutProps {
 
 // export default ({ children, ...props }: AppLayoutProps) => <div {...props}>{children}</div>;
 export default ({ children, ...props }: AppLayoutProps) => (
-    <div {...props} id="app-layout">
+    <div {...props} id="app-layout" className="mx-20 min-h-screen">
+        <Header />
         <SidebarProvider>
             <AppSidebar />
             <main>{children}</main>
