@@ -1,6 +1,6 @@
-.PHONY: artisan migrate migrate-fresh migrate-refresh rollback seed tinker cache-clear composer-install npm-install npm-dev npm-build down flush flush-hard
+.PHONY: artisan migrate migrate-fresh migrate-seed seed tinker cache-clear composer-install npm-install npm-dev npm-build down flush flush-hard
 
-PHP_CONTAINER =  laravel-docker-template-php-fpm-1
+PHP_CONTAINER =  laravel-products-php-fpm-1
 
 dev:
 	docker compose -f compose.dev.yaml up --build
@@ -14,14 +14,13 @@ prod:
 migrate:
 	docker exec $(PHP_CONTAINER) php artisan migrate
 
+# drop all tables and re-create them
 migrate-fresh:
 	docker exec $(PHP_CONTAINER) php artisan migrate:fresh
 
-migrate-refresh:
-	docker exec $(PHP_CONTAINER) php artisan migrate:refresh
-
-rollback:
-	docker exec $(PHP_CONTAINER) php artisan migrate:rollback
+# drop all tables and re-create them and seed
+migrate-seed:
+	docker exec $(PHP_CONTAINER) php artisan migrate:fresh --seed
 
 seed:
 	docker exec $(PHP_CONTAINER) php artisan db:seed
@@ -65,3 +64,5 @@ flush-hard:
 	@docker image prune --all --force
 	@rm -rf node_modules pnpm-lock.yaml yarn.lock package-lock.json
 	@echo "🧹 Hard cleanup done. Please run \`make build\` again."
+
+
