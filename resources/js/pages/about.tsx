@@ -4,8 +4,10 @@ import Footer from "@/components/footer";
 import Header from "@/components/header";
 import ServicesSection from "@/components/services-section";
 import { Button } from "@/components/ui/button";
+import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { Head, Link } from "@inertiajs/react";
 import { ChevronRight, DollarSign, Instagram, Linkedin, ShoppingBag, Twitter } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface StatisticProps {
   icon: React.ComponentType<{ className?: string }>;
@@ -148,9 +150,43 @@ const teamMembers = [
       linkedin: "#",
     },
   },
+  {
+    name: "Sarah Johnson",
+    position: "Marketing Director",
+    image: "/images/placeholder.svg?height=320&width=280&text=Sarah+Johnson",
+    socialLinks: {
+      twitter: "#",
+      instagram: "#",
+      linkedin: "#",
+    },
+  },
+  {
+    name: "Michael Brown",
+    position: "Technical Lead",
+    image: "/images/placeholder.svg?height=320&width=280&text=Michael+Brown",
+    socialLinks: {
+      twitter: "#",
+      instagram: "#",
+      linkedin: "#",
+    },
+  },
 ];
 
 export default function About() {
+  const [api, setApi] = useState<CarouselApi>();
+
+  useEffect(() => {
+    if (!api) {
+      return;
+    }
+
+    // Auto-slide every 3 seconds
+    const interval = setInterval(() => {
+      api.scrollNext();
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [api]);
   return (
     <div className="flex min-h-screen flex-col bg-white">
       <Head title="About - Exclusive" />
@@ -219,30 +255,28 @@ export default function About() {
 
           {/* Team Section */}
           <section className="py-16">
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-              {teamMembers.map((member, index) => (
-                <TeamMemberCard
-                  key={index}
-                  name={member.name}
-                  position={member.position}
-                  image={member.image}
-                  socialLinks={member.socialLinks}
-                />
-              ))}
-            </div>
-
-            {/* Pagination Dots */}
-            <div className="mt-12 flex justify-center space-x-2">
-              {[0, 1, 2, 3, 4].map((dot, index) => (
-                <button
-                  key={index}
-                  className={`h-3 w-3 rounded-full transition-colors ${
-                    index === 1 ? "bg-red-500" : "bg-gray-300 hover:bg-gray-400"
-                  }`}
-                  aria-label={`Go to slide ${index + 1}`}
-                />
-              ))}
-            </div>
+            <Carousel
+              setApi={setApi}
+              className="w-full"
+              opts={{
+                align: "start",
+                loop: true,
+                slidesToScroll: 1,
+              }}
+            >
+              <CarouselContent>
+                {teamMembers.map((member, index) => (
+                  <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                    <TeamMemberCard
+                      name={member.name}
+                      position={member.position}
+                      image={member.image}
+                      socialLinks={member.socialLinks}
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </Carousel>
           </section>
         </div>
 
