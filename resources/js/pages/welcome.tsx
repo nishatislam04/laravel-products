@@ -5,6 +5,7 @@ import FeaturedCategory from "@/components/featured-category";
 import FlashSales from "@/components/flash-sales";
 import Footer from "@/components/footer";
 import HeroCarousel from "@/components/hero-carousel";
+import NewArrival from "@/components/new-arrival";
 import ServicesSection from "@/components/services-section";
 import AppLayout from "@/layouts/app-layout";
 import { Head } from "@inertiajs/react";
@@ -36,6 +37,11 @@ export default function Welcome() {
     // Handle view all products - could navigate to products page
     // window.location.href = `/products`
   };
+  const handleNewArrivalClick = (product: any) => {
+    console.log("New arrival clicked:", product);
+    // Handle new arrival click - could navigate to product page
+    // window.location.href = `/product/${product.slug}`
+  };
   return (
     <AppLayout>
       <Head title="Landing page - Laravel Products" />
@@ -45,6 +51,7 @@ export default function Welcome() {
       <BestSellingProducts onViewAll={handleViewAllBestSelling} />
       <FeaturedCategory onBuyNow={handleFeaturedCategoryBuyNow} />
       <ExploreOurProducts onViewAll={handleViewAllProducts} />
+      <NewArrival onItemClick={handleNewArrivalClick} />
       <ServicesSection onBackToTop={handleBackToTop} />
       <Footer />
     </AppLayout>
