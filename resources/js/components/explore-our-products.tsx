@@ -248,44 +248,42 @@ export default function ExploreOurProducts({ className = "", onViewAll }: Explor
   };
 
   return (
-    <section className={`bg-white py-16 ${className}`}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-12 flex flex-col items-start justify-between">
-          <div className="flex items-center space-x-4">
-            {/* Our Products Indicator */}
-            <div className="h-10 w-5 rounded bg-red-500"></div>
-            <span className="font-semibold text-red-500">Our Products</span>
-          </div>
-
-          <div className="mt-6 flex flex-1 items-center justify-between">
-            <h2 className="text-3xl font-bold text-gray-900">Explore Our Products</h2>
-          </div>
+    <section className={`mx-18 bg-white py-16 ${className}`}>
+      {/* Header */}
+      <div className="mb-12 flex flex-col items-start justify-between">
+        <div className="flex items-center space-x-4">
+          {/* Our Products Indicator */}
+          <div className="h-10 w-5 rounded bg-red-500"></div>
+          <span className="font-semibold text-red-500">Our Products</span>
         </div>
 
-        {/* Products Grid */}
-        <div className="mb-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {exploreProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onAddToCart={handleAddToCart}
-              onToggleWishlist={handleToggleWishlist}
-              onQuickView={handleQuickView}
-            />
-          ))}
+        <div className="mt-6 flex flex-1 items-center justify-between">
+          <h2 className="text-3xl font-bold text-gray-900">Explore Our Products</h2>
         </div>
+      </div>
 
-        {/* View All Products Button */}
-        <div className="flex justify-center">
-          <Button
-            size="lg"
-            className="rounded-md bg-red-500 px-12 py-3 text-white hover:bg-red-600"
-            onClick={handleViewAll}
-          >
-            View All Products
-          </Button>
-        </div>
+      {/* Products Grid */}
+      <div className="mb-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {exploreProducts.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            onAddToCart={handleAddToCart}
+            onToggleWishlist={handleToggleWishlist}
+            onQuickView={handleQuickView}
+          />
+        ))}
+      </div>
+
+      {/* View All Products Button */}
+      <div className="flex justify-center">
+        <Button
+          size="lg"
+          className="rounded-md bg-red-500 px-12 py-3 text-white hover:bg-red-600"
+          onClick={handleViewAll}
+        >
+          View All Products
+        </Button>
       </div>
     </section>
   );

@@ -127,38 +127,36 @@ export default function NewArrival({ className = "", onItemClick }: NewArrivalPr
   };
 
   return (
-    <section className={`bg-white py-16 ${className}`}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-6 flex items-center space-x-4">
-          {/* Featured Indicator */}
-          <div className="h-10 w-5 rounded bg-red-500"></div>
-          <span className="font-semibold text-red-500">Featured</span>
+    <section className={`mx-18 bg-white py-16 ${className}`}>
+      {/* Header */}
+      <div className="mb-6 flex items-center space-x-4">
+        {/* Featured Indicator */}
+        <div className="h-10 w-5 rounded bg-red-500"></div>
+        <span className="font-semibold text-red-500">Featured</span>
+      </div>
+
+      <h2 className="mb-12 text-3xl font-bold text-gray-900">New Arrival</h2>
+
+      {/* Grid Layout - Fixed */}
+      <div className="grid h-[800px] grid-cols-1 gap-6 md:h-[600px] md:grid-cols-4">
+        {/* PlayStation 5 - Large Card (spans 2 columns and 2 rows) */}
+        <div className="h-full md:col-span-2 md:row-span-2">
+          <ArrivalCard item={arrivalItems[0]} onClick={handleItemClick} className="min-h-[300px] md:min-h-full" />
         </div>
 
-        <h2 className="mb-12 text-3xl font-bold text-gray-900">New Arrival</h2>
+        {/* Women's Collections - Top Right */}
+        <div className="h-full md:col-span-2 md:row-span-1">
+          <ArrivalCard item={arrivalItems[1]} onClick={handleItemClick} className="min-h-[250px] md:min-h-full" />
+        </div>
 
-        {/* Grid Layout - Fixed */}
-        <div className="grid h-[800px] grid-cols-1 gap-6 md:h-[600px] md:grid-cols-4">
-          {/* PlayStation 5 - Large Card (spans 2 columns and 2 rows) */}
-          <div className="h-full md:col-span-2 md:row-span-2">
-            <ArrivalCard item={arrivalItems[0]} onClick={handleItemClick} className="min-h-[300px] md:min-h-full" />
-          </div>
+        {/* Speakers - Bottom Left */}
+        <div className="h-full md:col-span-1 md:row-span-1">
+          <ArrivalCard item={arrivalItems[2]} onClick={handleItemClick} className="min-h-[250px] md:min-h-full" />
+        </div>
 
-          {/* Women's Collections - Top Right */}
-          <div className="h-full md:col-span-2 md:row-span-1">
-            <ArrivalCard item={arrivalItems[1]} onClick={handleItemClick} className="min-h-[250px] md:min-h-full" />
-          </div>
-
-          {/* Speakers - Bottom Left */}
-          <div className="h-full md:col-span-1 md:row-span-1">
-            <ArrivalCard item={arrivalItems[2]} onClick={handleItemClick} className="min-h-[250px] md:min-h-full" />
-          </div>
-
-          {/* Perfume - Bottom Right */}
-          <div className="h-full md:col-span-1 md:row-span-1">
-            <ArrivalCard item={arrivalItems[3]} onClick={handleItemClick} className="min-h-[250px] md:min-h-full" />
-          </div>
+        {/* Perfume - Bottom Right */}
+        <div className="h-full md:col-span-1 md:row-span-1">
+          <ArrivalCard item={arrivalItems[3]} onClick={handleItemClick} className="min-h-[250px] md:min-h-full" />
         </div>
       </div>
     </section>

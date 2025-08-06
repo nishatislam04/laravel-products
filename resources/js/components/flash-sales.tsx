@@ -320,73 +320,71 @@ export default function FlashSales({ className = "" }: FlashSalesProps) {
   };
 
   return (
-    <section className={`py-16 ${className}`}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-4 flex items-center justify-between">
-          <div className="flex w-1/2 flex-col space-x-8">
-            {/* Today's Indicator */}
-            <div className="flex items-center space-x-4">
-              <div className="h-10 w-5 rounded bg-red-500"></div>
-              <span className="font-semibold text-red-500">{"Today's"}</span>
-            </div>
-
-            {/* Title and Countdown */}
-            <div className="mt-8 flex items-center space-x-8">
-              <h2 className="text-4xl font-bold text-gray-900">Flash Sales</h2>
-              <div className="ml-auto">
-                <CountdownTimer targetDate={flashSaleEndDate} />
-              </div>
-            </div>
+    <section className={`mx-18 py-16 ${className}`}>
+      {/* Header */}
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex w-1/2 flex-col space-x-8">
+          {/* Today's Indicator */}
+          <div className="flex items-center space-x-4">
+            <div className="h-10 w-5 rounded bg-red-500"></div>
+            <span className="font-semibold text-red-500">{"Today's"}</span>
           </div>
 
-          {/* Navigation Buttons */}
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" size="icon" className="h-10 w-10 rounded-full" onClick={scrollPrev}>
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="icon" className="h-10 w-10 rounded-full" onClick={scrollNext}>
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+          {/* Title and Countdown */}
+          <div className="mt-8 flex items-center space-x-8">
+            <h2 className="text-4xl font-bold text-gray-900">Flash Sales</h2>
+            <div className="ml-auto">
+              <CountdownTimer targetDate={flashSaleEndDate} />
+            </div>
           </div>
         </div>
 
-        {/* Products Carousel */}
-        <Carousel
-          setApi={setApi}
-          className="w-full"
-          opts={{
-            align: "start",
-            slidesToScroll: 1,
-            dragFree: true,
-          }}
-        >
-          <CarouselContent className="-ml-4">
-            {flashSaleProducts.map((product) => (
-              <CarouselItem
-                key={product.id}
-                className="basis-full pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
-              >
-                <ProductCard
-                  product={product}
-                  onAddToCart={handleAddToCart}
-                  onToggleWishlist={handleToggleWishlist}
-                  onQuickView={handleQuickView}
-                />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-        </Carousel>
-
-        {/* View All Products Button */}
-        <div className="mt-12 flex justify-center">
-          <Button size="lg" className="rounded-md bg-red-500 px-12 py-4 text-lg text-white hover:bg-red-600">
-            View All Products
+        {/* Navigation Buttons */}
+        <div className="flex items-center space-x-2">
+          <Button variant="outline" size="icon" className="h-10 w-10 rounded-full" onClick={scrollPrev}>
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <Button variant="outline" size="icon" className="h-10 w-10 rounded-full" onClick={scrollNext}>
+            <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
-        {/* Bottom Border Line */}
-        <div className="mt-16 border-b border-gray-200"></div>
       </div>
+
+      {/* Products Carousel */}
+      <Carousel
+        setApi={setApi}
+        className="w-full"
+        opts={{
+          align: "start",
+          slidesToScroll: 1,
+          dragFree: true,
+        }}
+      >
+        <CarouselContent className="-ml-4">
+          {flashSaleProducts.map((product) => (
+            <CarouselItem
+              key={product.id}
+              className="basis-full pl-4 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+            >
+              <ProductCard
+                product={product}
+                onAddToCart={handleAddToCart}
+                onToggleWishlist={handleToggleWishlist}
+                onQuickView={handleQuickView}
+              />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+
+      {/* View All Products Button */}
+      <div className="mt-12 flex justify-center">
+        <Button size="lg" className="rounded-md bg-red-500 px-12 py-4 text-lg text-white hover:bg-red-600">
+          View All Products
+        </Button>
+      </div>
+      {/* Bottom Border Line */}
+      <div className="mt-16 border-b border-gray-200"></div>
     </section>
   );
 }

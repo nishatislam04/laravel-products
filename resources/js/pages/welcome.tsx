@@ -1,12 +1,15 @@
+import { AppSidebar } from "@/components/app-sidebar";
 import BestSellingProducts from "@/components/best-selling-products";
 import BrowseByCategory from "@/components/browse-by-category";
 import ExploreOurProducts from "@/components/explore-our-products";
 import FeaturedCategory from "@/components/featured-category";
 import FlashSales from "@/components/flash-sales";
 import Footer from "@/components/footer";
+import Header from "@/components/header";
 import HeroCarousel from "@/components/hero-carousel";
 import NewArrival from "@/components/new-arrival";
 import ServicesSection from "@/components/services-section";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import AppLayout from "@/layouts/app-layout";
 import { Head } from "@inertiajs/react";
 
@@ -45,15 +48,38 @@ export default function Welcome() {
   return (
     <AppLayout>
       <Head title="Landing page - Laravel Products" />
-      <HeroCarousel />
-      <FlashSales />
-      <BrowseByCategory onCategorySelect={handleCategorySelect} />
-      <BestSellingProducts onViewAll={handleViewAllBestSelling} />
-      <FeaturedCategory onBuyNow={handleFeaturedCategoryBuyNow} />
-      <ExploreOurProducts onViewAll={handleViewAllProducts} />
-      <NewArrival onItemClick={handleNewArrivalClick} />
-      <ServicesSection onBackToTop={handleBackToTop} />
-      <Footer />
+
+      {/* Header */}
+      <Header />
+
+      <div className="min-h-screen">
+        {/* Top Section: Sidebar + Carousel */}
+        <div className="flex">
+          {/* Sidebar */}
+          <SidebarProvider>
+            <AppSidebar />
+          </SidebarProvider>
+
+          {/* Carousel */}
+          <div className="flex-1">
+            <HeroCarousel />
+          </div>
+        </div>
+
+        {/* Full Width Sections */}
+        <main>
+          <FlashSales />
+          <BrowseByCategory onCategorySelect={handleCategorySelect} />
+          <BestSellingProducts onViewAll={handleViewAllBestSelling} />
+          <FeaturedCategory onBuyNow={handleFeaturedCategoryBuyNow} />
+          <ExploreOurProducts onViewAll={handleViewAllProducts} />
+          <NewArrival onItemClick={handleNewArrivalClick} />
+          <ServicesSection onBackToTop={handleBackToTop} />
+        </main>
+
+        {/* Footer */}
+        <Footer />
+      </div>
     </AppLayout>
   );
 }

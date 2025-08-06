@@ -76,14 +76,12 @@ export default function ServicesSection({ className = "", showBackToTop = true, 
   };
 
   return (
-    <section className={`relative bg-gray-50 py-20 ${className}`}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-3 lg:gap-16">
-          {services.map((service) => (
-            <ServiceCard key={service.id} service={service} />
-          ))}
-        </div>
+    <section className={`relative mx-18 py-20 ${className}`}>
+      {/* Services Grid */}
+      <div className="grid grid-cols-1 gap-12 md:grid-cols-3 lg:gap-16">
+        {services.map((service) => (
+          <ServiceCard key={service.id} service={service} />
+        ))}
       </div>
 
       {/* Back to Top Button */}
