@@ -1,5 +1,6 @@
 import BestSellingProducts from "@/components/best-selling-products";
 import BrowseByCategory from "@/components/browse-by-category";
+import ExploreOurProducts from "@/components/explore-our-products";
 import FeaturedCategory from "@/components/featured-category";
 import FlashSales from "@/components/flash-sales";
 import Footer from "@/components/footer";
@@ -30,16 +31,20 @@ export default function Welcome() {
     // Handle buy now - could navigate to product page
     // window.location.href = `/product/${productSlug}`
   };
+  const handleViewAllProducts = () => {
+    console.log("View all products");
+    // Handle view all products - could navigate to products page
+    // window.location.href = `/products`
+  };
   return (
     <AppLayout>
       <Head title="Landing page - Laravel Products" />
       <HeroCarousel />
-      <section>
-        <FlashSales />
-        <BrowseByCategory onCategorySelect={handleCategorySelect} />
-        <BestSellingProducts onViewAll={handleViewAllBestSelling} />
-        <FeaturedCategory onBuyNow={handleFeaturedCategoryBuyNow} />
-      </section>
+      <FlashSales />
+      <BrowseByCategory onCategorySelect={handleCategorySelect} />
+      <BestSellingProducts onViewAll={handleViewAllBestSelling} />
+      <FeaturedCategory onBuyNow={handleFeaturedCategoryBuyNow} />
+      <ExploreOurProducts onViewAll={handleViewAllProducts} />
       <ServicesSection onBackToTop={handleBackToTop} />
       <Footer />
     </AppLayout>
