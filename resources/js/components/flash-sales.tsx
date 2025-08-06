@@ -242,7 +242,7 @@ function ProductCard({ product, onAddToCart, onToggleWishlist, onQuickView }: Pr
 
         {/* Product Image */}
         <img
-          src={product.image || "/placeholder.svg"}
+          src={product.image || "/images/placeholder.svg"}
           alt={product.name}
           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />

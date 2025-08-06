@@ -75,7 +75,7 @@ function ArrivalCard({ item, onClick, className = "" }: ArrivalCardProps) {
       {/* Background Image */}
       <div className="absolute inset-0 h-full w-full">
         <img
-          src={item.image || "/placeholder.svg"}
+          src={item.image || "/images/placeholder.svg"}
           alt={item.title}
           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           onError={(e) => {

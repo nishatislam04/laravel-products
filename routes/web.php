@@ -26,3 +26,7 @@ Route::get('/about', function () {
 Route::get('/wishlist', function () {
     return Inertia::render('wishlist');
 })->name('wishlist');
+
+Route::get('/cart', function () {
+    return Inertia::render('cart');
+})->name('cart');

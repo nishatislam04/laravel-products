@@ -97,28 +97,36 @@ export default function Header({ className = "" }: HeaderProps) {
 
             {/* Action Icons */}
             <div className="ml-auto flex items-center space-x-2">
-              {/* Wishlist/Heart Icon */}
+              {/* Wishlist/Heart Icon with Badge */}
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-gray-600 transition-colors hover:bg-gray-100 hover:text-black"
+                className="relative mt-1 text-gray-600 transition-colors hover:bg-gray-100 hover:text-black"
                 asChild
               >
                 <Link href="/wishlist">
                   <Heart className="h-5 w-5" />
+                  {/* Wishlist Badge */}
+                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-medium text-white">
+                    4
+                  </span>
                   <span className="sr-only">Wishlist</span>
                 </Link>
               </Button>
 
-              {/* Shopping Cart Icon */}
+              {/* Shopping Cart Icon with Badge */}
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-gray-600 transition-colors hover:bg-gray-100 hover:text-black"
+                className="relative mt-1 text-gray-600 transition-colors hover:bg-gray-100 hover:text-black"
                 asChild
               >
                 <Link href="/cart">
                   <ShoppingCart className="h-5 w-5" />
+                  {/* Cart Badge */}
+                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-medium text-white">
+                    2
+                  </span>
                   <span className="sr-only">Shopping Cart</span>
                 </Link>
               </Button>
@@ -133,7 +141,7 @@ export default function Header({ className = "" }: HeaderProps) {
                       className="text-gray-600 transition-colors hover:bg-gray-100 hover:text-black"
                     >
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src="/placeholder.svg" alt="Profile" />
+                        <AvatarImage src="/images/placeholder.svg" alt="Profile" />
                         <AvatarFallback className="bg-red-500 text-sm font-medium text-white">U</AvatarFallback>
                       </Avatar>
                       <span className="sr-only">Profile Menu</span>
