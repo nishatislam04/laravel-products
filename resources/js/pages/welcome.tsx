@@ -1,4 +1,6 @@
+import BestSellingProducts from "@/components/best-selling-products";
 import BrowseByCategory from "@/components/browse-by-category";
+import FeaturedCategory from "@/components/featured-category";
 import FlashSales from "@/components/flash-sales";
 import Footer from "@/components/footer";
 import HeroCarousel from "@/components/hero-carousel";
@@ -18,6 +20,16 @@ export default function Welcome() {
       behavior: "smooth",
     });
   };
+  const handleViewAllBestSelling = () => {
+    console.log("View all best selling products");
+    // Handle view all best selling products - could navigate to best selling products page
+    // window.location.href = `/best-selling`
+  };
+  const handleFeaturedCategoryBuyNow = () => {
+    console.log("Buy now");
+    // Handle buy now - could navigate to product page
+    // window.location.href = `/product/${productSlug}`
+  };
   return (
     <AppLayout>
       <Head title="Landing page - Laravel Products" />
@@ -25,6 +37,8 @@ export default function Welcome() {
       <section>
         <FlashSales />
         <BrowseByCategory onCategorySelect={handleCategorySelect} />
+        <BestSellingProducts onViewAll={handleViewAllBestSelling} />
+        <FeaturedCategory onBuyNow={handleFeaturedCategoryBuyNow} />
       </section>
       <ServicesSection onBackToTop={handleBackToTop} />
       <Footer />
