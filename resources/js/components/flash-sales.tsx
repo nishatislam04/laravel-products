@@ -384,6 +384,8 @@ export default function FlashSales({ className = "" }: FlashSalesProps) {
             View All Products
           </Button>
         </div>
+        {/* Bottom Border Line */}
+        <div className="mt-16 border-b border-gray-200"></div>
       </div>
     </section>
   );
