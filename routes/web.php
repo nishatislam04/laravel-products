@@ -30,3 +30,7 @@ Route::get('/wishlist', function () {
 Route::get('/cart', function () {
     return Inertia::render('cart');
 })->name('cart');
+
+Route::get('/billing', function () {
+    return Inertia::render('billing');
+})->name('billing');

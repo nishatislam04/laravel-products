@@ -4,7 +4,7 @@ import Footer from "@/components/footer";
 import Header from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Head } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
 
@@ -120,6 +120,7 @@ export default function Cart() {
 
   const handleProceedToCheckout = () => {
     console.log("Proceed to checkout");
+    router.visit("/billing");
     // Handle checkout navigation
   };
 
