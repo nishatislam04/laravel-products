@@ -22,3 +22,7 @@ Route::get('/contact', function () {
 Route::get('/about', function () {
     return Inertia::render('about');
 })->name('about');
+
+Route::get('/wishlist', function () {
+    return Inertia::render('wishlist');
+})->name('wishlist');
