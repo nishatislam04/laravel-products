@@ -1,3 +1,4 @@
+import FlashSales from "@/components/flash-sales";
 import Footer from "@/components/footer";
 import HeroCarousel from "@/components/hero-carousel";
 import AppLayout from "@/layouts/app-layout";
@@ -8,8 +9,8 @@ export default function Welcome() {
         <AppLayout>
             <Head title="Landing page - Laravel Products" />
             <HeroCarousel />
-            <section className="min-h-100">
-                <h1 className="text-3xl">hello from mysql</h1>
+            <section>
+                <FlashSales />
             </section>
             <Footer />
         </AppLayout>
