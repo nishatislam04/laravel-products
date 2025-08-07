@@ -7,16 +7,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { User } from "@/types/user";
 import { Link, router } from "@inertiajs/react";
-import { Bell, Heart, LogOut, Search, ShoppingBag, ShoppingCart, User, X } from "lucide-react";
+import { Bell, Heart, LogOut, Search, ShoppingBag, ShoppingCart, UserIcon, X } from "lucide-react";
 
 interface HeaderProps {
   className?: string;
+  user: User;
 }
 
 // ! add active nav link design
-export default function Header({ className = "" }: HeaderProps) {
-  const isAuthenticated = true;
+export default function Header({ className = "", user }: HeaderProps) {
   const handleManageAccount = () => {
     console.log("Navigate to manage account");
     // Handle navigation to account management page
@@ -50,7 +51,7 @@ export default function Header({ className = "" }: HeaderProps) {
         <div className="flex h-16 w-full items-center">
           {/* Logo/Brand */}
           <div className="flex-shrink-0">
-            <Link href="/" className="text-2xl font-bold text-black transition-colors hover:text-gray-700">
+            <Link href={route("home")} className="text-2xl font-bold text-black transition-colors hover:text-gray-700">
               Exclusive
             </Link>
           </div>
@@ -58,29 +59,31 @@ export default function Header({ className = "" }: HeaderProps) {
           {/* Navigation Menu */}
           <nav className="hidden w-full items-center space-x-8 pl-35 md:flex">
             <Link
-              href="/"
+              href={route("home")}
               className="px-3 py-2 text-sm font-medium text-gray-900 transition-colors hover:text-gray-700"
             >
               Home
             </Link>
             <Link
-              href="/contact"
+              href={route("contact")}
               className="px-3 py-2 text-sm font-medium text-gray-900 transition-colors hover:text-gray-700"
             >
               Contact
             </Link>
             <Link
-              href="/about"
+              href={route("about")}
               className="px-3 py-2 text-sm font-medium text-gray-900 transition-colors hover:text-gray-700"
             >
               About
             </Link>
-            <Link
-              href={route("signup.page")}
-              className="px-3 py-2 text-sm font-medium text-gray-900 transition-colors hover:text-gray-700"
-            >
-              Sign Up
-            </Link>
+            {!user && (
+              <Link
+                href={route("signup.page")}
+                className="px-3 py-2 text-sm font-medium text-gray-900 transition-colors hover:text-gray-700"
+              >
+                Sign Up
+              </Link>
+            )}
           </nav>
 
           {/* Search Bar and Icons */}
@@ -98,43 +101,44 @@ export default function Header({ className = "" }: HeaderProps) {
             </div>
 
             {/* Action Icons */}
-            <div className="ml-auto flex items-center space-x-2">
-              {/* Wishlist/Heart Icon with Badge */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="relative mt-1 text-gray-600 transition-colors hover:bg-gray-100 hover:text-black"
-                asChild
-              >
-                <Link href="/wishlist">
-                  <Heart className="h-5 w-5" />
-                  {/* Wishlist Badge */}
-                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-medium text-white">
-                    4
-                  </span>
-                  <span className="sr-only">Wishlist</span>
-                </Link>
-              </Button>
+            {user && (
+              <div className="ml-auto flex items-center space-x-2">
+                {/* Wishlist/Heart Icon with Badge */}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative mt-1 text-gray-600 transition-colors hover:bg-gray-100 hover:text-black"
+                  asChild
+                >
+                  <Link href={route("wishlist")}>
+                    <Heart className="h-5 w-5" />
+                    {/* Wishlist Badge */}
+                    <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-medium text-white">
+                      4
+                    </span>
+                    <span className="sr-only">Wishlist</span>
+                  </Link>
+                </Button>
 
-              {/* Shopping Cart Icon with Badge */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="relative mt-1 text-gray-600 transition-colors hover:bg-gray-100 hover:text-black"
-                asChild
-              >
-                <Link href="/cart">
-                  <ShoppingCart className="h-5 w-5" />
-                  {/* Cart Badge */}
-                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-medium text-white">
-                    2
-                  </span>
-                  <span className="sr-only">Shopping Cart</span>
-                </Link>
-              </Button>
+                {/* Shopping Cart Icon with Badge */}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative mt-1 text-gray-600 transition-colors hover:bg-gray-100 hover:text-black"
+                  asChild
+                >
+                  <Link href={route("cart")}>
+                    <ShoppingCart className="h-5 w-5" />
+                    {/* Cart Badge */}
+                    <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-medium text-white">
+                      2
+                    </span>
+                    <span className="sr-only">Shopping Cart</span>
+                  </Link>
+                </Button>
 
-              {/* Profile Avatar with Dropdown - Only show if authenticated */}
-              {isAuthenticated && (
+                {/* Profile Avatar with Dropdown - Only show if authenticated */}
+
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
@@ -151,7 +155,7 @@ export default function Header({ className = "" }: HeaderProps) {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="mt-2 w-56 space-y-1.5 py-2">
                     <DropdownMenuItem onClick={handleManageAccount} className="cursor-pointer">
-                      <User className="mr-3 h-4 w-4" />
+                      <UserIcon className="mr-3 h-4 w-4" />
                       <span>Manage My Account</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleMyReviews} className="cursor-pointer">
@@ -172,8 +176,8 @@ export default function Header({ className = "" }: HeaderProps) {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

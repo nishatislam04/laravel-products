@@ -11,9 +11,10 @@ import NewArrival from "@/components/new-arrival";
 import ServicesSection from "@/components/services-section";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AppLayout from "@/layouts/app-layout";
+import { User } from "@/types/user";
 import { Head } from "@inertiajs/react";
 
-export default function Welcome() {
+export default function Index({ user }: { user: User }) {
   const handleCategorySelect = (categoryId: number, categorySlug: string) => {
     console.log("Selected category:", categoryId, categorySlug);
     // Handle category selection - could navigate to category page
@@ -50,7 +51,7 @@ export default function Welcome() {
       <Head title="Landing page - Laravel Products" />
 
       {/* Header */}
-      <Header />
+      <Header user={user} />
 
       <div className="min-h-screen">
         {/* Top Section: Sidebar + Carousel */}

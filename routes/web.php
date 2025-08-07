@@ -3,8 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Page\PublicPageController;
 
-Route::inertia('/', 'welcome')->name('home');
+Route::get('/', [PublicPageController::class, 'index'])->name('home');
 
 Route::get('/signin', [AuthController::class, 'showSigninForm'])->name('signin.page');
 Route::get('/signup', [AuthController::class, 'showSignupForm'])->name('signup.page');
@@ -12,9 +13,8 @@ Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
 Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
 Route::post('/signout', [AuthController::class, 'signout'])->name('signout');
 
-Route::inertia('/contact', 'contact')->name('contact');
-
-Route::inertia('/about', 'about')->name('about');
+Route::get('/contact', [PublicPageController::class, 'contact'])->name('contact');
+Route::get('/about', [PublicPageController::class, 'about'])->name('about');
 
 Route::get('/wishlist', function () {
     return Inertia::render('wishlist');
