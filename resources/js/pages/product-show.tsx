@@ -435,13 +435,15 @@ export default function Product() {
               {/* Thumbnail Images Below Main Image */}
               <div className="w-full">
                 <Carousel className="w-full">
-                  <CarouselContent className="-ml-2">
+                  <CarouselContent className="my-2 -ml-2">
                     {productImages.map((image, index) => (
                       <CarouselItem key={image.id} className="basis-1/4 pl-2">
                         <button
                           onClick={() => setSelectedImageIndex(index)}
                           className={`h-20 w-full overflow-hidden rounded-lg border-2 bg-gray-100 transition-colors ${
-                            selectedImageIndex === index ? "border-red-500" : "border-transparent hover:border-gray-300"
+                            selectedImageIndex === index
+                              ? "outline-2 outline-offset-2 outline-red-500"
+                              : "border-transparent hover:border-gray-300"
                           }`}
                         >
                           <img
@@ -487,12 +489,14 @@ export default function Product() {
 
                 {/* Price Section with Wishlist and Share */}
                 <div className="mb-4 flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <span className="text-3xl font-bold text-red-500">৳{currentPrice}</span>
-                    <span className="text-xl text-gray-500 line-through">৳{originalPrice}</span>
-                    <Badge className="bg-red-100 text-red-800 hover:bg-red-100">-{discountPercentage}% OFF</Badge>
+                  <div className="flex flex-col items-center gap-4 space-x-3">
+                    <span className="self-start text-3xl font-bold text-red-500">৳{currentPrice}</span>
+                    <div className="flex items-center gap-1 space-x-2">
+                      <span className="text-xl text-gray-400 line-through">৳{originalPrice}</span>
+                      <Badge className="bg-red-100 p-1 text-red-800 hover:bg-red-100">-{discountPercentage}% OFF</Badge>
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2 self-center">
                     <Button
                       variant="outline"
                       size="icon"
@@ -526,7 +530,7 @@ export default function Product() {
                       disabled={!color.available}
                       className={`h-8 w-8 rounded-full border-2 transition-all ${
                         selectedColor === color.id
-                          ? "scale-110 border-gray-900"
+                          ? "scale-110 outline-2 outline-offset-2 outline-red-400"
                           : color.available
                             ? "border-gray-300 hover:border-gray-400"
                             : "cursor-not-allowed border-gray-200 opacity-50"
@@ -549,7 +553,7 @@ export default function Product() {
                       disabled={!size.available}
                       className={`rounded-md border px-4 py-2 text-sm font-medium transition-colors ${
                         selectedSize === size.value
-                          ? "border-red-500 bg-red-500 text-white"
+                          ? "border-red-500 bg-red-500 text-white outline-2 outline-offset-2 outline-red-500"
                           : size.available
                             ? "border-gray-300 text-gray-700 hover:border-gray-400"
                             : "cursor-not-allowed border-gray-200 text-gray-400"
@@ -594,7 +598,7 @@ export default function Product() {
                   </div>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-7">
                   <div className="flex items-start space-x-3">
                     <MapPin className="mt-0.5 h-5 w-5 text-gray-600" />
                     <div className="flex-1">
@@ -632,7 +636,7 @@ export default function Product() {
                   </div>
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-6">
                   <div className="flex items-center space-x-3">
                     <RotateCcw className="h-5 w-5 text-gray-600" />
                     <div className="text-sm text-gray-900">7 Days Returns</div>
