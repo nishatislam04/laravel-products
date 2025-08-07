@@ -25,7 +25,7 @@ import {
   SidebarProvider,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import {
   BarChart3,
   Bell,
@@ -93,6 +93,10 @@ const navigationItems = [
 ];
 
 export default function VendorLayout({ children, title = "Vendor Panel" }: VendorLayoutProps) {
+  const handleLogout = () => {
+    router.post(route("signout"));
+  };
+
   return (
     <>
       <Head title={title} />
@@ -166,7 +170,7 @@ export default function VendorLayout({ children, title = "Vendor Panel" }: Vendo
                       Store Settings
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Log out</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleLogout()}>Log out</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </SidebarMenuItem>

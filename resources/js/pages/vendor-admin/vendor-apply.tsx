@@ -108,9 +108,12 @@ export default function VendorApply({ user }: { user: User }) {
       setData("name", user?.name);
     }
 
+    console.log("before", errors);
+
     post(route("vendor.apply.store"), {
       forceFormData: true, // Important for file uploads
     });
+    console.log("after", errors);
   };
 
   return (
