@@ -34,3 +34,7 @@ Route::get('/cart', function () {
 Route::get('/billing', function () {
     return Inertia::render('billing');
 })->name('billing');
+
+Route::get('/product-show', function () {
+    return Inertia::render('product-show');
+})->name('product-show');
