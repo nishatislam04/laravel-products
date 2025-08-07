@@ -1,4 +1,3 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,118 +23,146 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Textarea } from "@/components/ui/textarea";
 import AdminLayout from "@/layouts/admin-layout";
 import {
+  AlertTriangle,
   ChevronLeft,
   ChevronRight,
   Edit,
   Eye,
-  Mail,
   MoreHorizontal,
-  Phone,
+  Package,
   Plus,
   Search,
-  Store,
+  Star,
   Trash2,
 } from "lucide-react";
 import React, { useState } from "react";
 
-// Mock vendor data
-const vendors = [
+// Mock product data
+const products = [
   {
     id: 1,
-    name: "TechGear Solutions",
-    email: "contact@techgear.com",
-    phone: "+1 (555) 123-4567",
+    name: "Wireless Bluetooth Headphones",
+    sku: "WBH-001",
+    category: "Electronics",
+    price: "$99.99",
+    stock: 45,
     status: "Active",
-    products: 45,
-    revenue: "$12,450",
-    joinDate: "2024-01-15",
-    avatar: "/images/placeholder.svg?height=40&width=40",
+    rating: 4.5,
+    sales: 234,
+    image: "/images/placeholder.svg?height=40&width=40",
+    vendor: "TechGear Solutions",
+    createdAt: "2024-01-15",
   },
   {
     id: 2,
-    name: "Fashion Forward",
-    email: "hello@fashionforward.com",
-    phone: "+1 (555) 234-5678",
+    name: "Smart Fitness Watch",
+    sku: "SFW-002",
+    category: "Electronics",
+    price: "$199.99",
+    stock: 12,
     status: "Active",
-    products: 78,
-    revenue: "$8,920",
-    joinDate: "2024-02-20",
-    avatar: "/images/placeholder.svg?height=40&width=40",
+    rating: 4.8,
+    sales: 156,
+    image: "/images/placeholder.svg?height=40&width=40",
+    vendor: "TechGear Solutions",
+    createdAt: "2024-01-20",
   },
   {
     id: 3,
-    name: "Home Essentials",
-    email: "info@homeessentials.com",
-    phone: "+1 (555) 345-6789",
-    status: "Pending",
-    products: 23,
-    revenue: "$3,450",
-    joinDate: "2024-03-10",
-    avatar: "/images/placeholder.svg?height=40&width=40",
+    name: "Cotton T-Shirt",
+    sku: "CTS-003",
+    category: "Clothing",
+    price: "$24.99",
+    stock: 0,
+    status: "Out of Stock",
+    rating: 4.2,
+    sales: 89,
+    image: "/images/placeholder.svg?height=40&width=40",
+    vendor: "Fashion Forward",
+    createdAt: "2024-02-01",
   },
   {
     id: 4,
-    name: "Sports Central",
-    email: "sales@sportscentral.com",
-    phone: "+1 (555) 456-7890",
+    name: "Gaming Laptop",
+    sku: "GL-004",
+    category: "Electronics",
+    price: "$1299.99",
+    stock: 8,
+    status: "Active",
+    rating: 4.7,
+    sales: 45,
+    image: "/images/placeholder.svg?height=40&width=40",
+    vendor: "TechGear Solutions",
+    createdAt: "2024-02-10",
+  },
+  {
+    id: 5,
+    name: "Organic Coffee Beans",
+    sku: "OCB-005",
+    category: "Food & Beverages",
+    price: "$18.99",
+    stock: 67,
     status: "Inactive",
-    products: 12,
-    revenue: "$1,200",
-    joinDate: "2024-01-05",
-    avatar: "/images/placeholder.svg?height=40&width=40",
+    rating: 4.3,
+    sales: 123,
+    image: "/images/placeholder.svg?height=40&width=40",
+    vendor: "Home Essentials",
+    createdAt: "2024-03-01",
   },
 ];
 
-const vendorStats = [
+const productStats = [
   {
-    title: "Total Vendors",
-    value: "156",
-    change: "+12",
-    icon: Store,
+    title: "Total Products",
+    value: "1,234",
+    change: "+89",
+    icon: Package,
   },
   {
-    title: "Active Vendors",
-    value: "142",
-    change: "+8",
-    icon: Store,
+    title: "Active Products",
+    value: "1,156",
+    change: "+76",
+    icon: Package,
   },
   {
-    title: "Pending Approval",
-    value: "8",
-    change: "+3",
-    icon: Store,
+    title: "Out of Stock",
+    value: "23",
+    change: "+5",
+    icon: AlertTriangle,
   },
   {
-    title: "Total Revenue",
-    value: "$45,230",
-    change: "+15%",
-    icon: Store,
+    title: "Average Rating",
+    value: "4.6",
+    change: "+0.2",
+    icon: Star,
   },
 ];
 
-export default function Vendors() {
+export default function Products() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
-    phone: "",
-    address: "",
+    sku: "",
+    category: "",
+    price: "",
+    stock: "",
     description: "",
-    status: "Pending",
+    vendor: "",
+    status: "Active",
   });
 
-  const filteredVendors = vendors.filter(
-    (vendor) =>
-      vendor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      vendor.email.toLowerCase().includes(searchTerm.toLowerCase()),
+  const itemsPerPage = 5;
+  const filteredProducts = products.filter(
+    (product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.sku.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const itemsPerPage = 5;
-  const totalPages = Math.ceil(filteredVendors.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedVendors = filteredVendors.slice(startIndex, startIndex + itemsPerPage);
+  const paginatedProducts = filteredProducts.slice(startIndex, startIndex + itemsPerPage);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -143,40 +170,41 @@ export default function Vendors() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send the data to your backend
-    console.log("Creating vendor:", formData);
+    console.log("Creating product:", formData);
     setIsDialogOpen(false);
     setFormData({
       name: "",
-      email: "",
-      phone: "",
-      address: "",
+      sku: "",
+      category: "",
+      price: "",
+      stock: "",
       description: "",
-      status: "Pending",
+      vendor: "",
+      status: "Active",
     });
   };
 
   return (
-    <AdminLayout title="Manage Vendors">
+    <AdminLayout title="Products">
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Manage Vendors</h1>
-            <p className="text-muted-foreground">Manage and monitor all vendors in your marketplace</p>
+            <h1 className="text-3xl font-bold tracking-tight">Products</h1>
+            <p className="text-muted-foreground">Manage your product inventory and listings</p>
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button>
                 <Plus className="mr-2 h-4 w-4" />
-                Add Vendor
+                Add Product
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-[500px]">
               <DialogHeader>
-                <DialogTitle>Add New Vendor</DialogTitle>
+                <DialogTitle>Add New Product</DialogTitle>
                 <DialogDescription>
-                  Create a new vendor account. Fill in the required information below.
+                  Create a new product listing. Fill in the required information below.
                 </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleSubmit}>
@@ -194,41 +222,74 @@ export default function Vendors() {
                     />
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="email" className="text-right">
-                      Email
+                    <Label htmlFor="sku" className="text-right">
+                      SKU
                     </Label>
                     <Input
-                      id="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange("email", e.target.value)}
+                      id="sku"
+                      value={formData.sku}
+                      onChange={(e) => handleInputChange("sku", e.target.value)}
                       className="col-span-3"
                       required
                     />
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="phone" className="text-right">
-                      Phone
+                    <Label htmlFor="category" className="text-right">
+                      Category
+                    </Label>
+                    <Select value={formData.category} onValueChange={(value) => handleInputChange("category", value)}>
+                      <SelectTrigger className="col-span-3">
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Electronics">Electronics</SelectItem>
+                        <SelectItem value="Clothing">Clothing</SelectItem>
+                        <SelectItem value="Books">Books</SelectItem>
+                        <SelectItem value="Food & Beverages">Food & Beverages</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="price" className="text-right">
+                      Price
                     </Label>
                     <Input
-                      id="phone"
-                      value={formData.phone}
-                      onChange={(e) => handleInputChange("phone", e.target.value)}
+                      id="price"
+                      type="number"
+                      step="0.01"
+                      value={formData.price}
+                      onChange={(e) => handleInputChange("price", e.target.value)}
                       className="col-span-3"
                       required
                     />
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="address" className="text-right">
-                      Address
+                    <Label htmlFor="stock" className="text-right">
+                      Stock
                     </Label>
-                    <Textarea
-                      id="address"
-                      value={formData.address}
-                      onChange={(e) => handleInputChange("address", e.target.value)}
+                    <Input
+                      id="stock"
+                      type="number"
+                      value={formData.stock}
+                      onChange={(e) => handleInputChange("stock", e.target.value)}
                       className="col-span-3"
-                      rows={3}
+                      required
                     />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="vendor" className="text-right">
+                      Vendor
+                    </Label>
+                    <Select value={formData.vendor} onValueChange={(value) => handleInputChange("vendor", value)}>
+                      <SelectTrigger className="col-span-3">
+                        <SelectValue placeholder="Select vendor" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="TechGear Solutions">TechGear Solutions</SelectItem>
+                        <SelectItem value="Fashion Forward">Fashion Forward</SelectItem>
+                        <SelectItem value="Home Essentials">Home Essentials</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="description" className="text-right">
@@ -252,14 +313,14 @@ export default function Vendors() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Active">Active</SelectItem>
-                        <SelectItem value="Pending">Pending</SelectItem>
                         <SelectItem value="Inactive">Inactive</SelectItem>
+                        <SelectItem value="Out of Stock">Out of Stock</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button type="submit">Create Vendor</Button>
+                  <Button type="submit">Create Product</Button>
                 </DialogFooter>
               </form>
             </DialogContent>
@@ -268,7 +329,7 @@ export default function Vendors() {
 
         {/* Stats Cards */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {vendorStats.map((stat) => (
+          {productStats.map((stat) => (
             <Card key={stat.title}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
@@ -282,18 +343,18 @@ export default function Vendors() {
           ))}
         </div>
 
-        {/* Search and Filters */}
+        {/* Products List */}
         <Card>
           <CardHeader>
-            <CardTitle>Vendor List</CardTitle>
-            <CardDescription>A list of all vendors in your marketplace</CardDescription>
+            <CardTitle>Product List</CardTitle>
+            <CardDescription>Manage all products in your inventory</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="mb-4 flex items-center space-x-2">
               <div className="relative max-w-sm flex-1">
                 <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search vendors..."
+                  placeholder="Search products..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-8"
@@ -304,63 +365,63 @@ export default function Vendors() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Vendor</TableHead>
-                  <TableHead>Contact</TableHead>
+                  <TableHead>Product</TableHead>
+                  <TableHead>Category</TableHead>
+                  <TableHead>Price</TableHead>
+                  <TableHead>Stock</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Products</TableHead>
-                  <TableHead>Revenue</TableHead>
-                  <TableHead>Join Date</TableHead>
+                  <TableHead>Rating</TableHead>
+                  <TableHead>Sales</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {paginatedVendors.map((vendor) => (
-                  <TableRow key={vendor.id}>
+                {paginatedProducts.map((product) => (
+                  <TableRow key={product.id}>
                     <TableCell>
                       <div className="flex items-center space-x-3">
-                        <Avatar>
-                          <AvatarImage src={vendor.avatar || "/images/placeholder.svg"} />
-                          <AvatarFallback>
-                            {vendor.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </AvatarFallback>
-                        </Avatar>
+                        <img
+                          src={product.image || "/images/placeholder.svg"}
+                          alt={product.name}
+                          className="h-10 w-10 rounded-lg object-cover"
+                        />
                         <div>
-                          <div className="font-medium">{vendor.name}</div>
-                          <div className="text-sm text-muted-foreground">ID: {vendor.id}</div>
+                          <div className="font-medium">{product.name}</div>
+                          <div className="text-sm text-muted-foreground">SKU: {product.sku}</div>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="space-y-1">
-                        <div className="flex items-center text-sm">
-                          <Mail className="mr-1 h-3 w-3" />
-                          {vendor.email}
-                        </div>
-                        <div className="flex items-center text-sm text-muted-foreground">
-                          <Phone className="mr-1 h-3 w-3" />
-                          {vendor.phone}
-                        </div>
-                      </div>
+                      <Badge variant="outline">{product.category}</Badge>
+                    </TableCell>
+                    <TableCell className="font-medium">{product.price}</TableCell>
+                    <TableCell>
+                      <span
+                        className={product.stock === 0 ? "text-red-600" : product.stock < 20 ? "text-yellow-600" : ""}
+                      >
+                        {product.stock}
+                      </span>
                     </TableCell>
                     <TableCell>
                       <Badge
                         variant={
-                          vendor.status === "Active"
+                          product.status === "Active"
                             ? "default"
-                            : vendor.status === "Pending"
-                              ? "secondary"
-                              : "destructive"
+                            : product.status === "Out of Stock"
+                              ? "destructive"
+                              : "secondary"
                         }
                       >
-                        {vendor.status}
+                        {product.status}
                       </Badge>
                     </TableCell>
-                    <TableCell>{vendor.products}</TableCell>
-                    <TableCell className="font-medium">{vendor.revenue}</TableCell>
-                    <TableCell>{vendor.joinDate}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center">
+                        <Star className="mr-1 h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        {product.rating}
+                      </div>
+                    </TableCell>
+                    <TableCell>{product.sales}</TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -375,11 +436,11 @@ export default function Vendors() {
                           </DropdownMenuItem>
                           <DropdownMenuItem>
                             <Edit className="mr-2 h-4 w-4" />
-                            Edit Vendor
+                            Edit Product
                           </DropdownMenuItem>
                           <DropdownMenuItem className="text-red-600">
                             <Trash2 className="mr-2 h-4 w-4" />
-                            Delete Vendor
+                            Delete Product
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -388,10 +449,12 @@ export default function Vendors() {
                 ))}
               </TableBody>
             </Table>
+
+            {/* Pagination */}
             <div className="flex items-center justify-between space-x-2 py-4">
               <div className="text-sm text-muted-foreground">
-                Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredVendors.length)} of{" "}
-                {filteredVendors.length} vendors
+                Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredProducts.length)} of{" "}
+                {filteredProducts.length} products
               </div>
               <div className="flex items-center space-x-2">
                 <Button

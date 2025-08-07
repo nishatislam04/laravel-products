@@ -1,4 +1,3 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,119 +22,117 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import AdminLayout from "@/layouts/admin-layout";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Edit,
-  Eye,
-  Mail,
-  MoreHorizontal,
-  Phone,
-  Plus,
-  Search,
-  Store,
-  Trash2,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Edit, Eye, Folder, MoreHorizontal, Plus, Search, Tag, Trash2 } from "lucide-react";
 import React, { useState } from "react";
 
-// Mock vendor data
-const vendors = [
+// Mock category data
+const categories = [
   {
     id: 1,
-    name: "TechGear Solutions",
-    email: "contact@techgear.com",
-    phone: "+1 (555) 123-4567",
+    name: "Electronics",
+    slug: "electronics",
+    description: "Electronic devices and gadgets",
     status: "Active",
-    products: 45,
-    revenue: "$12,450",
-    joinDate: "2024-01-15",
-    avatar: "/images/placeholder.svg?height=40&width=40",
+    products: 245,
+    parent: null,
+    image: "/images/placeholder.svg?height=40&width=40",
+    createdAt: "2024-01-15",
   },
   {
     id: 2,
-    name: "Fashion Forward",
-    email: "hello@fashionforward.com",
-    phone: "+1 (555) 234-5678",
+    name: "Smartphones",
+    slug: "smartphones",
+    description: "Mobile phones and accessories",
     status: "Active",
-    products: 78,
-    revenue: "$8,920",
-    joinDate: "2024-02-20",
-    avatar: "/images/placeholder.svg?height=40&width=40",
+    products: 89,
+    parent: "Electronics",
+    image: "/images/placeholder.svg?height=40&width=40",
+    createdAt: "2024-01-20",
   },
   {
     id: 3,
-    name: "Home Essentials",
-    email: "info@homeessentials.com",
-    phone: "+1 (555) 345-6789",
-    status: "Pending",
-    products: 23,
-    revenue: "$3,450",
-    joinDate: "2024-03-10",
-    avatar: "/images/placeholder.svg?height=40&width=40",
+    name: "Clothing",
+    slug: "clothing",
+    description: "Fashion and apparel",
+    status: "Active",
+    products: 156,
+    parent: null,
+    image: "/images/placeholder.svg?height=40&width=40",
+    createdAt: "2024-02-01",
   },
   {
     id: 4,
-    name: "Sports Central",
-    email: "sales@sportscentral.com",
-    phone: "+1 (555) 456-7890",
+    name: "Men's Clothing",
+    slug: "mens-clothing",
+    description: "Clothing for men",
+    status: "Active",
+    products: 78,
+    parent: "Clothing",
+    image: "/images/placeholder.svg?height=40&width=40",
+    createdAt: "2024-02-05",
+  },
+  {
+    id: 5,
+    name: "Books",
+    slug: "books",
+    description: "Books and literature",
     status: "Inactive",
-    products: 12,
-    revenue: "$1,200",
-    joinDate: "2024-01-05",
-    avatar: "/images/placeholder.svg?height=40&width=40",
+    products: 34,
+    parent: null,
+    image: "/images/placeholder.svg?height=40&width=40",
+    createdAt: "2024-03-01",
   },
 ];
 
-const vendorStats = [
+const categoryStats = [
   {
-    title: "Total Vendors",
-    value: "156",
-    change: "+12",
-    icon: Store,
+    title: "Total Categories",
+    value: "45",
+    change: "+5",
+    icon: Tag,
   },
   {
-    title: "Active Vendors",
-    value: "142",
-    change: "+8",
-    icon: Store,
-  },
-  {
-    title: "Pending Approval",
-    value: "8",
+    title: "Active Categories",
+    value: "42",
     change: "+3",
-    icon: Store,
+    icon: Tag,
   },
   {
-    title: "Total Revenue",
-    value: "$45,230",
-    change: "+15%",
-    icon: Store,
+    title: "Parent Categories",
+    value: "12",
+    change: "+1",
+    icon: Folder,
+  },
+  {
+    title: "Total Products",
+    value: "1,234",
+    change: "+89",
+    icon: Tag,
   },
 ];
 
-export default function Vendors() {
+export default function Categories() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
-    phone: "",
-    address: "",
+    slug: "",
     description: "",
-    status: "Pending",
+    parent: "",
+    status: "Active",
   });
 
-  const filteredVendors = vendors.filter(
-    (vendor) =>
-      vendor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      vendor.email.toLowerCase().includes(searchTerm.toLowerCase()),
+  const itemsPerPage = 5;
+  const filteredCategories = categories.filter(
+    (category) =>
+      category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      category.description.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const itemsPerPage = 5;
-  const totalPages = Math.ceil(filteredVendors.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredCategories.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedVendors = filteredVendors.slice(startIndex, startIndex + itemsPerPage);
+  const paginatedCategories = filteredCategories.slice(startIndex, startIndex + itemsPerPage);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -143,40 +140,38 @@ export default function Vendors() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send the data to your backend
-    console.log("Creating vendor:", formData);
+    console.log("Creating category:", formData);
     setIsDialogOpen(false);
     setFormData({
       name: "",
-      email: "",
-      phone: "",
-      address: "",
+      slug: "",
       description: "",
-      status: "Pending",
+      parent: "",
+      status: "Active",
     });
   };
 
   return (
-    <AdminLayout title="Manage Vendors">
+    <AdminLayout title="Categories">
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Manage Vendors</h1>
-            <p className="text-muted-foreground">Manage and monitor all vendors in your marketplace</p>
+            <h1 className="text-3xl font-bold tracking-tight">Categories</h1>
+            <p className="text-muted-foreground">Manage product categories and subcategories</p>
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button>
                 <Plus className="mr-2 h-4 w-4" />
-                Add Vendor
+                Add Category
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
-                <DialogTitle>Add New Vendor</DialogTitle>
+                <DialogTitle>Add New Category</DialogTitle>
                 <DialogDescription>
-                  Create a new vendor account. Fill in the required information below.
+                  Create a new product category. Fill in the required information below.
                 </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleSubmit}>
@@ -194,40 +189,15 @@ export default function Vendors() {
                     />
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="email" className="text-right">
-                      Email
+                    <Label htmlFor="slug" className="text-right">
+                      Slug
                     </Label>
                     <Input
-                      id="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange("email", e.target.value)}
+                      id="slug"
+                      value={formData.slug}
+                      onChange={(e) => handleInputChange("slug", e.target.value)}
                       className="col-span-3"
                       required
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="phone" className="text-right">
-                      Phone
-                    </Label>
-                    <Input
-                      id="phone"
-                      value={formData.phone}
-                      onChange={(e) => handleInputChange("phone", e.target.value)}
-                      className="col-span-3"
-                      required
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="address" className="text-right">
-                      Address
-                    </Label>
-                    <Textarea
-                      id="address"
-                      value={formData.address}
-                      onChange={(e) => handleInputChange("address", e.target.value)}
-                      className="col-span-3"
-                      rows={3}
                     />
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
@@ -243,6 +213,22 @@ export default function Vendors() {
                     />
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="parent" className="text-right">
+                      Parent Category
+                    </Label>
+                    <Select value={formData.parent} onValueChange={(value) => handleInputChange("parent", value)}>
+                      <SelectTrigger className="col-span-3">
+                        <SelectValue placeholder="Select parent category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="">None (Root Category)</SelectItem>
+                        <SelectItem value="Electronics">Electronics</SelectItem>
+                        <SelectItem value="Clothing">Clothing</SelectItem>
+                        <SelectItem value="Books">Books</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="status" className="text-right">
                       Status
                     </Label>
@@ -252,14 +238,13 @@ export default function Vendors() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Active">Active</SelectItem>
-                        <SelectItem value="Pending">Pending</SelectItem>
                         <SelectItem value="Inactive">Inactive</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button type="submit">Create Vendor</Button>
+                  <Button type="submit">Create Category</Button>
                 </DialogFooter>
               </form>
             </DialogContent>
@@ -268,7 +253,7 @@ export default function Vendors() {
 
         {/* Stats Cards */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {vendorStats.map((stat) => (
+          {categoryStats.map((stat) => (
             <Card key={stat.title}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
@@ -282,18 +267,18 @@ export default function Vendors() {
           ))}
         </div>
 
-        {/* Search and Filters */}
+        {/* Categories List */}
         <Card>
           <CardHeader>
-            <CardTitle>Vendor List</CardTitle>
-            <CardDescription>A list of all vendors in your marketplace</CardDescription>
+            <CardTitle>Category List</CardTitle>
+            <CardDescription>Manage all product categories and their hierarchy</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="mb-4 flex items-center space-x-2">
               <div className="relative max-w-sm flex-1">
                 <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search vendors..."
+                  placeholder="Search categories..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-8"
@@ -304,63 +289,44 @@ export default function Vendors() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Vendor</TableHead>
-                  <TableHead>Contact</TableHead>
+                  <TableHead>Category</TableHead>
+                  <TableHead>Parent</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Products</TableHead>
-                  <TableHead>Revenue</TableHead>
-                  <TableHead>Join Date</TableHead>
+                  <TableHead>Created</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {paginatedVendors.map((vendor) => (
-                  <TableRow key={vendor.id}>
+                {paginatedCategories.map((category) => (
+                  <TableRow key={category.id}>
                     <TableCell>
                       <div className="flex items-center space-x-3">
-                        <Avatar>
-                          <AvatarImage src={vendor.avatar || "/images/placeholder.svg"} />
-                          <AvatarFallback>
-                            {vendor.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </AvatarFallback>
-                        </Avatar>
+                        <img
+                          src={category.image || "/images/placeholder.svg"}
+                          alt={category.name}
+                          className="h-10 w-10 rounded-lg object-cover"
+                        />
                         <div>
-                          <div className="font-medium">{vendor.name}</div>
-                          <div className="text-sm text-muted-foreground">ID: {vendor.id}</div>
+                          <div className="font-medium">{category.name}</div>
+                          <div className="text-sm text-muted-foreground">{category.slug}</div>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="space-y-1">
-                        <div className="flex items-center text-sm">
-                          <Mail className="mr-1 h-3 w-3" />
-                          {vendor.email}
-                        </div>
-                        <div className="flex items-center text-sm text-muted-foreground">
-                          <Phone className="mr-1 h-3 w-3" />
-                          {vendor.phone}
-                        </div>
-                      </div>
+                      {category.parent ? (
+                        <Badge variant="outline">{category.parent}</Badge>
+                      ) : (
+                        <span className="text-muted-foreground">Root</span>
+                      )}
                     </TableCell>
                     <TableCell>
-                      <Badge
-                        variant={
-                          vendor.status === "Active"
-                            ? "default"
-                            : vendor.status === "Pending"
-                              ? "secondary"
-                              : "destructive"
-                        }
-                      >
-                        {vendor.status}
+                      <Badge variant={category.status === "Active" ? "default" : "destructive"}>
+                        {category.status}
                       </Badge>
                     </TableCell>
-                    <TableCell>{vendor.products}</TableCell>
-                    <TableCell className="font-medium">{vendor.revenue}</TableCell>
-                    <TableCell>{vendor.joinDate}</TableCell>
+                    <TableCell>{category.products}</TableCell>
+                    <TableCell>{category.createdAt}</TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -375,11 +341,11 @@ export default function Vendors() {
                           </DropdownMenuItem>
                           <DropdownMenuItem>
                             <Edit className="mr-2 h-4 w-4" />
-                            Edit Vendor
+                            Edit Category
                           </DropdownMenuItem>
                           <DropdownMenuItem className="text-red-600">
                             <Trash2 className="mr-2 h-4 w-4" />
-                            Delete Vendor
+                            Delete Category
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -388,10 +354,12 @@ export default function Vendors() {
                 ))}
               </TableBody>
             </Table>
+
+            {/* Pagination */}
             <div className="flex items-center justify-between space-x-2 py-4">
               <div className="text-sm text-muted-foreground">
-                Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredVendors.length)} of{" "}
-                {filteredVendors.length} vendors
+                Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredCategories.length)} of{" "}
+                {filteredCategories.length} categories
               </div>
               <div className="flex items-center space-x-2">
                 <Button

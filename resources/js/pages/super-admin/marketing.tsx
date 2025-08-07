@@ -1,7 +1,7 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import {
   Dialog,
   DialogContent,
@@ -29,113 +29,133 @@ import {
   Edit,
   Eye,
   Mail,
+  Megaphone,
   MoreHorizontal,
-  Phone,
   Plus,
   Search,
-  Store,
+  Target,
   Trash2,
+  TrendingUp,
 } from "lucide-react";
 import React, { useState } from "react";
+import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
-// Mock vendor data
-const vendors = [
+// Mock marketing data
+const campaigns = [
   {
     id: 1,
-    name: "TechGear Solutions",
-    email: "contact@techgear.com",
-    phone: "+1 (555) 123-4567",
+    name: "Summer Sale 2024",
+    type: "Email",
     status: "Active",
-    products: 45,
-    revenue: "$12,450",
-    joinDate: "2024-01-15",
-    avatar: "/images/placeholder.svg?height=40&width=40",
+    budget: "$5,000",
+    spent: "$3,200",
+    clicks: 12450,
+    conversions: 234,
+    roi: "320%",
+    startDate: "2024-06-01",
+    endDate: "2024-08-31",
   },
   {
     id: 2,
-    name: "Fashion Forward",
-    email: "hello@fashionforward.com",
-    phone: "+1 (555) 234-5678",
-    status: "Active",
-    products: 78,
-    revenue: "$8,920",
-    joinDate: "2024-02-20",
-    avatar: "/images/placeholder.svg?height=40&width=40",
+    name: "New Product Launch",
+    type: "Social Media",
+    status: "Completed",
+    budget: "$8,000",
+    spent: "$7,800",
+    clicks: 25600,
+    conversions: 456,
+    roi: "280%",
+    startDate: "2024-03-01",
+    endDate: "2024-03-31",
   },
   {
     id: 3,
-    name: "Home Essentials",
-    email: "info@homeessentials.com",
-    phone: "+1 (555) 345-6789",
-    status: "Pending",
-    products: 23,
-    revenue: "$3,450",
-    joinDate: "2024-03-10",
-    avatar: "/images/placeholder.svg?height=40&width=40",
+    name: "Black Friday Promo",
+    type: "PPC",
+    status: "Scheduled",
+    budget: "$15,000",
+    spent: "$0",
+    clicks: 0,
+    conversions: 0,
+    roi: "0%",
+    startDate: "2024-11-20",
+    endDate: "2024-11-30",
   },
   {
     id: 4,
-    name: "Sports Central",
-    email: "sales@sportscentral.com",
-    phone: "+1 (555) 456-7890",
-    status: "Inactive",
-    products: 12,
-    revenue: "$1,200",
-    joinDate: "2024-01-05",
-    avatar: "/images/placeholder.svg?height=40&width=40",
+    name: "Customer Retention",
+    type: "Email",
+    status: "Paused",
+    budget: "$3,000",
+    spent: "$1,500",
+    clicks: 8900,
+    conversions: 123,
+    roi: "180%",
+    startDate: "2024-04-01",
+    endDate: "2024-06-30",
   },
 ];
 
-const vendorStats = [
+const marketingStats = [
   {
-    title: "Total Vendors",
-    value: "156",
-    change: "+12",
-    icon: Store,
+    title: "Total Campaigns",
+    value: "24",
+    change: "+4",
+    icon: Megaphone,
   },
   {
-    title: "Active Vendors",
-    value: "142",
-    change: "+8",
-    icon: Store,
-  },
-  {
-    title: "Pending Approval",
+    title: "Active Campaigns",
     value: "8",
-    change: "+3",
-    icon: Store,
+    change: "+2",
+    icon: Target,
   },
   {
-    title: "Total Revenue",
-    value: "$45,230",
-    change: "+15%",
-    icon: Store,
+    title: "Total Clicks",
+    value: "156K",
+    change: "+23%",
+    icon: TrendingUp,
+  },
+  {
+    title: "Email Subscribers",
+    value: "12.5K",
+    change: "+8%",
+    icon: Mail,
   },
 ];
 
-export default function Vendors() {
+const campaignPerformance = [
+  { month: "Jan", clicks: 8400, conversions: 240 },
+  { month: "Feb", clicks: 9200, conversions: 280 },
+  { month: "Mar", clicks: 12500, conversions: 350 },
+  { month: "Apr", clicks: 10800, conversions: 320 },
+  { month: "May", clicks: 14200, conversions: 420 },
+  { month: "Jun", clicks: 16800, conversions: 480 },
+];
+
+export default function Marketing() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
-    phone: "",
-    address: "",
+    type: "",
+    budget: "",
+    startDate: "",
+    endDate: "",
     description: "",
-    status: "Pending",
+    status: "Scheduled",
   });
 
-  const filteredVendors = vendors.filter(
-    (vendor) =>
-      vendor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      vendor.email.toLowerCase().includes(searchTerm.toLowerCase()),
+  const itemsPerPage = 5;
+  const filteredCampaigns = campaigns.filter(
+    (campaign) =>
+      campaign.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      campaign.type.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const itemsPerPage = 5;
-  const totalPages = Math.ceil(filteredVendors.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredCampaigns.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedVendors = filteredVendors.slice(startIndex, startIndex + itemsPerPage);
+  const paginatedCampaigns = filteredCampaigns.slice(startIndex, startIndex + itemsPerPage);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -143,41 +163,39 @@ export default function Vendors() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send the data to your backend
-    console.log("Creating vendor:", formData);
+    console.log("Creating campaign:", formData);
     setIsDialogOpen(false);
     setFormData({
       name: "",
-      email: "",
-      phone: "",
-      address: "",
+      type: "",
+      budget: "",
+      startDate: "",
+      endDate: "",
       description: "",
-      status: "Pending",
+      status: "Scheduled",
     });
   };
 
   return (
-    <AdminLayout title="Manage Vendors">
+    <AdminLayout title="Marketing">
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Manage Vendors</h1>
-            <p className="text-muted-foreground">Manage and monitor all vendors in your marketplace</p>
+            <h1 className="text-3xl font-bold tracking-tight">Marketing</h1>
+            <p className="text-muted-foreground">Manage marketing campaigns and track performance</p>
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button>
                 <Plus className="mr-2 h-4 w-4" />
-                Add Vendor
+                Create Campaign
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
-                <DialogTitle>Add New Vendor</DialogTitle>
-                <DialogDescription>
-                  Create a new vendor account. Fill in the required information below.
-                </DialogDescription>
+                <DialogTitle>Create New Campaign</DialogTitle>
+                <DialogDescription>Set up a new marketing campaign. Fill in the details below.</DialogDescription>
               </DialogHeader>
               <form onSubmit={handleSubmit}>
                 <div className="grid gap-4 py-4">
@@ -194,40 +212,58 @@ export default function Vendors() {
                     />
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="email" className="text-right">
-                      Email
+                    <Label htmlFor="type" className="text-right">
+                      Type
+                    </Label>
+                    <Select value={formData.type} onValueChange={(value) => handleInputChange("type", value)}>
+                      <SelectTrigger className="col-span-3">
+                        <SelectValue placeholder="Select campaign type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Email">Email</SelectItem>
+                        <SelectItem value="Social Media">Social Media</SelectItem>
+                        <SelectItem value="PPC">PPC</SelectItem>
+                        <SelectItem value="Display">Display</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="budget" className="text-right">
+                      Budget
                     </Label>
                     <Input
-                      id="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange("email", e.target.value)}
+                      id="budget"
+                      type="number"
+                      value={formData.budget}
+                      onChange={(e) => handleInputChange("budget", e.target.value)}
                       className="col-span-3"
                       required
                     />
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="phone" className="text-right">
-                      Phone
+                    <Label htmlFor="startDate" className="text-right">
+                      Start Date
                     </Label>
                     <Input
-                      id="phone"
-                      value={formData.phone}
-                      onChange={(e) => handleInputChange("phone", e.target.value)}
+                      id="startDate"
+                      type="date"
+                      value={formData.startDate}
+                      onChange={(e) => handleInputChange("startDate", e.target.value)}
                       className="col-span-3"
                       required
                     />
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="address" className="text-right">
-                      Address
+                    <Label htmlFor="endDate" className="text-right">
+                      End Date
                     </Label>
-                    <Textarea
-                      id="address"
-                      value={formData.address}
-                      onChange={(e) => handleInputChange("address", e.target.value)}
+                    <Input
+                      id="endDate"
+                      type="date"
+                      value={formData.endDate}
+                      onChange={(e) => handleInputChange("endDate", e.target.value)}
                       className="col-span-3"
-                      rows={3}
+                      required
                     />
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
@@ -242,24 +278,9 @@ export default function Vendors() {
                       rows={3}
                     />
                   </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="status" className="text-right">
-                      Status
-                    </Label>
-                    <Select value={formData.status} onValueChange={(value) => handleInputChange("status", value)}>
-                      <SelectTrigger className="col-span-3">
-                        <SelectValue placeholder="Select status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Active">Active</SelectItem>
-                        <SelectItem value="Pending">Pending</SelectItem>
-                        <SelectItem value="Inactive">Inactive</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
                 </div>
                 <DialogFooter>
-                  <Button type="submit">Create Vendor</Button>
+                  <Button type="submit">Create Campaign</Button>
                 </DialogFooter>
               </form>
             </DialogContent>
@@ -268,7 +289,7 @@ export default function Vendors() {
 
         {/* Stats Cards */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {vendorStats.map((stat) => (
+          {marketingStats.map((stat) => (
             <Card key={stat.title}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
@@ -282,18 +303,51 @@ export default function Vendors() {
           ))}
         </div>
 
-        {/* Search and Filters */}
+        {/* Performance Chart */}
         <Card>
           <CardHeader>
-            <CardTitle>Vendor List</CardTitle>
-            <CardDescription>A list of all vendors in your marketplace</CardDescription>
+            <CardTitle>Campaign Performance</CardTitle>
+            <CardDescription>Monthly clicks and conversions overview</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer
+              config={{
+                clicks: {
+                  label: "Clicks",
+                  color: "hsl(var(--chart-1))",
+                },
+                conversions: {
+                  label: "Conversions",
+                  color: "hsl(var(--chart-2))",
+                },
+              }}
+              className="h-[300px]"
+            >
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={campaignPerformance}>
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <Line type="monotone" dataKey="clicks" stroke="var(--color-clicks)" strokeWidth={2} />
+                  <Line type="monotone" dataKey="conversions" stroke="var(--color-conversions)" strokeWidth={2} />
+                </LineChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+
+        {/* Campaigns List */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Marketing Campaigns</CardTitle>
+            <CardDescription>Manage all your marketing campaigns</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="mb-4 flex items-center space-x-2">
               <div className="relative max-w-sm flex-1">
                 <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search vendors..."
+                  placeholder="Search campaigns..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-8"
@@ -304,63 +358,54 @@ export default function Vendors() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Vendor</TableHead>
-                  <TableHead>Contact</TableHead>
+                  <TableHead>Campaign</TableHead>
+                  <TableHead>Type</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Products</TableHead>
-                  <TableHead>Revenue</TableHead>
-                  <TableHead>Join Date</TableHead>
+                  <TableHead>Budget</TableHead>
+                  <TableHead>Clicks</TableHead>
+                  <TableHead>Conversions</TableHead>
+                  <TableHead>ROI</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {paginatedVendors.map((vendor) => (
-                  <TableRow key={vendor.id}>
+                {paginatedCampaigns.map((campaign) => (
+                  <TableRow key={campaign.id}>
                     <TableCell>
-                      <div className="flex items-center space-x-3">
-                        <Avatar>
-                          <AvatarImage src={vendor.avatar || "/images/placeholder.svg"} />
-                          <AvatarFallback>
-                            {vendor.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <div className="font-medium">{vendor.name}</div>
-                          <div className="text-sm text-muted-foreground">ID: {vendor.id}</div>
+                      <div>
+                        <div className="font-medium">{campaign.name}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {campaign.startDate} - {campaign.endDate}
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="space-y-1">
-                        <div className="flex items-center text-sm">
-                          <Mail className="mr-1 h-3 w-3" />
-                          {vendor.email}
-                        </div>
-                        <div className="flex items-center text-sm text-muted-foreground">
-                          <Phone className="mr-1 h-3 w-3" />
-                          {vendor.phone}
-                        </div>
-                      </div>
+                      <Badge variant="outline">{campaign.type}</Badge>
                     </TableCell>
                     <TableCell>
                       <Badge
                         variant={
-                          vendor.status === "Active"
+                          campaign.status === "Active"
                             ? "default"
-                            : vendor.status === "Pending"
+                            : campaign.status === "Completed"
                               ? "secondary"
-                              : "destructive"
+                              : campaign.status === "Scheduled"
+                                ? "outline"
+                                : "destructive"
                         }
                       >
-                        {vendor.status}
+                        {campaign.status}
                       </Badge>
                     </TableCell>
-                    <TableCell>{vendor.products}</TableCell>
-                    <TableCell className="font-medium">{vendor.revenue}</TableCell>
-                    <TableCell>{vendor.joinDate}</TableCell>
+                    <TableCell>
+                      <div>
+                        <div className="font-medium">{campaign.budget}</div>
+                        <div className="text-sm text-muted-foreground">Spent: {campaign.spent}</div>
+                      </div>
+                    </TableCell>
+                    <TableCell>{campaign.clicks.toLocaleString()}</TableCell>
+                    <TableCell>{campaign.conversions}</TableCell>
+                    <TableCell className="font-medium text-green-600">{campaign.roi}</TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -375,11 +420,11 @@ export default function Vendors() {
                           </DropdownMenuItem>
                           <DropdownMenuItem>
                             <Edit className="mr-2 h-4 w-4" />
-                            Edit Vendor
+                            Edit Campaign
                           </DropdownMenuItem>
                           <DropdownMenuItem className="text-red-600">
                             <Trash2 className="mr-2 h-4 w-4" />
-                            Delete Vendor
+                            Delete Campaign
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -388,10 +433,12 @@ export default function Vendors() {
                 ))}
               </TableBody>
             </Table>
+
+            {/* Pagination */}
             <div className="flex items-center justify-between space-x-2 py-4">
               <div className="text-sm text-muted-foreground">
-                Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredVendors.length)} of{" "}
-                {filteredVendors.length} vendors
+                Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredCampaigns.length)} of{" "}
+                {filteredCampaigns.length} campaigns
               </div>
               <div className="flex items-center space-x-2">
                 <Button
