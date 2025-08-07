@@ -49,48 +49,48 @@ interface AdminLayoutProps {
 const navigationItems = [
   {
     title: "Overview",
-    url: "/super-admin/dashboard",
+    url: route("super-admin.overview.page"),
     icon: BarChart3,
   },
   {
     title: "Manage Vendors",
-    url: "/super-admin/vendors",
+    url: route("super-admin.vendors.page"),
     icon: Store,
   },
   {
     title: "Manage Users",
-    url: "/super-admin/users",
+    url: route("super-admin.users.page"),
     icon: Users,
   },
   {
     title: "Orders",
-    url: "/super-admin/orders",
+    url: route("super-admin.orders.page"),
     icon: ShoppingCart,
     badge: "12",
   },
   {
     title: "Categories",
-    url: "/super-admin/categories",
+    url: route("super-admin.categories.page"),
     icon: Tag,
   },
   {
     title: "Products",
-    url: "/super-admin/products",
+    url: route("super-admin.products.page"),
     icon: Package,
   },
   {
     title: "Marketing",
-    url: "/super-admin/marketing",
+    url: route("super-admin.marketing.page"),
     icon: TrendingUp,
   },
   {
     title: "Analytics",
-    url: "/super-admin/analytics",
+    url: route("super-admin.analytics.page"),
     icon: BarChart3,
   },
   {
     title: "Settings",
-    url: "/super-admin/settings",
+    url: route("super-admin.settings.page"),
     icon: Settings,
   },
 ];
@@ -105,7 +105,7 @@ export default function AdminLayout({ children, title = "Admin Panel" }: AdminLa
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton className="space-x-2" size="lg" asChild>
-                  <Link href="/super-admin/dashboard">
+                  <Link href={route("super-admin.overview.page")}>
                     <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                       <Store className="size-4" />
                     </div>

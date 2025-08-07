@@ -51,7 +51,10 @@ export default function Header({ className = "", user }: HeaderProps) {
         <div className="flex h-16 w-full items-center">
           {/* Logo/Brand */}
           <div className="flex-shrink-0">
-            <Link href={route("home")} className="text-2xl font-bold text-black transition-colors hover:text-gray-700">
+            <Link
+              href={route("home.page")}
+              className="text-2xl font-bold text-black transition-colors hover:text-gray-700"
+            >
               Exclusive
             </Link>
           </div>
@@ -59,19 +62,19 @@ export default function Header({ className = "", user }: HeaderProps) {
           {/* Navigation Menu */}
           <nav className="hidden w-full items-center space-x-8 pl-35 md:flex">
             <Link
-              href={route("home")}
+              href={route("home.page")}
               className="px-3 py-2 text-sm font-medium text-gray-900 transition-colors hover:text-gray-700"
             >
               Home
             </Link>
             <Link
-              href={route("contact")}
+              href={route("contact.page")}
               className="px-3 py-2 text-sm font-medium text-gray-900 transition-colors hover:text-gray-700"
             >
               Contact
             </Link>
             <Link
-              href={route("about")}
+              href={route("about.page")}
               className="px-3 py-2 text-sm font-medium text-gray-900 transition-colors hover:text-gray-700"
             >
               About
@@ -110,7 +113,7 @@ export default function Header({ className = "", user }: HeaderProps) {
                   className="relative mt-1 text-gray-600 transition-colors hover:bg-gray-100 hover:text-black"
                   asChild
                 >
-                  <Link href={route("wishlist")}>
+                  <Link href={route("wishlist.page")}>
                     <Heart className="h-5 w-5" />
                     {/* Wishlist Badge */}
                     <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-medium text-white">
@@ -127,7 +130,7 @@ export default function Header({ className = "", user }: HeaderProps) {
                   className="relative mt-1 text-gray-600 transition-colors hover:bg-gray-100 hover:text-black"
                   asChild
                 >
-                  <Link href={route("cart")}>
+                  <Link href={route("cart.page")}>
                     <ShoppingCart className="h-5 w-5" />
                     {/* Cart Badge */}
                     <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs font-medium text-white">

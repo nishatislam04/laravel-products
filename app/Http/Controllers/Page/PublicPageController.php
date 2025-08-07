@@ -10,6 +10,7 @@ use Inertia\Inertia;
 class PublicPageController extends Controller {
     public function index() {
         $user = Auth::user();
+
         return Inertia::render('public-pages/index', [
             'user' => $user,
         ]);

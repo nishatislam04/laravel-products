@@ -5,8 +5,10 @@ use Inertia\Inertia;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Page\PublicPageController;
 use App\Http\Controllers\Vendor\VendorApplyController;
+use App\Http\Controllers\Page\SuperAdminPageController;
+use App\Http\Controllers\Vendor\VendorManageController;
 
-Route::get('/', [PublicPageController::class, 'index'])->name('home');
+Route::get('/', [PublicPageController::class, 'index'])->name('home.page');
 
 Route::get('/signin', [AuthController::class, 'showSigninForm'])->name('signin.page');
 Route::get('/signup', [AuthController::class, 'showSignupForm'])->name('signup.page');
@@ -14,109 +16,86 @@ Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
 Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
 Route::post('/signout', [AuthController::class, 'signout'])->name('signout');
 
-Route::get('/contact', [PublicPageController::class, 'contact'])->name('contact');
-Route::get('/about', [PublicPageController::class, 'about'])->name('about');
+Route::get('/contact', [PublicPageController::class, 'contact'])->name('contact.page');
+Route::get('/about', [PublicPageController::class, 'about'])->name('about.page');
 
-Route::get('/vendor-apply', [VendorApplyController::class, 'index'])->name('vendor.apply');
+Route::get('/vendor-apply', [VendorApplyController::class, 'index'])->name('vendor.apply.page');
 Route::post('/vendor-apply', [VendorApplyController::class, 'store'])->name('vendor.apply.store');
+
+
+Route::get('/super-admin/overview', [SuperAdminPageController::class, 'overviewSection'])->name('super-admin.overview.page');
+Route::get('/super-admin/vendors', [SuperAdminPageController::class, 'vendorSection'])->name('super-admin.vendors.page');
+Route::get('/super-admin/users', [SuperAdminPageController::class, 'userSection'])->name('super-admin.users.page');
+Route::get('/super-admin/orders', [SuperAdminPageController::class, 'orderSection'])->name('super-admin.orders.page');
+Route::get('/super-admin/categories', [SuperAdminPageController::class, 'categorySection'])->name('super-admin.categories.page');
+Route::get('/super-admin/products', [SuperAdminPageController::class, 'productSection'])->name('super-admin.products.page');
+Route::get('/super-admin/marketing', [SuperAdminPageController::class, 'marketingSection'])->name('super-admin.marketing.page');
+Route::get('/super-admin/analytics', [SuperAdminPageController::class, 'analyticsSection'])->name('super-admin.analytics.page');
+Route::get('/super-admin/settings', [SuperAdminPageController::class, 'settingsSection'])->name('super-admin.settings.page');
+
+Route::post('/super-admin/approve-vendor', [VendorManageController::class, 'approveVendor'])->name('super-admin.approve-vendor');
+Route::post('/super-admin/reject-vendor', [VendorManageController::class, 'rejectVendor'])->name('super-admin.reject-vendor');
+
 
 Route::get('/wishlist', function () {
     return Inertia::render('wishlist');
-})->name('wishlist');
+})->name('wishlist.page');
 
 Route::get('/cart', function () {
     return Inertia::render('cart');
-})->name('cart');
+})->name('cart.page');
 
 Route::get('/billing', function () {
     return Inertia::render('billing');
-})->name('billing');
+})->name('billing.page');
 
 Route::get('/product-show', function () {
     return Inertia::render('product-show');
-})->name('product-show');
+})->name('product-show.page');
 
 Route::get('/account/settings', function () {
     return Inertia::render('account/settings');
-})->name('settings');
+})->name('settings.page');
 
 Route::get('/account/profile', function () {
     return Inertia::render('account/profile');
-})->name('profile');
+})->name('profile.page');
 
 Route::get('/account/addresses', function () {
     return Inertia::render('account/address-book');
-})->name('addresses');
+})->name('addresses.page');
 
 Route::get('/account/payment-options', function () {
     return Inertia::render('account/payment-options');
-})->name('payment-options');
+})->name('payment-options.page');
 
 Route::get('/account/orders', function () {
     return Inertia::render('account/orders');
-})->name('orders');
+})->name('orders.page');
 
 Route::get('/account/returns', function () {
     return Inertia::render('account/returns');
-})->name('returns');
+})->name('returns.page');
 
 Route::get('/account/wishlists', function () {
     return Inertia::render('account/wishlists');
-})->name('wishlists');
+})->name('wishlists.page');
 
 Route::get('/account/privacy', function () {
     return Inertia::render('account/privacy');
-})->name('privacy');
+})->name('privacy.page');
 
 Route::get('/account/notifications', function () {
     return Inertia::render('account/notifications');
-})->name('notifications');
+})->name('notifications.page');
 
 Route::get('/account/cancellations', function () {
     return Inertia::render('account/cancellations');
-})->name('cancellations');
+})->name('cancellations.page');
 
 Route::get('/account/help-center', function () {
     return Inertia::render('account/help-center');
-})->name('help-center');
-
-// super-admin
-
-Route::get('/super-admin/dashboard', function () {
-    return Inertia::render('super-admin/dashboard');
-})->name('super-admin.dashboard');
-
-Route::get('/super-admin/vendors', function () {
-    return Inertia::render('super-admin/vendors');
-})->name('super-admin.vendors');
-
-Route::get('/super-admin/users', function () {
-    return Inertia::render('super-admin/users');
-})->name('super-admin.users');
-
-Route::get('/super-admin/orders', function () {
-    return Inertia::render('super-admin/orders');
-})->name('super-admin.orders');
-
-Route::get('/super-admin/categories', function () {
-    return Inertia::render('super-admin/categories');
-})->name('super-admin.categories');
-
-Route::get('/super-admin/products', function () {
-    return Inertia::render('super-admin/products');
-})->name('super-admin.products');
-
-Route::get('/super-admin/marketing', function () {
-    return Inertia::render('super-admin/marketing');
-})->name('super-admin.marketing');
-
-Route::get('/super-admin/analytics', function () {
-    return Inertia::render('super-admin/analytics');
-})->name('super-admin.analytics');
-
-Route::get('/super-admin/settings', function () {
-    return Inertia::render('super-admin/settings');
-})->name('super-admin.settings');
+})->name('help-center.page');
 
 
 // vendor-admin

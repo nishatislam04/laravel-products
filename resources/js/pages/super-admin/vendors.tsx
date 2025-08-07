@@ -23,7 +23,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import AdminLayout from "@/layouts/admin-layout";
+import { router } from "@inertiajs/react";
 import {
+  Check,
   ChevronLeft,
   ChevronRight,
   Edit,
@@ -35,56 +37,18 @@ import {
   Search,
   Store,
   Trash2,
+  X,
 } from "lucide-react";
 import React, { useState } from "react";
 
-// Mock vendor data
-const vendors = [
-  {
-    id: 1,
-    name: "TechGear Solutions",
-    email: "contact@techgear.com",
-    phone: "+1 (555) 123-4567",
-    status: "Active",
-    products: 45,
-    revenue: "$12,450",
-    joinDate: "2024-01-15",
-    avatar: "/images/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: 2,
-    name: "Fashion Forward",
-    email: "hello@fashionforward.com",
-    phone: "+1 (555) 234-5678",
-    status: "Active",
-    products: 78,
-    revenue: "$8,920",
-    joinDate: "2024-02-20",
-    avatar: "/images/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: 3,
-    name: "Home Essentials",
-    email: "info@homeessentials.com",
-    phone: "+1 (555) 345-6789",
-    status: "Pending",
-    products: 23,
-    revenue: "$3,450",
-    joinDate: "2024-03-10",
-    avatar: "/images/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: 4,
-    name: "Sports Central",
-    email: "sales@sportscentral.com",
-    phone: "+1 (555) 456-7890",
-    status: "Inactive",
-    products: 12,
-    revenue: "$1,200",
-    joinDate: "2024-01-05",
-    avatar: "/images/placeholder.svg?height=40&width=40",
-  },
-];
+interface VendorType {
+  id: number;
+  store_name: string;
+  email: string;
+  phone: string;
+  status: string;
+  logo: string;
+}
 
 const vendorStats = [
   {
@@ -113,12 +77,12 @@ const vendorStats = [
   },
 ];
 
-export default function Vendors() {
+export default function Vendors({ vendors }: { vendors: VendorType[] }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
+    store_name: "",
     email: "",
     phone: "",
     address: "",
@@ -127,8 +91,8 @@ export default function Vendors() {
   });
 
   const filteredVendors = vendors.filter(
-    (vendor) =>
-      vendor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (vendor: VendorType) =>
+      vendor.store_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       vendor.email.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
@@ -147,13 +111,23 @@ export default function Vendors() {
     console.log("Creating vendor:", formData);
     setIsDialogOpen(false);
     setFormData({
-      name: "",
+      store_name: "",
       email: "",
       phone: "",
       address: "",
       description: "",
       status: "Pending",
     });
+  };
+
+  const handleApproveVendor = (vendorId: number) => {
+    console.log("Approving vendor:", vendorId);
+    router.post(route("super-admin.approve-vendor", { vendorId }));
+  };
+
+  const handleRejectVendor = (vendorId: number) => {
+    console.log("Rejecting vendor:", vendorId);
+    router.post(route("super-admin.reject-vendor", { vendorId }));
   };
 
   return (
@@ -182,13 +156,13 @@ export default function Vendors() {
               <form onSubmit={handleSubmit}>
                 <div className="grid gap-4 py-4">
                   <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="name" className="text-right">
-                      Name
+                    <Label htmlFor="store_name" className="text-right">
+                      Store Name
                     </Label>
                     <Input
-                      id="name"
-                      value={formData.name}
-                      onChange={(e) => handleInputChange("name", e.target.value)}
+                      id="store_name"
+                      value={formData.store_name}
+                      onChange={(e) => handleInputChange("store_name", e.target.value)}
                       className="col-span-3"
                       required
                     />
@@ -304,7 +278,7 @@ export default function Vendors() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Vendor</TableHead>
+                  <TableHead>Store Name</TableHead>
                   <TableHead>Contact</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Products</TableHead>
@@ -314,21 +288,21 @@ export default function Vendors() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {paginatedVendors.map((vendor) => (
+                {paginatedVendors.map((vendor: VendorType) => (
                   <TableRow key={vendor.id}>
                     <TableCell>
                       <div className="flex items-center space-x-3">
                         <Avatar>
-                          <AvatarImage src={vendor.avatar || "/images/placeholder.svg"} />
+                          <AvatarImage src={vendor.logo || "/images/placeholder.svg"} />
                           <AvatarFallback>
-                            {vendor.name
+                            {vendor.store_name
                               .split(" ")
-                              .map((n) => n[0])
+                              .map((n: any) => n[0])
                               .join("")}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <div className="font-medium">{vendor.name}</div>
+                          <div className="font-medium">{vendor.store_name}</div>
                           <div className="text-sm text-muted-foreground">ID: {vendor.id}</div>
                         </div>
                       </div>
@@ -341,7 +315,7 @@ export default function Vendors() {
                         </div>
                         <div className="flex items-center text-sm text-muted-foreground">
                           <Phone className="mr-1 h-3 w-3" />
-                          {vendor.phone}
+                          {vendor.phone || "N/A"}
                         </div>
                       </div>
                     </TableCell>
@@ -358,9 +332,9 @@ export default function Vendors() {
                         {vendor.status}
                       </Badge>
                     </TableCell>
-                    <TableCell>{vendor.products}</TableCell>
-                    <TableCell className="font-medium">{vendor.revenue}</TableCell>
-                    <TableCell>{vendor.joinDate}</TableCell>
+                    <TableCell>N/A</TableCell>
+                    <TableCell>N/A</TableCell>
+                    <TableCell>N/A</TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -369,6 +343,14 @@ export default function Vendors() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => handleApproveVendor(vendor.id)}>
+                            <Check className="mr-2 h-4 w-4" />
+                            Approve
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleRejectVendor(vendor.id)}>
+                            <X className="mr-2 h-4 w-4" />
+                            Reject
+                          </DropdownMenuItem>
                           <DropdownMenuItem>
                             <Eye className="mr-2 h-4 w-4" />
                             View Details
