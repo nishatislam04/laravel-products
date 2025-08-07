@@ -82,3 +82,41 @@ Route::get('/account/cancellations', function () {
 Route::get('/account/help-center', function () {
     return Inertia::render('account/help-center');
 })->name('help-center');
+
+// super-admin
+
+Route::get('/super-admin/dashboard', function () {
+    return Inertia::render('super-admin/dashboard');
+})->name('super-admin.dashboard');
+
+Route::get('/super-admin/vendors', function () {
+    return Inertia::render('super-admin/vendors');
+})->name('super-admin.vendors');
+
+Route::get('/super-admin/users', function () {
+    return Inertia::render('super-admin/users');
+})->name('super-admin.users');
+
+Route::get('/super-admin/orders', function () {
+    return Inertia::render('super-admin/orders');
+})->name('super-admin.orders');
+
+Route::get('/super-admin/categories', function () {
+    return Inertia::render('super-admin/categories');
+})->name('super-admin.categories');
+
+Route::get('/super-admin/products', function () {
+    return Inertia::render('super-admin/products');
+})->name('super-admin.products');
+
+Route::get('/super-admin/marketing', function () {
+    return Inertia::render('super-admin/marketing');
+})->name('super-admin.marketing');
+
+Route::get('/super-admin/analytics', function () {
+    return Inertia::render('super-admin/analytics');
+})->name('super-admin.analytics');
+
+Route::get('/super-admin/settings', function () {
+    return Inertia::render('super-admin/settings');
+})->name('super-admin.settings');
