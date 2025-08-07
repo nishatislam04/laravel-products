@@ -42,9 +42,7 @@ export default function Header({ className = "" }: HeaderProps) {
   };
 
   const handleLogout = () => {
-    console.log("Logout user");
-    // setIsAuthenticated(false);
-    // Handle logout logic
+    router.post(route("signout"));
   };
   return (
     <header className={`mx-20 border-b-2 border-gray-200 bg-white pt-4 ${className}`}>
@@ -170,7 +168,7 @@ export default function Header({ className = "" }: HeaderProps) {
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
                       <LogOut className="mr-3 h-4 w-4" />
-                      <span>Logout</span>
+                      <span>Sign Out</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

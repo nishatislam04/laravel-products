@@ -7,19 +7,25 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class AuthController extends Controller {
+
     public function showSigninForm() {
         return Inertia::render('auth/sign-in');
     }
 
+    /**
+     * Sign in to the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function signin(Request $request) {
         $credentials = $request->only('email', 'password');
 
-        if (Auth::attempt($credentials)) {
-            return redirect()->intended('home');
+        if (Auth::attempt($credentials, true)) {
+            return redirect()->route('home');
         }
 
         return back()->withErrors([
@@ -31,21 +37,36 @@ class AuthController extends Controller {
         return Inertia::render('auth/sign-up');
     }
 
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function signup(Request $request) {
         $credentials = $request->only('name', 'email', 'password');
 
 
-        $user = User::create([
-            'name' => $credentials['name'],
-            'email' => $credentials['email'],
-            'password' => Hash::make($credentials['password']),
-        ]);
+        $user = $this->createUserForSignup($credentials);
 
-        Log::info($user);
 
         Auth::login($user, true);
 
         return redirect()->route('home');
+    }
+
+    /**
+     * Create a new user instance after a valid registration.
+     *
+     * @param  array  $credentials
+     * @return \App\Models\User
+     */
+    public function createUserForSignup($credentials) {
+        return User::create([
+            'name' => $credentials['name'],
+            'email' => $credentials['email'],
+            'password' => Hash::make($credentials['password']),
+        ]);
     }
 
     public function signout(Request $request) {
@@ -55,6 +76,6 @@ class AuthController extends Controller {
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect()->route('home');
     }
 }

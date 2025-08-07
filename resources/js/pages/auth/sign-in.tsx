@@ -3,30 +3,21 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Head, Link } from "@inertiajs/react";
-import { useState } from "react";
+import { Head, Link, useForm } from "@inertiajs/react";
 import Footer from "../../components/footer";
 import Header from "../../components/header";
 
 export default function SignIn() {
-  const [formData, setFormData] = useState({
+  const { data, setData, post, processing, errors } = useForm({
+    name: "",
     email: "",
     password: "",
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log("Sign in form submitted:", formData);
-    // Handle form submission logic here
-  };
+    post(route("signin"));
+  }
 
   const handleForgotPassword = () => {
     console.log("Forgot password clicked");
@@ -65,7 +56,7 @@ export default function SignIn() {
                 </div>
 
                 {/* Sign In Form */}
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={submit} className="space-y-6">
                   {/* Email Field */}
                   <div className="space-y-2">
                     <Label htmlFor="email" className="sr-only">
@@ -76,11 +67,12 @@ export default function SignIn() {
                       name="email"
                       type="email"
                       placeholder="Email Address"
-                      value={formData.email}
-                      onChange={handleInputChange}
+                      value={data.email}
+                      onChange={(e) => setData("email", e.target.value)}
                       className="w-full rounded-none border-0 border-b border-gray-300 bg-transparent px-0 py-3 transition-all duration-500 placeholder:text-gray-500 focus-visible:border-b-4 focus-visible:ring-0"
                       required
                     />
+                    {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
                   </div>
 
                   {/* Password Field */}
@@ -93,11 +85,12 @@ export default function SignIn() {
                       name="password"
                       type="password"
                       placeholder="Password"
-                      value={formData.password}
-                      onChange={handleInputChange}
+                      value={data.password}
+                      onChange={(e) => setData("password", e.target.value)}
                       className="w-full rounded-none border-0 border-b border-gray-300 bg-transparent px-0 py-3 transition-all duration-500 placeholder:text-gray-500 focus-visible:border-b-4 focus-visible:ring-0"
                       required
                     />
+                    {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password}</p>}
                   </div>
 
                   {/* Sign In Button and Forgot Password */}
@@ -105,6 +98,7 @@ export default function SignIn() {
                     <Button
                       size="sm"
                       type="submit"
+                      disabled={processing}
                       className="rounded-md bg-red-500 px-10 py-6 font-medium text-white transition-colors hover:bg-red-600"
                     >
                       Sign In

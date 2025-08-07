@@ -4,17 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Head, Link, useForm } from "@inertiajs/react";
-import { useState } from "react";
 import Footer from "../../components/footer";
 import Header from "../../components/header";
 
 export default function SignUp() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
-
   const { data, setData, post, processing, errors } = useForm({
     name: "",
     email: "",
@@ -26,14 +19,6 @@ export default function SignUp() {
     post(route("signup"));
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
   const handleGoogleSignUp = () => {
     console.log("Sign up with Google clicked");
     // Handle Google sign up logic here
@@ -43,10 +28,8 @@ export default function SignUp() {
     <div className="flex min-h-screen flex-col bg-white">
       <Head title="Sign Up - Exclusive" />
 
-      {/* Header */}
       <Header />
 
-      {/* Main Content */}
       <main className="flex flex-1 items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
         <div className="w-full max-w-7xl">
           <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-16">
@@ -61,18 +44,14 @@ export default function SignUp() {
               </div>
             </div>
 
-            {/* Right Side - Sign Up Form */}
             <div className="mx-auto w-full max-w-md lg:mx-0">
               <div className="space-y-6">
-                {/* Header */}
                 <div className="space-y-2">
                   <h1 className="text-3xl font-bold text-gray-900">Create an account</h1>
                   <p className="text-gray-600">Enter your details below</p>
                 </div>
 
-                {/* Sign Up Form */}
                 <form onSubmit={submit} className="space-y-6">
-                  {/* Name Field */}
                   <div className="space-y-2">
                     <Label htmlFor="name" className="sr-only">
                       Name
@@ -87,9 +66,9 @@ export default function SignUp() {
                       className="w-full rounded-none border-0 border-b border-gray-300 bg-transparent px-0 py-3 transition-all duration-500 placeholder:text-gray-500 focus-visible:border-b-4 focus-visible:ring-0"
                       required
                     />
+                    {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
                   </div>
 
-                  {/* Email Field */}
                   <div className="space-y-2">
                     <Label htmlFor="email" className="sr-only">
                       Email Address
@@ -104,9 +83,9 @@ export default function SignUp() {
                       className="w-full rounded-none border-0 border-b border-gray-300 bg-transparent px-0 py-3 transition-all duration-500 placeholder:text-gray-500 focus-visible:border-b-4 focus-visible:ring-0"
                       required
                     />
+                    {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
                   </div>
 
-                  {/* Password Field */}
                   <div className="space-y-2">
                     <Label htmlFor="password" className="sr-only">
                       Password
@@ -121,18 +100,18 @@ export default function SignUp() {
                       className="w-full rounded-none border-0 border-b border-gray-300 bg-transparent px-0 py-3 transition-all duration-500 placeholder:text-gray-500 focus-visible:border-b-4 focus-visible:ring-0"
                       required
                     />
+                    {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password}</p>}
                   </div>
 
-                  {/* Create Account Button */}
                   <Button
                     size="lg"
                     type="submit"
+                    disabled={processing}
                     className="w-full rounded-md bg-red-500 px-4 py-3 font-medium text-white transition-colors hover:bg-red-600"
                   >
                     Create Account
                   </Button>
 
-                  {/* Google Sign Up Button */}
                   <Button
                     size="lg"
                     type="button"
@@ -161,7 +140,6 @@ export default function SignUp() {
                     <span>Sign up with Google</span>
                   </Button>
 
-                  {/* Sign In Link */}
                   <div className="text-center">
                     <p className="text-sm leading-loose text-gray-600">
                       Already have account?{" "}
@@ -180,7 +158,6 @@ export default function SignUp() {
         </div>
       </main>
 
-      {/* Footer */}
       <Footer />
     </div>
   );
