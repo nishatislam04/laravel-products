@@ -7,8 +7,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Link } from "@inertiajs/react";
-import { Heart, LogOut, Search, ShoppingBag, ShoppingCart, Star, User, X } from "lucide-react";
+import { Link, router } from "@inertiajs/react";
+import { Bell, Heart, LogOut, Search, ShoppingBag, ShoppingCart, User, X } from "lucide-react";
 
 interface HeaderProps {
   className?: string;
@@ -20,21 +20,25 @@ export default function Header({ className = "" }: HeaderProps) {
   const handleManageAccount = () => {
     console.log("Navigate to manage account");
     // Handle navigation to account management page
+    router.visit("/account/settings");
   };
 
   const handleMyOrders = () => {
     console.log("Navigate to my orders");
     // Handle navigation to orders page
+    router.visit("/account/orders");
   };
 
   const handleMyCancellations = () => {
     console.log("Navigate to my cancellations");
     // Handle navigation to cancellations page
+    router.visit("/account/cancellations");
   };
 
   const handleMyReviews = () => {
     console.log("Navigate to my reviews");
     // Handle navigation to reviews page
+    router.visit("/account/reviews");
   };
 
   const handleLogout = () => {
@@ -147,10 +151,14 @@ export default function Header({ className = "" }: HeaderProps) {
                       <span className="sr-only">Profile Menu</span>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="mt-2 w-56 space-y-1.5">
+                  <DropdownMenuContent align="end" className="mt-2 w-56 space-y-1.5 py-2">
                     <DropdownMenuItem onClick={handleManageAccount} className="cursor-pointer">
                       <User className="mr-3 h-4 w-4" />
                       <span>Manage My Account</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleMyReviews} className="cursor-pointer">
+                      <Bell className="mr-3 h-4 w-4" />
+                      <span>My Notifications</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleMyOrders} className="cursor-pointer">
                       <ShoppingBag className="mr-3 h-4 w-4" />
@@ -159,10 +167,6 @@ export default function Header({ className = "" }: HeaderProps) {
                     <DropdownMenuItem onClick={handleMyCancellations} className="cursor-pointer">
                       <X className="mr-3 h-4 w-4" />
                       <span>My Cancellations</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleMyReviews} className="cursor-pointer">
-                      <Star className="mr-3 h-4 w-4" />
-                      <span>My Reviews</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
                       <LogOut className="mr-3 h-4 w-4" />
