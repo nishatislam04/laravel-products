@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -46,9 +47,9 @@ class AuthController extends Controller {
     public function signup(Request $request) {
         $credentials = $request->only('name', 'email', 'password');
 
-
         $user = $this->createUserForSignup($credentials);
 
+        $user->roles()->attach(Role::where('name', 'user')->first());
 
         Auth::login($user, true);
 
