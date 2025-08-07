@@ -30,18 +30,18 @@ import {
   BarChart3,
   Bell,
   Package,
+  Plus,
+  RefreshCw,
   Search,
   Settings,
   ShoppingCart,
-  Store,
-  Tag,
-  TrendingUp,
+  Star,
   User,
   Users,
 } from "lucide-react";
 import React from "react";
 
-interface AdminLayoutProps {
+interface VendorLayoutProps {
   children: React.ReactNode;
   title?: string;
 }
@@ -49,53 +49,50 @@ interface AdminLayoutProps {
 const navigationItems = [
   {
     title: "Overview",
-    url: "/super-admin/dashboard",
+    url: "/vendor-admin/dashboard",
     icon: BarChart3,
   },
   {
-    title: "Manage Vendors",
-    url: "/super-admin/vendors",
-    icon: Store,
-  },
-  {
-    title: "Manage Users",
-    url: "/super-admin/users",
+    title: "Add Staff",
+    url: "/vendor-admin/staffs",
     icon: Users,
   },
   {
-    title: "Orders",
-    url: "/super-admin/orders",
-    icon: ShoppingCart,
-    badge: "12",
-  },
-  {
-    title: "Categories",
-    url: "/super-admin/categories",
-    icon: Tag,
-  },
-  {
-    title: "Products",
-    url: "/super-admin/products",
+    title: "Product Management",
+    url: "/vendor-admin/products",
     icon: Package,
+    badge: "45",
   },
   {
-    title: "Marketing",
-    url: "/super-admin/marketing",
-    icon: TrendingUp,
+    title: "Order Management",
+    url: "/vendor-admin/orders",
+    icon: ShoppingCart,
+    badge: "8",
+  },
+  {
+    title: "Refund Requests",
+    url: "/vendor-admin/refunds",
+    icon: RefreshCw,
+    badge: "3",
   },
   {
     title: "Analytics",
-    url: "/super-admin/analytics",
+    url: "/vendor-admin/analytics",
     icon: BarChart3,
   },
   {
+    title: "Reviews & Ratings",
+    url: "/vendor-admin/reviews",
+    icon: Star,
+  },
+  {
     title: "Settings",
-    url: "/super-admin/settings",
+    url: "/vendor-admin/settings",
     icon: Settings,
   },
 ];
 
-export default function AdminLayout({ children, title = "Admin Panel" }: AdminLayoutProps) {
+export default function VendorLayout({ children, title = "Vendor Panel" }: VendorLayoutProps) {
   return (
     <>
       <Head title={title} />
@@ -104,14 +101,14 @@ export default function AdminLayout({ children, title = "Admin Panel" }: AdminLa
           <SidebarHeader>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton className="space-x-2" size="lg" asChild>
-                  <Link href="/super-admin/dashboard">
+                <SidebarMenuButton size="lg" asChild>
+                  <Link className="space-x-2" href="/vendor-admin/dashboard">
                     <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                      <Store className="size-4" />
+                      <Package className="size-4" />
                     </div>
                     <div className="flex flex-col gap-0.5 leading-none">
-                      <span className="font-semibold">ECommerce</span>
-                      <span className="text-xs">Super Admin</span>
+                      <span className="font-semibold">TechGear Store</span>
+                      <span className="text-xs">Vendor Dashboard</span>
                     </div>
                   </Link>
                 </SidebarMenuButton>
@@ -121,7 +118,7 @@ export default function AdminLayout({ children, title = "Admin Panel" }: AdminLa
 
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel className="mt-3 pl-2">Main Navigation</SidebarGroupLabel>
+              <SidebarGroupLabel className="mt-3 pl-2">Vendor Management</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu className="space-y-2 pl-2">
                   {navigationItems.map((item) => (
@@ -152,13 +149,13 @@ export default function AdminLayout({ children, title = "Admin Panel" }: AdminLa
                     <SidebarMenuButton>
                       <Avatar className="size-6">
                         <AvatarImage src="/images/placeholder.svg?height=32&width=32" />
-                        <AvatarFallback>SA</AvatarFallback>
+                        <AvatarFallback>TG</AvatarFallback>
                       </Avatar>
-                      <span>Super Admin</span>
+                      <span>TechGear Solutions</span>
                     </SidebarMenuButton>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent side="bottom" className="mt-auto">
-                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
+                    <DropdownMenuLabel>My Store</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>
                       <User className="mr-2 h-4 w-4" />
@@ -166,7 +163,7 @@ export default function AdminLayout({ children, title = "Admin Panel" }: AdminLa
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       <Settings className="mr-2 h-4 w-4" />
-                      Settings
+                      Store Settings
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>Log out</DropdownMenuItem>
@@ -179,12 +176,16 @@ export default function AdminLayout({ children, title = "Admin Panel" }: AdminLa
         </Sidebar>
 
         <SidebarInset>
-          <header className="flex h-15 w-full shrink-0 items-center justify-between gap-2 border-b px-4">
+          <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
             <div className="flex w-full items-center justify-end gap-2">
               <div className="relative max-w-md flex-1">
                 <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
                 <Input type="search" placeholder="Search products, orders..." className="pl-8" />
               </div>
+              <Button variant="outline" size="sm">
+                <Plus className="mr-2 h-4 w-4" />
+                Add Product
+              </Button>
               <Button variant="outline" size="icon">
                 <Bell className="h-4 w-4" />
               </Button>

@@ -120,3 +120,37 @@ Route::get('/super-admin/analytics', function () {
 Route::get('/super-admin/settings', function () {
     return Inertia::render('super-admin/settings');
 })->name('super-admin.settings');
+
+
+// vendor-admin
+Route::get('/vendor-admin/dashboard', function () {
+    return Inertia::render('vendor-admin/dashboard');
+})->name('vendor-admin.dashboard');
+
+Route::get('/vendor-admin/staffs', function () {
+    return Inertia::render('vendor-admin/staffs');
+})->name('vendor-admin.staffs');
+
+Route::get('/vendor-admin/products', function () {
+    return Inertia::render('vendor-admin/products');
+})->name('vendor-admin.products');
+
+Route::get('/vendor-admin/orders', function () {
+    return Inertia::render('vendor-admin/orders');
+})->name('vendor-admin.orders');
+
+Route::get('/vendor-admin/refunds', function () {
+    return Inertia::render('vendor-admin/refunds');
+})->name('vendor-admin.refunds');
+
+Route::get('/vendor-admin/analytics', function () {
+    return Inertia::render('vendor-admin/analytics');
+})->name('vendor-admin.analytics');
+
+Route::get('/vendor-admin/reviews', function () {
+    return Inertia::render('vendor-admin/reviews');
+})->name('vendor-admin.reviews');
+
+Route::get('/vendor-admin/settings', function () {
+    return Inertia::render('vendor-admin/settings');
+})->name('vendor-admin.settings');
