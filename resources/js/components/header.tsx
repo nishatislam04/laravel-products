@@ -13,7 +13,7 @@ import { Bell, Heart, LogOut, Search, ShoppingBag, ShoppingCart, UserIcon, X } f
 
 interface HeaderProps {
   className?: string;
-  user: User;
+  user?: User;
 }
 
 // ! add active nav link design

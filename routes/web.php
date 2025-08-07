@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Page\PublicPageController;
+use App\Http\Controllers\Vendor\VendorApplyController;
 
 Route::get('/', [PublicPageController::class, 'index'])->name('home');
 
@@ -15,6 +16,9 @@ Route::post('/signout', [AuthController::class, 'signout'])->name('signout');
 
 Route::get('/contact', [PublicPageController::class, 'contact'])->name('contact');
 Route::get('/about', [PublicPageController::class, 'about'])->name('about');
+
+Route::get('/vendor-apply', [VendorApplyController::class, 'index'])->name('vendor.apply');
+Route::post('/vendor-apply', [VendorApplyController::class, 'store'])->name('vendor.apply.store');
 
 Route::get('/wishlist', function () {
     return Inertia::render('wishlist');
