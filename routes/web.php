@@ -2,26 +2,19 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\Auth\AuthController;
 
-Route::get('/', function () {
-    return Inertia::render('welcome');
-})->name('home');
+Route::inertia('/', 'welcome')->name('home');
 
-Route::get('/signup', function () {
-    return Inertia::render('sign-up');
-})->name('signup');
+Route::get('/signin', [AuthController::class, 'showSigninForm'])->name('signin.page');
+Route::get('/signup', [AuthController::class, 'showSignupForm'])->name('signup.page');
+Route::post('/signin', [AuthController::class, 'signin'])->name('signin');
+Route::post('/signup', [AuthController::class, 'signup'])->name('signup');
+Route::post('/signout', [AuthController::class, 'signout'])->name('signout');
 
-Route::get('/signin', function () {
-    return Inertia::render('sign-in');
-})->name('signin');
+Route::inertia('/contact', 'contact')->name('contact');
 
-Route::get('/contact', function () {
-    return Inertia::render('contact');
-})->name('contact');
-
-Route::get('/about', function () {
-    return Inertia::render('about');
-})->name('about');
+Route::inertia('/about', 'about')->name('about');
 
 Route::get('/wishlist', function () {
     return Inertia::render('wishlist');

@@ -3,10 +3,10 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, useForm } from "@inertiajs/react";
 import { useState } from "react";
-import Footer from "../components/footer";
-import Header from "../components/header";
+import Footer from "../../components/footer";
+import Header from "../../components/header";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -15,18 +15,23 @@ export default function SignUp() {
     password: "",
   });
 
+  const { data, setData, post, processing, errors } = useForm({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  function submit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    post(route("signup"));
+  }
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Sign up form submitted:", formData);
-    // Handle form submission logic here
   };
 
   const handleGoogleSignUp = () => {
@@ -66,7 +71,7 @@ export default function SignUp() {
                 </div>
 
                 {/* Sign Up Form */}
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={submit} className="space-y-6">
                   {/* Name Field */}
                   <div className="space-y-2">
                     <Label htmlFor="name" className="sr-only">
@@ -77,8 +82,8 @@ export default function SignUp() {
                       name="name"
                       type="text"
                       placeholder="Name"
-                      value={formData.name}
-                      onChange={handleInputChange}
+                      value={data.name}
+                      onChange={(e) => setData("name", e.target.value)}
                       className="w-full rounded-none border-0 border-b border-gray-300 bg-transparent px-0 py-3 transition-all duration-500 placeholder:text-gray-500 focus-visible:border-b-4 focus-visible:ring-0"
                       required
                     />
@@ -87,15 +92,15 @@ export default function SignUp() {
                   {/* Email Field */}
                   <div className="space-y-2">
                     <Label htmlFor="email" className="sr-only">
-                      Email or Phone Number
+                      Email Address
                     </Label>
                     <Input
                       id="email"
                       name="email"
                       type="email"
-                      placeholder="Email or Phone Number"
-                      value={formData.email}
-                      onChange={handleInputChange}
+                      placeholder="Email Address"
+                      value={data.email}
+                      onChange={(e) => setData("email", e.target.value)}
                       className="w-full rounded-none border-0 border-b border-gray-300 bg-transparent px-0 py-3 transition-all duration-500 placeholder:text-gray-500 focus-visible:border-b-4 focus-visible:ring-0"
                       required
                     />
@@ -111,8 +116,8 @@ export default function SignUp() {
                       name="password"
                       type="password"
                       placeholder="Password"
-                      value={formData.password}
-                      onChange={handleInputChange}
+                      value={data.password}
+                      onChange={(e) => setData("password", e.target.value)}
                       className="w-full rounded-none border-0 border-b border-gray-300 bg-transparent px-0 py-3 transition-all duration-500 placeholder:text-gray-500 focus-visible:border-b-4 focus-visible:ring-0"
                       required
                     />
@@ -161,10 +166,10 @@ export default function SignUp() {
                     <p className="text-sm leading-loose text-gray-600">
                       Already have account?{" "}
                       <Link
-                        href="/signin"
+                        href={route("signin.page")}
                         className="font-medium text-gray-900 underline underline-offset-4 hover:text-gray-700"
                       >
-                        Log in
+                        Sign in
                       </Link>
                     </p>
                   </div>

@@ -5,8 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Head, Link } from "@inertiajs/react";
 import { useState } from "react";
-import Footer from "../components/footer";
-import Header from "../components/header";
+import Footer from "../../components/footer";
+import Header from "../../components/header";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({
@@ -60,7 +60,7 @@ export default function SignIn() {
               <div className="space-y-6">
                 {/* Header */}
                 <div className="space-y-2">
-                  <h1 className="text-3xl font-bold text-gray-900">Log in to Exclusive</h1>
+                  <h1 className="text-3xl font-bold text-gray-900">Sign In to Exclusive</h1>
                   <p className="text-gray-600">Enter your details below</p>
                 </div>
 
@@ -69,13 +69,13 @@ export default function SignIn() {
                   {/* Email Field */}
                   <div className="space-y-2">
                     <Label htmlFor="email" className="sr-only">
-                      Email or Phone Number
+                      Email Address
                     </Label>
                     <Input
                       id="email"
                       name="email"
                       type="email"
-                      placeholder="Email or Phone Number"
+                      placeholder="Email Address"
                       value={formData.email}
                       onChange={handleInputChange}
                       className="w-full rounded-none border-0 border-b border-gray-300 bg-transparent px-0 py-3 transition-all duration-500 placeholder:text-gray-500 focus-visible:border-b-4 focus-visible:ring-0"
@@ -107,7 +107,7 @@ export default function SignIn() {
                       type="submit"
                       className="rounded-md bg-red-500 px-10 py-6 font-medium text-white transition-colors hover:bg-red-600"
                     >
-                      Log In
+                      Sign In
                     </Button>
 
                     <Button
@@ -126,7 +126,7 @@ export default function SignIn() {
                   <p className="text-gray-600">
                     Don't have an account?{" "}
                     <Link
-                      href="/signup"
+                      href={route("signup.page")}
                       className="font-medium text-gray-900 underline underline-offset-4 hover:text-gray-700"
                     >
                       Sign up

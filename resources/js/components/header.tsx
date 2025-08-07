@@ -78,7 +78,7 @@ export default function Header({ className = "" }: HeaderProps) {
               About
             </Link>
             <Link
-              href="/signup"
+              href={route("signup.page")}
               className="px-3 py-2 text-sm font-medium text-gray-900 transition-colors hover:text-gray-700"
             >
               Sign Up
