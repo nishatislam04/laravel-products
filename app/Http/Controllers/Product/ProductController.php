@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller {
     public function store(Request $request) {
+        Log::info($request->all());
+
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:products,slug',
@@ -20,7 +23,7 @@ class ProductController extends Controller {
             'sku' => 'required|string|max:255|unique:products,sku',
             'stock' => 'required|numeric',
             'stock_status' => 'required|in:in_stock,out_of_stock,pre_order',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'thumbnail' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'images' => 'nullable|array',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // do we need this?
             'weight' => 'nullable|numeric',

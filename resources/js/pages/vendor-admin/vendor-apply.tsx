@@ -63,7 +63,20 @@ const countries = [
 ];
 
 export default function VendorApply({ user }: { user: User }) {
-  const { data, setData, post, processing, errors, progress } = useForm<VendorApplicationForm>({
+  const {
+    data,
+    setData,
+    post,
+    processing,
+    errors,
+    isDirty,
+    setDefaults,
+    reset,
+    setError,
+    clearErrors,
+    progress,
+    transform,
+  } = useForm<VendorApplicationForm>({
     name: "",
     email: user?.email ?? "",
     password: "",

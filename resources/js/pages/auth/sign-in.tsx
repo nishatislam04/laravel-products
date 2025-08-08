@@ -8,7 +8,20 @@ import Footer from "../../components/footer";
 import Header from "../../components/header";
 
 export default function SignIn() {
-  const { data, setData, post, processing, errors } = useForm({
+  const {
+    data,
+    setData,
+    post,
+    processing,
+    errors,
+    isDirty,
+    setDefaults,
+    reset,
+    setError,
+    clearErrors,
+    progress,
+    transform,
+  } = useForm({
     name: "",
     email: "",
     password: "",

@@ -192,7 +192,6 @@ export default function VendorProducts({
   stockStatusEnum: any;
   warrentTypeEnum: any;
 }) {
-  console.log(stockStatusEnum);
   const [searchTerm, setSearchTerm] = useState("");
   const [openStartDate, setOpenStartDate] = useState(false);
   const [openEndDate, setOpenEndDate] = useState(false);
@@ -209,7 +208,21 @@ export default function VendorProducts({
   const [endDate, setEndDate] = React.useState<Date | undefined>(new Date());
   const [currentPage, setCurrentPage] = useState(1);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { data, setData, post, processing, errors } = useForm<FormProduct>({
+
+  const {
+    data,
+    setData,
+    post,
+    processing,
+    errors,
+    isDirty,
+    setDefaults,
+    reset,
+    setError,
+    clearErrors,
+    progress,
+    transform,
+  } = useForm<FormProduct>({
     name: "",
     slug: "",
     description: "",
@@ -230,7 +243,7 @@ export default function VendorProducts({
     brand: "",
     price: "",
     stock: "",
-    status: "Active",
+    status: "active",
     return_days: "",
     warranty_type: "",
     warranty_period: "",
@@ -238,6 +251,7 @@ export default function VendorProducts({
     meta_description: "",
     tags: "",
   });
+
   // Auto-generate slug from store name
   const handleNameChange = (value: string) => {
     setData("name", value);
@@ -261,10 +275,11 @@ export default function VendorProducts({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    post(route("vendor.products.store"), {
+    console.log(isDirty);
+    post(route("vendor-admin.products.store"), {
       forceFormData: true,
     });
-    setIsDialogOpen(false);
+    // setIsDialogOpen(false);
   };
 
   return (
@@ -303,8 +318,9 @@ export default function VendorProducts({
                         value={data.name}
                         className={errors.name ? "border-red-500" : ""}
                         onChange={(e) => handleNameChange(e.target.value)}
-                        required
+                        // required
                       />
+                      {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
                     </div>
                     <div className="">
                       <Label htmlFor="slug" className="text-right">
@@ -316,8 +332,9 @@ export default function VendorProducts({
                         value={data.slug}
                         className={errors.slug ? "border-red-500" : ""}
                         onChange={(e) => setData("slug", e.target.value)}
-                        required
+                        // required
                       />
+                      {errors.slug && <p className="text-sm text-red-500">{errors.slug}</p>}
                     </div>
                     <div className="">
                       <Label htmlFor="description" className="text-right">
@@ -330,12 +347,12 @@ export default function VendorProducts({
                         className={errors.description ? "border-red-500" : ""}
                         onChange={(e) => setData("description", e.target.value)}
                       />
+                      {errors.description && <p className="text-sm text-red-500">{errors.description}</p>}
                     </div>
                     {/* catgory & brand */}
-                    {/* catgory required */}
                     <div className="flex justify-between">
                       <div className="flex w-1/2 flex-col space-y-1">
-                        <Label htmlFor="category">Category</Label>
+                        <Label htmlFor="category">Category*</Label>
                         <Popover open={openCategory} onOpenChange={setOpenCategory}>
                           <PopoverTrigger asChild>
                             <Button
@@ -350,9 +367,9 @@ export default function VendorProducts({
                           </PopoverTrigger>
                           <PopoverContent className="w-[200px] p-0">
                             <Command>
-                              <CommandInput placeholder="Search framework..." className="h-9" />
+                              <CommandInput placeholder="Search category..." className="h-9" />
                               <CommandList>
-                                <CommandEmpty>No framework found.</CommandEmpty>
+                                <CommandEmpty>No category found.</CommandEmpty>
                                 <CommandGroup>
                                   {categories.map((category: any) => (
                                     <CommandItem
@@ -378,6 +395,7 @@ export default function VendorProducts({
                             </Command>
                           </PopoverContent>
                         </Popover>
+                        {errors.category_id && <p className="text-sm text-red-500">{errors.category_id}</p>}
                       </div>
 
                       {/* brand optional */}
@@ -397,9 +415,9 @@ export default function VendorProducts({
                           </PopoverTrigger>
                           <PopoverContent className="w-[200px] p-0">
                             <Command>
-                              <CommandInput placeholder="Search framework..." className="h-9" />
+                              <CommandInput placeholder="Search brand..." className="h-9" />
                               <CommandList>
-                                <CommandEmpty>No framework found.</CommandEmpty>
+                                <CommandEmpty>No brand found.</CommandEmpty>
                                 <CommandGroup>
                                   {brands.map((brand: any) => (
                                     <CommandItem
@@ -425,6 +443,7 @@ export default function VendorProducts({
                             </Command>
                           </PopoverContent>
                         </Popover>
+                        {errors.brand && <p className="text-sm text-red-500">{errors.brand}</p>}
                       </div>
                     </div>
                   </div>
@@ -443,8 +462,9 @@ export default function VendorProducts({
                         value={data.price}
                         className={errors.price ? "border-red-500" : ""}
                         onChange={(e) => setData("price", e.target.value)}
-                        required
+                        // required
                       />
+                      {errors.price && <p className="text-sm text-red-500">{errors.price}</p>}
                     </div>
                     <div className="">
                       <Label htmlFor="price" className="text-right">
@@ -458,6 +478,7 @@ export default function VendorProducts({
                         value={data.sale_price}
                         onChange={(e) => setData("sale_price", e.target.value)}
                       />
+                      {errors.sale_price && <p className="text-sm text-red-500">{errors.sale_price}</p>}
                     </div>
                     <div className="my-4">
                       <Label htmlFor="sale_start" className="text-right">
@@ -482,6 +503,7 @@ export default function VendorProducts({
                           />
                         </PopoverContent>
                       </Popover>
+                      {errors.sale_start && <p className="text-sm text-red-500">{errors.sale_start}</p>}
                     </div>
                     <div className="my-4">
                       <Label htmlFor="sale_end" className="text-right">
@@ -506,6 +528,7 @@ export default function VendorProducts({
                           />
                         </PopoverContent>
                       </Popover>
+                      {errors.sale_end && <p className="text-sm text-red-500">{errors.sale_end}</p>}
                     </div>
                   </div>
 
@@ -522,30 +545,32 @@ export default function VendorProducts({
                         value={data.sku}
                         className={errors.sku ? "border-red-500" : ""}
                         onChange={(e) => setData("sku", e.target.value)}
-                        required
+                        // required
                       />
+                      {errors.sku && <p className="text-sm text-red-500">{errors.sku}</p>}
                     </div>
                     <div className="">
-                      <Label htmlFor="stock_quantity" className="text-right">
+                      <Label htmlFor="stock" className="text-right">
                         Stock Quantity*
                       </Label>
                       <Input
-                        id="stock_quantity"
+                        id="stock"
                         type="number"
-                        value={data.stock_quantity}
-                        className={errors.stock_quantity ? "border-red-500" : ""}
-                        onChange={(e) => setData("stock_quantity", e.target.value)}
-                        required
+                        value={data.stock}
+                        className={errors.stock ? "border-red-500" : ""}
+                        onChange={(e) => setData("stock", e.target.value)}
+                        // required
                       />
+                      {errors.stock && <p className="text-sm text-red-500">{errors.stock}</p>}
                     </div>
                     <div className="">
-                      <Label htmlFor="stock_quantity" className="text-right">
+                      <Label htmlFor="stock_status" className="text-right">
                         Stock Status*
                       </Label>
                       <Select
                         value={data.stock_status}
                         onValueChange={(value) => setData("stock_status", value)}
-                        required
+                        // required
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select stock status" />
@@ -558,6 +583,7 @@ export default function VendorProducts({
                           ))}
                         </SelectContent>
                       </Select>
+                      {errors.stock_status && <p className="text-sm text-red-500">{errors.stock_status}</p>}
                     </div>
                   </div>
 
@@ -575,8 +601,9 @@ export default function VendorProducts({
                         className={errors.thumbnail ? "border-red-500" : ""}
                         value={data.thumbnail}
                         onChange={(e) => setData("thumbnail", e.target.value)}
-                        required
+                        // required
                       />
+                      {errors.thumbnail && <p className="text-sm text-red-500">{errors.thumbnail}</p>}
                     </div>
                     <div className="">
                       <Label htmlFor="images" className="text-right">
@@ -589,9 +616,9 @@ export default function VendorProducts({
                         className={errors.images ? "border-red-500" : ""}
                         value={data.images}
                         onChange={(e) => setData("images", e.target.value)}
-                        required
                         multiple
                       />
+                      {errors.images && <p className="text-sm text-red-500">{errors.images}</p>}
                     </div>
                   </div>
 
@@ -609,6 +636,7 @@ export default function VendorProducts({
                         value={data.weight}
                         onChange={(e) => setData("weight", e.target.value)}
                       />
+                      {errors.weight && <p className="text-sm text-red-500">{errors.weight}</p>}
                     </div>
                     <div className="">
                       <Label htmlFor="length" className="text-right">
@@ -621,6 +649,7 @@ export default function VendorProducts({
                         value={data.length}
                         onChange={(e) => setData("length", e.target.value)}
                       />
+                      {errors.length && <p className="text-sm text-red-500">{errors.length}</p>}
                     </div>
                     <div className="">
                       <Label htmlFor="width" className="text-right">
@@ -633,6 +662,7 @@ export default function VendorProducts({
                         value={data.width}
                         onChange={(e) => setData("width", e.target.value)}
                       />
+                      {errors.width && <p className="text-sm text-red-500">{errors.width}</p>}
                     </div>
                     <div className="">
                       <Label htmlFor="height" className="text-right">
@@ -645,6 +675,7 @@ export default function VendorProducts({
                         value={data.height}
                         onChange={(e) => setData("height", e.target.value)}
                       />
+                      {errors.height && <p className="text-sm text-red-500">{errors.height}</p>}
                     </div>
                   </div>
 
@@ -662,6 +693,7 @@ export default function VendorProducts({
                         value={data.meta_title}
                         onChange={(e) => setData("meta_title", e.target.value)}
                       />
+                      {errors.meta_title && <p className="text-sm text-red-500">{errors.meta_title}</p>}
                     </div>
                     <div className="">
                       <Label htmlFor="meta_description" className="text-right">
@@ -673,6 +705,7 @@ export default function VendorProducts({
                         value={data.meta_description}
                         onChange={(e) => setData("meta_description", e.target.value)}
                       />
+                      {errors.meta_description && <p className="text-sm text-red-500">{errors.meta_description}</p>}
                     </div>
                     <div className="">
                       <Label htmlFor="tags" className="text-right">
@@ -685,6 +718,7 @@ export default function VendorProducts({
                         value={data.tags}
                         onChange={(e) => setData("tags", e.target.value)}
                       />
+                      {errors.tags && <p className="text-sm text-red-500">{errors.tags}</p>}
                     </div>
                   </div>
 
@@ -701,8 +735,9 @@ export default function VendorProducts({
                         className={errors.return_days ? "border-red-500" : ""}
                         value={data.return_days}
                         onChange={(e) => setData("return_days", e.target.value)}
-                        required
+                        // required
                       />
+                      {errors.return_days && <p className="text-sm text-red-500">{errors.return_days}</p>}
                     </div>
                     <div className="">
                       <Label htmlFor="warranty_type" className="text-right">
@@ -720,6 +755,7 @@ export default function VendorProducts({
                           ))}
                         </SelectContent>
                       </Select>
+                      {errors.warranty_type && <p className="text-sm text-red-500">{errors.warranty_type}</p>}
                     </div>
                     <div className="">
                       <Label htmlFor="warranty_period" className="text-right">
@@ -731,8 +767,9 @@ export default function VendorProducts({
                         className={errors.warranty_period ? "border-red-500" : ""}
                         value={data.warranty_period}
                         onChange={(e) => setData("warranty_period", e.target.value)}
-                        required
+                        // required
                       />
+                      {errors.warranty_period && <p className="text-sm text-red-500">{errors.warranty_period}</p>}
                     </div>
                   </div>
                 </section>

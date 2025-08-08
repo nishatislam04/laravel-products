@@ -7,6 +7,7 @@ use App\Http\Controllers\Page\PublicPageController;
 use App\Http\Controllers\Vendor\VendorApplyController;
 use App\Http\Controllers\Page\SuperAdminPageController;
 use App\Http\Controllers\Page\VendorAdminPageController;
+use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Vendor\VendorManageController;
 
 Route::get('/', [PublicPageController::class, 'index'])->name('home.page');
@@ -107,6 +108,8 @@ Route::get('/vendor-admin/refunds', [VendorAdminPageController::class, 'refundsS
 Route::get('/vendor-admin/analytics', [VendorAdminPageController::class, 'analyticsSection'])->name('vendor-admin.analytics.page');
 Route::get('/vendor-admin/reviews', [VendorAdminPageController::class, 'reviewsSection'])->name('vendor-admin.reviews.page');
 Route::get('/vendor-admin/settings', [VendorAdminPageController::class, 'settingsSection'])->name('vendor-admin.settings.page');
+
+Route::post('/vendor-admin/products/store', [ProductController::class, 'store'])->name('vendor-admin.products.store');
 
 
 // vendor-admin
