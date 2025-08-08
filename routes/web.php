@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Page\PublicPageController;
 use App\Http\Controllers\Vendor\VendorApplyController;
 use App\Http\Controllers\Page\SuperAdminPageController;
+use App\Http\Controllers\Page\VendorAdminPageController;
 use App\Http\Controllers\Vendor\VendorManageController;
 
 Route::get('/', [PublicPageController::class, 'index'])->name('home.page');
@@ -98,35 +99,45 @@ Route::get('/account/help-center', function () {
 })->name('help-center.page');
 
 
+Route::get('/vendor-admin/overview', [VendorAdminPageController::class, 'overviewSection'])->name('vendor-admin.overview.page');
+Route::get('/vendor-admin/staffs', [VendorAdminPageController::class, 'staffsSection'])->name('vendor-admin.staffs.page');
+Route::get('/vendor-admin/products', [VendorAdminPageController::class, 'productsSection'])->name('vendor-admin.products.page');
+Route::get('/vendor-admin/orders', [VendorAdminPageController::class, 'ordersSection'])->name('vendor-admin.orders.page');
+Route::get('/vendor-admin/refunds', [VendorAdminPageController::class, 'refundsSection'])->name('vendor-admin.refunds.page');
+Route::get('/vendor-admin/analytics', [VendorAdminPageController::class, 'analyticsSection'])->name('vendor-admin.analytics.page');
+Route::get('/vendor-admin/reviews', [VendorAdminPageController::class, 'reviewsSection'])->name('vendor-admin.reviews.page');
+Route::get('/vendor-admin/settings', [VendorAdminPageController::class, 'settingsSection'])->name('vendor-admin.settings.page');
+
+
 // vendor-admin
-Route::get('/vendor-admin/dashboard', function () {
-    return Inertia::render('vendor-admin/dashboard');
-})->name('vendor-admin.dashboard');
+// Route::get('/vendor-admin/dashboard', function () {
+//     return Inertia::render('vendor-admin/dashboard');
+// })->name('vendor-admin.dashboard');
 
-Route::get('/vendor-admin/staffs', function () {
-    return Inertia::render('vendor-admin/staffs');
-})->name('vendor-admin.staffs');
+// Route::get('/vendor-admin/staffs', function () {
+//     return Inertia::render('vendor-admin/staffs');
+// })->name('vendor-admin.staffs');
 
-Route::get('/vendor-admin/products', function () {
-    return Inertia::render('vendor-admin/products');
-})->name('vendor-admin.products');
+// Route::get('/vendor-admin/products', function () {
+//     return Inertia::render('vendor-admin/products');
+// })->name('vendor-admin.products');
 
-Route::get('/vendor-admin/orders', function () {
-    return Inertia::render('vendor-admin/orders');
-})->name('vendor-admin.orders');
+// Route::get('/vendor-admin/orders', function () {
+//     return Inertia::render('vendor-admin/orders');
+// })->name('vendor-admin.orders');
 
-Route::get('/vendor-admin/refunds', function () {
-    return Inertia::render('vendor-admin/refunds');
-})->name('vendor-admin.refunds');
+// Route::get('/vendor-admin/refunds', function () {
+//     return Inertia::render('vendor-admin/refunds');
+// })->name('vendor-admin.refunds');
 
-Route::get('/vendor-admin/analytics', function () {
-    return Inertia::render('vendor-admin/analytics');
-})->name('vendor-admin.analytics');
+// Route::get('/vendor-admin/analytics', function () {
+//     return Inertia::render('vendor-admin/analytics');
+// })->name('vendor-admin.analytics');
 
-Route::get('/vendor-admin/reviews', function () {
-    return Inertia::render('vendor-admin/reviews');
-})->name('vendor-admin.reviews');
+// Route::get('/vendor-admin/reviews', function () {
+//     return Inertia::render('vendor-admin/reviews');
+// })->name('vendor-admin.reviews');
 
-Route::get('/vendor-admin/settings', function () {
-    return Inertia::render('vendor-admin/settings');
-})->name('vendor-admin.settings');
+// Route::get('/vendor-admin/settings', function () {
+//     return Inertia::render('vendor-admin/settings');
+// })->name('vendor-admin.settings');

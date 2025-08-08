@@ -1,6 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import {
   Dialog,
   DialogContent,
@@ -18,14 +20,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import VendorLayout from "@/layouts/vendor-layout";
+import { cn } from "@/lib/utils";
+import { useForm } from "@inertiajs/react";
+import { CommandGroup } from "cmdk";
 import {
   AlertTriangle,
+  Check,
+  ChevronDownIcon,
   ChevronLeft,
   ChevronRight,
+  ChevronsUpDown,
   Edit,
   Eye,
   MoreHorizontal,
@@ -139,19 +148,105 @@ const productStats = [
   },
 ];
 
-export default function VendorProducts() {
+// create type for formProduct
+type FormProduct = {
+  name: string;
+  slug: string;
+  description: string;
+  thumbnail: string;
+  category_id: string;
+  sale_price: string;
+  sale_start: string;
+  sale_end: string;
+  stock_quantity: string;
+  stock_status: string;
+  images: string;
+  weight: string;
+  length: string;
+  width: string;
+  height: string;
+  sku: string;
+  category: string;
+  brand: string;
+  price: string;
+  stock: string;
+  status: string;
+  return_days: string;
+  warranty_type: string;
+  warranty_period: string;
+  meta_title: string;
+  meta_description: string;
+  tags: string;
+};
+
+// ! add props type
+
+export default function VendorProducts({
+  categories,
+  brands,
+  stockStatusEnum,
+  warrentTypeEnum,
+}: {
+  categories: any;
+  brands: any;
+  stockStatusEnum: any;
+  warrentTypeEnum: any;
+}) {
+  console.log(stockStatusEnum);
   const [searchTerm, setSearchTerm] = useState("");
+  const [openStartDate, setOpenStartDate] = useState(false);
+  const [openEndDate, setOpenEndDate] = useState(false);
+
+  const [openCategory, setOpenCategory] = useState(false);
+  const [categoryValues, setCategoryValues] = useState("");
+  const [categoryInput, setCategoryInput] = useState("");
+
+  const [openBrand, setOpenBrand] = useState(false);
+  const [brandValues, setBrandValues] = useState("");
+  const [brandInput, setBrandInput] = useState("");
+
+  const [startDate, setStartDate] = React.useState<Date | undefined>(new Date());
+  const [endDate, setEndDate] = React.useState<Date | undefined>(new Date());
   const [currentPage, setCurrentPage] = useState(1);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [formData, setFormData] = useState({
+  const { data, setData, post, processing, errors } = useForm<FormProduct>({
     name: "",
+    slug: "",
+    description: "",
+    thumbnail: "",
+    category_id: "",
+    sale_price: "",
+    sale_start: "",
+    sale_end: "",
+    stock_quantity: "",
+    stock_status: "",
+    images: "",
+    weight: "",
+    length: "",
+    width: "",
+    height: "",
     sku: "",
     category: "",
+    brand: "",
     price: "",
     stock: "",
-    description: "",
     status: "Active",
+    return_days: "",
+    warranty_type: "",
+    warranty_period: "",
+    meta_title: "",
+    meta_description: "",
+    tags: "",
   });
+  // Auto-generate slug from store name
+  const handleNameChange = (value: string) => {
+    setData("name", value);
+    const slug = value
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+    setData("slug", slug);
+  };
 
   const itemsPerPage = 5;
   const filteredProducts = vendorProducts.filter(
@@ -164,23 +259,12 @@ export default function VendorProducts() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedProducts = filteredProducts.slice(startIndex, startIndex + itemsPerPage);
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Creating product:", formData);
-    setIsDialogOpen(false);
-    setFormData({
-      name: "",
-      sku: "",
-      category: "",
-      price: "",
-      stock: "",
-      description: "",
-      status: "Active",
+    post(route("vendor.products.store"), {
+      forceFormData: true,
     });
+    setIsDialogOpen(false);
   };
 
   return (
@@ -194,114 +278,468 @@ export default function VendorProducts() {
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button>
+              <Button className="relative">
                 <Plus className="mr-2 h-4 w-4" />
                 Add Product
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-[500px]">
-              <DialogHeader>
+            <DialogContent className="max-h-[90vh] min-h-[90vh] max-w-[70vw] min-w-[70vw] overflow-y-auto p-0">
+              <DialogHeader className="sticky top-0 z-50 bg-white px-6 py-6">
                 <DialogTitle>Add New Product</DialogTitle>
                 <DialogDescription>Create a new product listing for your store.</DialogDescription>
               </DialogHeader>
-              <form onSubmit={handleSubmit}>
-                <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="name" className="text-right">
-                      Name
-                    </Label>
-                    <Input
-                      id="name"
-                      value={formData.name}
-                      onChange={(e) => handleInputChange("name", e.target.value)}
-                      className="col-span-3"
-                      required
-                    />
+              <form className="p-6 pt-0" onSubmit={handleSubmit}>
+                <section className="grid grid-cols-12 gap-4">
+                  {/* basic info container */}
+                  <div className="col-span-6 space-y-2 rounded-sm border border-gray-200 p-4">
+                    <h3 className="mb-2 text-lg font-semibold tracking-tight">Basic Info</h3>
+                    <div className="">
+                      <Label htmlFor="name" className="text-right">
+                        Name*
+                      </Label>
+                      <Input
+                        id="name"
+                        name="name"
+                        value={data.name}
+                        className={errors.name ? "border-red-500" : ""}
+                        onChange={(e) => handleNameChange(e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className="">
+                      <Label htmlFor="slug" className="text-right">
+                        slug*
+                      </Label>
+                      <Input
+                        id="slug"
+                        name="slug"
+                        value={data.slug}
+                        className={errors.slug ? "border-red-500" : ""}
+                        onChange={(e) => setData("slug", e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className="">
+                      <Label htmlFor="description" className="text-right">
+                        Description
+                      </Label>
+                      <Textarea
+                        id="description"
+                        name="description"
+                        value={data.description}
+                        className={errors.description ? "border-red-500" : ""}
+                        onChange={(e) => setData("description", e.target.value)}
+                      />
+                    </div>
+                    {/* catgory & brand */}
+                    {/* catgory required */}
+                    <div className="flex justify-between">
+                      <div className="flex w-1/2 flex-col space-y-1">
+                        <Label htmlFor="category">Category</Label>
+                        <Popover open={openCategory} onOpenChange={setOpenCategory}>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              aria-expanded={openCategory}
+                              className="w-[200px] justify-between"
+                            >
+                              {categoryValues ? categoryValues : "Select category..."}
+                              <ChevronsUpDown className="opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-[200px] p-0">
+                            <Command>
+                              <CommandInput placeholder="Search framework..." className="h-9" />
+                              <CommandList>
+                                <CommandEmpty>No framework found.</CommandEmpty>
+                                <CommandGroup>
+                                  {categories.map((category: any) => (
+                                    <CommandItem
+                                      key={category.name}
+                                      value={category.name}
+                                      onSelect={(currentValue) => {
+                                        setCategoryInput(currentValue === categoryInput ? "" : currentValue);
+                                        setCategoryValues((prev) => (prev !== currentValue ? currentValue : ""));
+                                        setOpenCategory(false);
+                                      }}
+                                    >
+                                      {category.name}
+                                      <Check
+                                        className={cn(
+                                          "ml-auto",
+                                          categoryInput === category.name ? "opacity-100" : "opacity-0",
+                                        )}
+                                      />
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+
+                      {/* brand optional */}
+                      <div className="flex w-1/2 flex-col space-y-1">
+                        <Label htmlFor="brand">Brand</Label>
+                        <Popover open={openBrand} onOpenChange={setOpenBrand}>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              aria-expanded={openBrand}
+                              className="w-[200px] justify-between"
+                            >
+                              {brandValues ? brandValues : "Select brand..."}
+                              <ChevronsUpDown className="opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-[200px] p-0">
+                            <Command>
+                              <CommandInput placeholder="Search framework..." className="h-9" />
+                              <CommandList>
+                                <CommandEmpty>No framework found.</CommandEmpty>
+                                <CommandGroup>
+                                  {brands.map((brand: any) => (
+                                    <CommandItem
+                                      key={brand.name}
+                                      value={brand.name}
+                                      onSelect={(currentValue) => {
+                                        setBrandInput(currentValue === brandInput ? "" : currentValue);
+                                        setBrandValues((prev) => (prev !== currentValue ? currentValue : ""));
+                                        setOpenBrand(false);
+                                      }}
+                                    >
+                                      {brand.name}
+                                      <Check
+                                        className={cn(
+                                          "ml-auto",
+                                          brandInput === brand.name ? "opacity-100" : "opacity-0",
+                                        )}
+                                      />
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="sku" className="text-right">
-                      SKU
-                    </Label>
-                    <Input
-                      id="sku"
-                      value={formData.sku}
-                      onChange={(e) => handleInputChange("sku", e.target.value)}
-                      className="col-span-3"
-                      required
-                    />
+
+                  {/* pricing container */}
+                  <div className="col-span-6 rounded-sm border border-gray-200 p-4">
+                    <h3 className="mb-2 text-lg font-semibold tracking-tight">Pricing</h3>
+                    <div className="">
+                      <Label htmlFor="price" className="text-right">
+                        Price*
+                      </Label>
+                      <Input
+                        id="price"
+                        type="number"
+                        name="price"
+                        value={data.price}
+                        className={errors.price ? "border-red-500" : ""}
+                        onChange={(e) => setData("price", e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className="">
+                      <Label htmlFor="price" className="text-right">
+                        Sale price (discount price)
+                      </Label>
+                      <Input
+                        id="sale_price"
+                        type="number"
+                        name="sale_price"
+                        className={errors.sale_price ? "border-red-500" : ""}
+                        value={data.sale_price}
+                        onChange={(e) => setData("sale_price", e.target.value)}
+                      />
+                    </div>
+                    <div className="my-4">
+                      <Label htmlFor="sale_start" className="text-right">
+                        Sale start date
+                      </Label>
+                      <Popover open={openStartDate} onOpenChange={setOpenStartDate}>
+                        <PopoverTrigger asChild>
+                          <Button variant="outline" id="date" className="w-48 justify-between font-normal">
+                            {startDate ? startDate.toLocaleDateString() : "Select date"}
+                            <ChevronDownIcon />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={startDate}
+                            captionLayout="dropdown"
+                            onSelect={(date) => {
+                              setStartDate(date);
+                              setOpenStartDate(false);
+                            }}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                    <div className="my-4">
+                      <Label htmlFor="sale_end" className="text-right">
+                        Sale end date
+                      </Label>
+                      <Popover open={openEndDate} onOpenChange={setOpenEndDate}>
+                        <PopoverTrigger asChild>
+                          <Button variant="outline" id="date" className="w-48 justify-between font-normal">
+                            {endDate ? endDate.toLocaleDateString() : "Select date"}
+                            <ChevronDownIcon />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={endDate}
+                            captionLayout="dropdown"
+                            onSelect={(date) => {
+                              setEndDate(date);
+                              setOpenEndDate(false);
+                            }}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="category" className="text-right">
-                      Category
-                    </Label>
-                    <Select value={formData.category} onValueChange={(value) => handleInputChange("category", value)}>
-                      <SelectTrigger className="col-span-3">
-                        <SelectValue placeholder="Select category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Electronics">Electronics</SelectItem>
-                        <SelectItem value="Accessories">Accessories</SelectItem>
-                        <SelectItem value="Gadgets">Gadgets</SelectItem>
-                      </SelectContent>
-                    </Select>
+
+                  {/* stock & sku container */}
+                  <div className="col-span-6 rounded-sm border border-gray-200 p-4">
+                    <h3 className="mb-2 text-lg font-semibold tracking-tight">Stock & SKU</h3>
+                    <div className="">
+                      <Label htmlFor="sku" className="text-right">
+                        SKU*
+                      </Label>
+                      <Input
+                        id="sku"
+                        type="text"
+                        value={data.sku}
+                        className={errors.sku ? "border-red-500" : ""}
+                        onChange={(e) => setData("sku", e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className="">
+                      <Label htmlFor="stock_quantity" className="text-right">
+                        Stock Quantity*
+                      </Label>
+                      <Input
+                        id="stock_quantity"
+                        type="number"
+                        value={data.stock_quantity}
+                        className={errors.stock_quantity ? "border-red-500" : ""}
+                        onChange={(e) => setData("stock_quantity", e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className="">
+                      <Label htmlFor="stock_quantity" className="text-right">
+                        Stock Status*
+                      </Label>
+                      <Select
+                        value={data.stock_status}
+                        onValueChange={(value) => setData("stock_status", value)}
+                        required
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select stock status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {stockStatusEnum.map((status: any) => (
+                            <SelectItem key={status.value} value={status.value}>
+                              {status.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="price" className="text-right">
-                      Price
-                    </Label>
-                    <Input
-                      id="price"
-                      type="number"
-                      step="0.01"
-                      value={formData.price}
-                      onChange={(e) => handleInputChange("price", e.target.value)}
-                      className="col-span-3"
-                      required
-                    />
+
+                  {/* media container */}
+                  <div className="col-span-6 rounded-sm border border-gray-200 p-4">
+                    <h3 className="mb-2 text-lg font-semibold tracking-tight">Media</h3>
+                    <div className="my-6">
+                      <Label htmlFor="thumbnail" className="text-right">
+                        Thumbnail*
+                      </Label>
+                      <Input
+                        id="thumbnail"
+                        type="file"
+                        name="thumbnail"
+                        className={errors.thumbnail ? "border-red-500" : ""}
+                        value={data.thumbnail}
+                        onChange={(e) => setData("thumbnail", e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className="">
+                      <Label htmlFor="images" className="text-right">
+                        Images
+                      </Label>
+                      <Input
+                        id="images"
+                        type="file"
+                        name="images"
+                        className={errors.images ? "border-red-500" : ""}
+                        value={data.images}
+                        onChange={(e) => setData("images", e.target.value)}
+                        required
+                        multiple
+                      />
+                    </div>
                   </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="stock" className="text-right">
-                      Stock
-                    </Label>
-                    <Input
-                      id="stock"
-                      type="number"
-                      value={formData.stock}
-                      onChange={(e) => handleInputChange("stock", e.target.value)}
-                      className="col-span-3"
-                      required
-                    />
+
+                  {/* shipping container */}
+                  <div className="col-span-6 rounded-sm border border-gray-200 p-4">
+                    <h3 className="mb-2 text-lg font-semibold tracking-tight">Shipping</h3>
+                    <div className="">
+                      <Label htmlFor="weight" className="text-right">
+                        Weight
+                      </Label>
+                      <Input
+                        id="weight"
+                        type="number"
+                        className={errors.weight ? "border-red-500" : ""}
+                        value={data.weight}
+                        onChange={(e) => setData("weight", e.target.value)}
+                      />
+                    </div>
+                    <div className="">
+                      <Label htmlFor="length" className="text-right">
+                        Length
+                      </Label>
+                      <Input
+                        id="length"
+                        type="number"
+                        className={errors.length ? "border-red-500" : ""}
+                        value={data.length}
+                        onChange={(e) => setData("length", e.target.value)}
+                      />
+                    </div>
+                    <div className="">
+                      <Label htmlFor="width" className="text-right">
+                        Width
+                      </Label>
+                      <Input
+                        id="width"
+                        type="number"
+                        className={errors.width ? "border-red-500" : ""}
+                        value={data.width}
+                        onChange={(e) => setData("width", e.target.value)}
+                      />
+                    </div>
+                    <div className="">
+                      <Label htmlFor="height" className="text-right">
+                        Height
+                      </Label>
+                      <Input
+                        id="height"
+                        type="number"
+                        className={errors.height ? "border-red-500" : ""}
+                        value={data.height}
+                        onChange={(e) => setData("height", e.target.value)}
+                      />
+                    </div>
                   </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="description" className="text-right">
-                      Description
-                    </Label>
-                    <Textarea
-                      id="description"
-                      value={formData.description}
-                      onChange={(e) => handleInputChange("description", e.target.value)}
-                      className="col-span-3"
-                      rows={3}
-                    />
+
+                  {/* seo & marketing container */}
+                  <div className="col-span-6 rounded-sm border border-gray-200 p-4">
+                    <h3 className="mb-2 text-lg font-semibold tracking-tight">SEO & Marketing</h3>
+                    <div className="">
+                      <Label htmlFor="meta_title" className="text-right">
+                        Meta Title
+                      </Label>
+                      <Input
+                        id="meta_title"
+                        type="text"
+                        className={errors.meta_title ? "border-red-500" : ""}
+                        value={data.meta_title}
+                        onChange={(e) => setData("meta_title", e.target.value)}
+                      />
+                    </div>
+                    <div className="">
+                      <Label htmlFor="meta_description" className="text-right">
+                        Meta Description
+                      </Label>
+                      <Textarea
+                        id="meta_description"
+                        className={errors.meta_description ? "border-red-500" : ""}
+                        value={data.meta_description}
+                        onChange={(e) => setData("meta_description", e.target.value)}
+                      />
+                    </div>
+                    <div className="">
+                      <Label htmlFor="tags" className="text-right">
+                        Tags (comma separated)
+                      </Label>
+                      <Input
+                        id="tags"
+                        type="text"
+                        className={errors.tags ? "border-red-500" : ""}
+                        value={data.tags}
+                        onChange={(e) => setData("tags", e.target.value)}
+                      />
+                    </div>
                   </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="status" className="text-right">
-                      Status
-                    </Label>
-                    <Select value={formData.status} onValueChange={(value) => handleInputChange("status", value)}>
-                      <SelectTrigger className="col-span-3">
-                        <SelectValue placeholder="Select status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Active">Active</SelectItem>
-                        <SelectItem value="Inactive">Inactive</SelectItem>
-                        <SelectItem value="Draft">Draft</SelectItem>
-                      </SelectContent>
-                    </Select>
+
+                  {/* return & warranty container */}
+                  <div className="col-span-6 rounded-sm border border-gray-200 p-4">
+                    <h3 className="mb-2 text-lg font-semibold tracking-tight">Return & Warranty</h3>
+                    <div className="">
+                      <Label htmlFor="return_days" className="text-right">
+                        Return Days*
+                      </Label>
+                      <Input
+                        id="return_days"
+                        type="number"
+                        className={errors.return_days ? "border-red-500" : ""}
+                        value={data.return_days}
+                        onChange={(e) => setData("return_days", e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className="">
+                      <Label htmlFor="warranty_type" className="text-right">
+                        Warranty Type*
+                      </Label>
+                      <Select value={data.warranty_type} onValueChange={(value) => setData("warranty_type", value)}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select warranty type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {warrentTypeEnum.map((type: any) => (
+                            <SelectItem key={type.value} value={type.value}>
+                              {type.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="">
+                      <Label htmlFor="warranty_period" className="text-right">
+                        Warranty Period*
+                      </Label>
+                      <Input
+                        id="warranty_period"
+                        type="number"
+                        className={errors.warranty_period ? "border-red-500" : ""}
+                        value={data.warranty_period}
+                        onChange={(e) => setData("warranty_period", e.target.value)}
+                        required
+                      />
+                    </div>
                   </div>
-                </div>
-                <DialogFooter>
-                  <Button type="submit">Create Product</Button>
+                </section>
+                <DialogFooter className="mb-4">
+                  <Button disabled={processing} type="submit">
+                    Create Product
+                  </Button>
                 </DialogFooter>
               </form>
             </DialogContent>

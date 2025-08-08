@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 
+/**
+ * This controller is all about vendor apply management
+ */
 class VendorApplyController extends Controller {
 
     public function index() {

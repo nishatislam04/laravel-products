@@ -49,45 +49,45 @@ interface VendorLayoutProps {
 const navigationItems = [
   {
     title: "Overview",
-    url: "/vendor-admin/dashboard",
+    url: route("vendor-admin.overview.page"),
     icon: BarChart3,
   },
   {
     title: "Add Staff",
-    url: "/vendor-admin/staffs",
+    url: route("vendor-admin.staffs.page"),
     icon: Users,
   },
   {
     title: "Product Management",
-    url: "/vendor-admin/products",
+    url: route("vendor-admin.products.page"),
     icon: Package,
     badge: "45",
   },
   {
     title: "Order Management",
-    url: "/vendor-admin/orders",
+    url: route("vendor-admin.orders.page"),
     icon: ShoppingCart,
     badge: "8",
   },
   {
     title: "Refund Requests",
-    url: "/vendor-admin/refunds",
+    url: route("vendor-admin.refunds.page"),
     icon: RefreshCw,
     badge: "3",
   },
   {
     title: "Analytics",
-    url: "/vendor-admin/analytics",
+    url: route("vendor-admin.analytics.page"),
     icon: BarChart3,
   },
   {
     title: "Reviews & Ratings",
-    url: "/vendor-admin/reviews",
+    url: route("vendor-admin.reviews.page"),
     icon: Star,
   },
   {
     title: "Settings",
-    url: "/vendor-admin/settings",
+    url: route("vendor-admin.settings.page"),
     icon: Settings,
   },
 ];
@@ -101,8 +101,8 @@ export default function VendorLayout({ children, title = "Vendor Panel" }: Vendo
           <SidebarHeader>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton size="lg" asChild>
-                  <Link className="space-x-2" href="/vendor-admin/dashboard">
+                <SidebarMenuButton className="space-x-2" size="lg" asChild>
+                  <Link className="space-x-2" href={route("vendor-admin.overview.page")}>
                     <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                       <Package className="size-4" />
                     </div>
@@ -118,9 +118,9 @@ export default function VendorLayout({ children, title = "Vendor Panel" }: Vendo
 
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel className="mt-3 pl-2">Vendor Management</SidebarGroupLabel>
+              <SidebarGroupLabel className="mt-3 pl-4">Vendor Management</SidebarGroupLabel>
               <SidebarGroupContent>
-                <SidebarMenu className="space-y-2 pl-2">
+                <SidebarMenu className="space-y-2 pl-4">
                   {navigationItems.map((item) => (
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton asChild>
@@ -154,7 +154,7 @@ export default function VendorLayout({ children, title = "Vendor Panel" }: Vendo
                       <span>TechGear Solutions</span>
                     </SidebarMenuButton>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
+                  <DropdownMenuContent side="top" className="mt-auto">
                     <DropdownMenuLabel>My Store</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>

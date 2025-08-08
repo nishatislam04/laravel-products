@@ -435,7 +435,7 @@ export default function Product() {
               {/* Thumbnail Images Below Main Image */}
               <div className="w-full">
                 <Carousel className="w-full">
-                  <CarouselContent className="my-2 -ml-2">
+                  <CarouselContent className="my-2 -ml-2 px-2">
                     {productImages.map((image, index) => (
                       <CarouselItem key={image.id} className="basis-1/4 pl-2">
                         <button
