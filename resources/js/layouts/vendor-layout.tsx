@@ -25,7 +25,7 @@ import {
   SidebarProvider,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { Head, Link, router } from "@inertiajs/react";
+import { Head, Link, router, usePage } from "@inertiajs/react";
 import {
   BarChart3,
   Bell,
@@ -92,7 +92,20 @@ const navigationItems = [
   },
 ];
 
+type SessionProps = {
+  auth: {
+    user: {
+      name: string;
+      email: string;
+      id: number;
+      status: string;
+    };
+  };
+};
+
 export default function VendorLayout({ children, title = "Vendor Panel" }: VendorLayoutProps) {
+  const { auth } = usePage<SessionProps>().props;
+
   return (
     <>
       <Head title={title} />
@@ -151,7 +164,7 @@ export default function VendorLayout({ children, title = "Vendor Panel" }: Vendo
                         <AvatarImage src="/images/placeholder.svg?height=32&width=32" />
                         <AvatarFallback>TG</AvatarFallback>
                       </Avatar>
-                      <span>TechGear Solutions</span>
+                      <span>{auth.user.name}</span>
                     </SidebarMenuButton>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent side="top" className="mt-auto">

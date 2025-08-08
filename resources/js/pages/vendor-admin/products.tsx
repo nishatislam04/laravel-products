@@ -153,24 +153,22 @@ type FormProduct = {
   name: string;
   slug: string;
   description: string;
-  thumbnail: string;
+  thumbnail: File | undefined;
   category_id: string;
+  brand_id: string;
   sale_price: string;
   sale_start: string;
   sale_end: string;
   stock_quantity: string;
   stock_status: string;
-  images: string;
+  images: File[];
   weight: string;
   length: string;
   width: string;
   height: string;
   sku: string;
-  category: string;
-  brand: string;
   price: string;
   stock: string;
-  status: string;
   return_days: string;
   warranty_type: string;
   warranty_period: string;
@@ -226,24 +224,22 @@ export default function VendorProducts({
     name: "",
     slug: "",
     description: "",
-    thumbnail: "",
+    thumbnail: undefined,
+    images: [],
     category_id: "",
     sale_price: "",
     sale_start: "",
     sale_end: "",
     stock_quantity: "",
     stock_status: "",
-    images: "",
     weight: "",
     length: "",
     width: "",
     height: "",
     sku: "",
-    category: "",
-    brand: "",
+    brand_id: "",
     price: "",
     stock: "",
-    status: "active",
     return_days: "",
     warranty_type: "",
     warranty_period: "",
@@ -253,14 +249,15 @@ export default function VendorProducts({
   });
 
   // Auto-generate slug from store name
-  const handleNameChange = (value: string) => {
-    setData("name", value);
-    const slug = value
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "");
-    setData("slug", slug);
-  };
+  // ! generate slug on server
+  // const handleNameChange = (value: string) => {
+  //   setData("name", value);
+  //   const slug = value
+  //     .toLowerCase()
+  //     .replace(/[^a-z0-9]+/g, "-")
+  //     .replace(/(^-|-$)/g, "");
+  //   setData("slug", slug);
+  // };
 
   const itemsPerPage = 5;
   const filteredProducts = vendorProducts.filter(
@@ -275,11 +272,36 @@ export default function VendorProducts({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(isDirty);
+    console.log(data);
+
     post(route("vendor-admin.products.store"), {
       forceFormData: true,
+      onSuccess: () => {
+        setIsDialogOpen(false); // close modal on success
+        reset();
+      },
+      onError: () => {
+        // optionally do something on error
+      },
     });
+
+    console.log(errors);
     // setIsDialogOpen(false);
+  };
+
+  // const handleChange = (field: keyof FormProduct) => (e: React.ChangeEvent<Element>) => {
+  //   const target = e.target as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+  //   let value: string | number | boolean = target.value;
+
+  //   setData(field, value);
+  //   if (errors[field]) clearErrors(field);
+  // };
+
+  const handleChange = (field: keyof FormProduct) => (e: any) => {
+    let value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+
+    setData(field, value);
+    if (errors[field]) clearErrors(field);
   };
 
   return (
@@ -317,7 +339,7 @@ export default function VendorProducts({
                         name="name"
                         value={data.name}
                         className={errors.name ? "border-red-500" : ""}
-                        onChange={(e) => handleNameChange(e.target.value)}
+                        onChange={handleChange("name")}
                         // required
                       />
                       {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
@@ -331,7 +353,7 @@ export default function VendorProducts({
                         name="slug"
                         value={data.slug}
                         className={errors.slug ? "border-red-500" : ""}
-                        onChange={(e) => setData("slug", e.target.value)}
+                        onChange={handleChange("slug")}
                         // required
                       />
                       {errors.slug && <p className="text-sm text-red-500">{errors.slug}</p>}
@@ -345,7 +367,7 @@ export default function VendorProducts({
                         name="description"
                         value={data.description}
                         className={errors.description ? "border-red-500" : ""}
-                        onChange={(e) => setData("description", e.target.value)}
+                        onChange={handleChange("description")}
                       />
                       {errors.description && <p className="text-sm text-red-500">{errors.description}</p>}
                     </div>
@@ -379,6 +401,9 @@ export default function VendorProducts({
                                         setCategoryInput(currentValue === categoryInput ? "" : currentValue);
                                         setCategoryValues((prev) => (prev !== currentValue ? currentValue : ""));
                                         setOpenCategory(false);
+
+                                        setData("category_id", category.id); // better to use id instead of name
+                                        if (errors.category_id) clearErrors("category_id");
                                       }}
                                     >
                                       {category.name}
@@ -427,6 +452,9 @@ export default function VendorProducts({
                                         setBrandInput(currentValue === brandInput ? "" : currentValue);
                                         setBrandValues((prev) => (prev !== currentValue ? currentValue : ""));
                                         setOpenBrand(false);
+
+                                        setData("brand_id", brand.id); // better to use id instead of name
+                                        if (errors.brand_id) clearErrors("brand_id");
                                       }}
                                     >
                                       {brand.name}
@@ -443,7 +471,7 @@ export default function VendorProducts({
                             </Command>
                           </PopoverContent>
                         </Popover>
-                        {errors.brand && <p className="text-sm text-red-500">{errors.brand}</p>}
+                        {errors.brand_id && <p className="text-sm text-red-500">{errors.brand_id}</p>}
                       </div>
                     </div>
                   </div>
@@ -461,7 +489,7 @@ export default function VendorProducts({
                         name="price"
                         value={data.price}
                         className={errors.price ? "border-red-500" : ""}
-                        onChange={(e) => setData("price", e.target.value)}
+                        onChange={handleChange("price")}
                         // required
                       />
                       {errors.price && <p className="text-sm text-red-500">{errors.price}</p>}
@@ -476,7 +504,7 @@ export default function VendorProducts({
                         name="sale_price"
                         className={errors.sale_price ? "border-red-500" : ""}
                         value={data.sale_price}
-                        onChange={(e) => setData("sale_price", e.target.value)}
+                        onChange={handleChange("sale_price")}
                       />
                       {errors.sale_price && <p className="text-sm text-red-500">{errors.sale_price}</p>}
                     </div>
@@ -499,6 +527,7 @@ export default function VendorProducts({
                             onSelect={(date) => {
                               setStartDate(date);
                               setOpenStartDate(false);
+                              handleChange("sale_start");
                             }}
                           />
                         </PopoverContent>
@@ -524,6 +553,7 @@ export default function VendorProducts({
                             onSelect={(date) => {
                               setEndDate(date);
                               setOpenEndDate(false);
+                              handleChange("sale_end");
                             }}
                           />
                         </PopoverContent>
@@ -544,7 +574,7 @@ export default function VendorProducts({
                         type="text"
                         value={data.sku}
                         className={errors.sku ? "border-red-500" : ""}
-                        onChange={(e) => setData("sku", e.target.value)}
+                        onChange={handleChange("sku")}
                         // required
                       />
                       {errors.sku && <p className="text-sm text-red-500">{errors.sku}</p>}
@@ -558,7 +588,7 @@ export default function VendorProducts({
                         type="number"
                         value={data.stock}
                         className={errors.stock ? "border-red-500" : ""}
-                        onChange={(e) => setData("stock", e.target.value)}
+                        onChange={handleChange("stock")}
                         // required
                       />
                       {errors.stock && <p className="text-sm text-red-500">{errors.stock}</p>}
@@ -569,7 +599,10 @@ export default function VendorProducts({
                       </Label>
                       <Select
                         value={data.stock_status}
-                        onValueChange={(value) => setData("stock_status", value)}
+                        onValueChange={(value) => {
+                          setData("stock_status", value);
+                          if (errors.stock_status) clearErrors("stock_status");
+                        }}
                         // required
                       >
                         <SelectTrigger>
@@ -599,8 +632,10 @@ export default function VendorProducts({
                         type="file"
                         name="thumbnail"
                         className={errors.thumbnail ? "border-red-500" : ""}
-                        value={data.thumbnail}
-                        onChange={(e) => setData("thumbnail", e.target.value)}
+                        onChange={(e) => {
+                          setData("thumbnail", e.target.files?.[0]);
+                          if (errors.thumbnail) clearErrors("thumbnail");
+                        }}
                         // required
                       />
                       {errors.thumbnail && <p className="text-sm text-red-500">{errors.thumbnail}</p>}
@@ -613,12 +648,58 @@ export default function VendorProducts({
                         id="images"
                         type="file"
                         name="images"
-                        className={errors.images ? "border-red-500" : ""}
-                        value={data.images}
-                        onChange={(e) => setData("images", e.target.value)}
                         multiple
+                        className={errors.images ? "border-red-500" : ""}
+                        onChange={(e) => {
+                          const files = e.target.files;
+                          if (!files) return;
+
+                          const existingFiles = data.images ?? [];
+                          const newFiles = Array.from(files);
+
+                          // Optional: prevent duplicates by name and size
+                          const combinedFiles = [
+                            ...existingFiles,
+                            ...newFiles.filter(
+                              (newFile) =>
+                                !existingFiles.some((file) => file.name === newFile.name && file.size === newFile.size),
+                            ),
+                          ];
+
+                          setData("images", combinedFiles);
+
+                          if (errors.images) clearErrors("images");
+                        }}
                       />
+
                       {errors.images && <p className="text-sm text-red-500">{errors.images}</p>}
+                    </div>
+                    {/* image preview */}
+                    <div>
+                      {data.images && data.images.length > 0 && (
+                        <ul className="mt-2 space-y-1">
+                          {data.images.map((file, index) => (
+                            <li key={index} className="flex items-center justify-between text-sm text-gray-700">
+                              <span>
+                                {file.name} ({(file.size / 1024).toFixed(1)} KB)
+                              </span>
+                              {/* Optional: Add a remove button */}
+                              <button
+                                type="button"
+                                className="ml-4 text-red-500 hover:text-red-700"
+                                onClick={() => {
+                                  // Remove file at index
+                                  const newFiles = [...data.images];
+                                  newFiles.splice(index, 1);
+                                  setData("images", newFiles);
+                                }}
+                              >
+                                Remove
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
                   </div>
 
@@ -634,7 +715,7 @@ export default function VendorProducts({
                         type="number"
                         className={errors.weight ? "border-red-500" : ""}
                         value={data.weight}
-                        onChange={(e) => setData("weight", e.target.value)}
+                        onChange={handleChange("weight")}
                       />
                       {errors.weight && <p className="text-sm text-red-500">{errors.weight}</p>}
                     </div>
@@ -647,7 +728,7 @@ export default function VendorProducts({
                         type="number"
                         className={errors.length ? "border-red-500" : ""}
                         value={data.length}
-                        onChange={(e) => setData("length", e.target.value)}
+                        onChange={handleChange("length")}
                       />
                       {errors.length && <p className="text-sm text-red-500">{errors.length}</p>}
                     </div>
@@ -660,7 +741,7 @@ export default function VendorProducts({
                         type="number"
                         className={errors.width ? "border-red-500" : ""}
                         value={data.width}
-                        onChange={(e) => setData("width", e.target.value)}
+                        onChange={handleChange("width")}
                       />
                       {errors.width && <p className="text-sm text-red-500">{errors.width}</p>}
                     </div>
@@ -673,7 +754,7 @@ export default function VendorProducts({
                         type="number"
                         className={errors.height ? "border-red-500" : ""}
                         value={data.height}
-                        onChange={(e) => setData("height", e.target.value)}
+                        onChange={handleChange("height")}
                       />
                       {errors.height && <p className="text-sm text-red-500">{errors.height}</p>}
                     </div>
@@ -691,7 +772,7 @@ export default function VendorProducts({
                         type="text"
                         className={errors.meta_title ? "border-red-500" : ""}
                         value={data.meta_title}
-                        onChange={(e) => setData("meta_title", e.target.value)}
+                        onChange={handleChange("meta_title")}
                       />
                       {errors.meta_title && <p className="text-sm text-red-500">{errors.meta_title}</p>}
                     </div>
@@ -703,7 +784,7 @@ export default function VendorProducts({
                         id="meta_description"
                         className={errors.meta_description ? "border-red-500" : ""}
                         value={data.meta_description}
-                        onChange={(e) => setData("meta_description", e.target.value)}
+                        onChange={handleChange("meta_description")}
                       />
                       {errors.meta_description && <p className="text-sm text-red-500">{errors.meta_description}</p>}
                     </div>
@@ -716,7 +797,7 @@ export default function VendorProducts({
                         type="text"
                         className={errors.tags ? "border-red-500" : ""}
                         value={data.tags}
-                        onChange={(e) => setData("tags", e.target.value)}
+                        onChange={handleChange("tags")}
                       />
                       {errors.tags && <p className="text-sm text-red-500">{errors.tags}</p>}
                     </div>
@@ -734,7 +815,7 @@ export default function VendorProducts({
                         type="number"
                         className={errors.return_days ? "border-red-500" : ""}
                         value={data.return_days}
-                        onChange={(e) => setData("return_days", e.target.value)}
+                        onChange={handleChange("return_days")}
                         // required
                       />
                       {errors.return_days && <p className="text-sm text-red-500">{errors.return_days}</p>}
@@ -743,7 +824,13 @@ export default function VendorProducts({
                       <Label htmlFor="warranty_type" className="text-right">
                         Warranty Type*
                       </Label>
-                      <Select value={data.warranty_type} onValueChange={(value) => setData("warranty_type", value)}>
+                      <Select
+                        value={data.warranty_type}
+                        onValueChange={(value) => {
+                          setData("warranty_type", value);
+                          if (errors.warranty_type) clearErrors("warranty_type");
+                        }}
+                      >
                         <SelectTrigger>
                           <SelectValue placeholder="Select warranty type" />
                         </SelectTrigger>
@@ -759,14 +846,14 @@ export default function VendorProducts({
                     </div>
                     <div className="">
                       <Label htmlFor="warranty_period" className="text-right">
-                        Warranty Period*
+                        Warranty Period* (in month)
                       </Label>
                       <Input
                         id="warranty_period"
                         type="number"
                         className={errors.warranty_period ? "border-red-500" : ""}
                         value={data.warranty_period}
-                        onChange={(e) => setData("warranty_period", e.target.value)}
+                        onChange={handleChange("warranty_period")}
                         // required
                       />
                       {errors.warranty_period && <p className="text-sm text-red-500">{errors.warranty_period}</p>}

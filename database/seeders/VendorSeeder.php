@@ -2,19 +2,15 @@
 
 namespace Database\Seeders;
 
-use App\Models\Product;
-use App\Models\ProductImage;
 use App\Models\Vendor;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class ProductSeeder extends Seeder {
+class VendorSeeder extends Seeder {
     /**
      * Run the database seeds.
      */
     public function run(): void {
-        Product::factory(50)
-            ->has(ProductImage::factory()->count(5), 'images')
-            ->create();
+        Vendor::factory(5)->create();
     }
 }

@@ -10,19 +10,6 @@ return new class extends Migration {
      */
     public function up(): void {
         Schema::create('products', function (Blueprint $table) {
-            // $table->id();
-            // $table->string('name');
-            // $table->string('slug')->unique();
-            // $table->longText('description')->nullable();
-            // $table->string('thumbnail')->nullable();
-            // $table->decimal('price', 10, 2);
-            // $table->integer('stock')->default(0);
-            // $table->boolean('is_active')->default(true);
-
-            // $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            // $table->foreignId('brand_id')->constrained()->onDelete('cascade');
-
-            // $table->timestamps();
             $table->id();
 
             // Basic Info
@@ -67,7 +54,7 @@ return new class extends Migration {
 
             // Return & Warranty
             $table->integer('return_days')->nullable();
-            $table->string('warranty_type')->nullable(); // e.g., "Manufacturer", "Seller"
+            $table->enum('warranty_type', ['manufacturer', 'seller'])->nullable();
             $table->integer('warranty_period')->nullable(); // in months
 
             $table->timestamps();

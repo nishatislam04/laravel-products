@@ -3,8 +3,8 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Database\Events\QueryExecuted;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia as InertiaInertia;
 
 class AppServiceProvider extends ServiceProvider {
     /**
@@ -18,12 +18,5 @@ class AppServiceProvider extends ServiceProvider {
      * Bootstrap any application services.
      */
     public function boot(): void {
-        // Listening for Query Events
-        DB::listen(function (QueryExecuted $query) {
-            $query->sql;
-            $query->bindings;
-            $query->time;
-            $query->toRawSql();
-        });
     }
 }

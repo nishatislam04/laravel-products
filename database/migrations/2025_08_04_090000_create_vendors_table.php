@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->id();
 
             // User reference
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
 
             // Store branding
             $table->string('store_name')->unique();
