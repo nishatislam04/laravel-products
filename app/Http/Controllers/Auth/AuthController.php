@@ -25,6 +25,11 @@ class AuthController extends Controller {
     public function signin(Request $request) {
         $credentials = $request->only('email', 'password');
 
+        $request->validate([
+            'email' => 'required|string|email|max:255',
+            'password' => 'required|string|min:8',
+        ]);
+
         if (Auth::attempt($credentials, true)) {
             return redirect()->route('home.page');
         }
@@ -46,6 +51,12 @@ class AuthController extends Controller {
      */
     public function signup(Request $request) {
         $credentials = $request->only('name', 'email', 'password');
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'password' => 'required|string|min:8',
+        ]);
 
         $user = $this->createUserForSignup($credentials);
 

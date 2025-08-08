@@ -7,6 +7,11 @@ import { Head, Link, useForm } from "@inertiajs/react";
 import Footer from "../../components/footer";
 import Header from "../../components/header";
 
+type FormType = {
+  email: string;
+  password: string;
+};
+
 export default function SignIn() {
   const {
     data,
@@ -21,8 +26,7 @@ export default function SignIn() {
     clearErrors,
     progress,
     transform,
-  } = useForm({
-    name: "",
+  } = useForm<FormType>({
     email: "",
     password: "",
   });
@@ -34,14 +38,17 @@ export default function SignIn() {
 
   const handleForgotPassword = () => {
     console.log("Forgot password clicked");
-    // Handle forgot password logic here
+  };
+
+  const handleChange = (field: keyof FormType) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    setData(field, e.target.value);
+    if (errors[field]) clearErrors(field);
   };
 
   return (
     <div className="flex min-h-screen flex-col bg-white">
       <Head title="Sign In - Exclusive" />
 
-      {/* Header */}
       <Header />
 
       {/* Main Content */}
@@ -81,8 +88,8 @@ export default function SignIn() {
                       type="email"
                       placeholder="Email Address"
                       value={data.email}
-                      onChange={(e) => setData("email", e.target.value)}
-                      className="w-full rounded-none border-0 border-b border-gray-300 bg-transparent px-0 py-3 transition-all duration-500 placeholder:text-gray-500 focus-visible:border-b-4 focus-visible:ring-0"
+                      onChange={handleChange("email")}
+                      className="w-full rounded-none border-0 border-b border-gray-300 bg-transparent px-0 py-3 placeholder:text-gray-500 focus-visible:border-b-4 focus-visible:ring-0"
                       required
                     />
                     {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
@@ -99,8 +106,8 @@ export default function SignIn() {
                       type="password"
                       placeholder="Password"
                       value={data.password}
-                      onChange={(e) => setData("password", e.target.value)}
-                      className="w-full rounded-none border-0 border-b border-gray-300 bg-transparent px-0 py-3 transition-all duration-500 placeholder:text-gray-500 focus-visible:border-b-4 focus-visible:ring-0"
+                      onChange={handleChange("password")}
+                      className="w-full rounded-none border-0 border-b border-gray-300 bg-transparent px-0 py-3 placeholder:text-gray-500 focus-visible:border-b-4 focus-visible:ring-0"
                       required
                     />
                     {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password}</p>}
@@ -146,7 +153,6 @@ export default function SignIn() {
         </div>
       </main>
 
-      {/* Footer */}
       <Footer />
     </div>
   );

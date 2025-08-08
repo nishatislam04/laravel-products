@@ -7,6 +7,12 @@ import { Head, Link, useForm } from "@inertiajs/react";
 import Footer from "../../components/footer";
 import Header from "../../components/header";
 
+type FormType = {
+  name: string;
+  email: string;
+  password: string;
+};
+
 export default function SignUp() {
   const {
     data,
@@ -21,7 +27,7 @@ export default function SignUp() {
     clearErrors,
     progress,
     transform,
-  } = useForm({
+  } = useForm<FormType>({
     name: "",
     email: "",
     password: "",
@@ -32,9 +38,13 @@ export default function SignUp() {
     post(route("signup"));
   }
 
+  const handleChange = (field: keyof FormType) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    setData(field, e.target.value);
+    if (errors[field]) clearErrors(field);
+  };
+
   const handleGoogleSignUp = () => {
     console.log("Sign up with Google clicked");
-    // Handle Google sign up logic here
   };
 
   return (
@@ -75,8 +85,8 @@ export default function SignUp() {
                       type="text"
                       placeholder="Name"
                       value={data.name}
-                      onChange={(e) => setData("name", e.target.value)}
-                      className="w-full rounded-none border-0 border-b border-gray-300 bg-transparent px-0 py-3 transition-all duration-500 placeholder:text-gray-500 focus-visible:border-b-4 focus-visible:ring-0"
+                      onChange={handleChange("name")}
+                      className={`w-full rounded-none border-0 border-b border-gray-300 bg-transparent px-0 py-3 placeholder:text-gray-500 focus-visible:border-b-4 focus-visible:ring-0 ${errors.name ? "border-red-500" : ""}`}
                       required
                     />
                     {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
@@ -92,8 +102,8 @@ export default function SignUp() {
                       type="email"
                       placeholder="Email Address"
                       value={data.email}
-                      onChange={(e) => setData("email", e.target.value)}
-                      className="w-full rounded-none border-0 border-b border-gray-300 bg-transparent px-0 py-3 transition-all duration-500 placeholder:text-gray-500 focus-visible:border-b-4 focus-visible:ring-0"
+                      onChange={handleChange("email")}
+                      className={`w-full rounded-none border-0 border-b border-gray-300 bg-transparent px-0 py-3 placeholder:text-gray-500 focus-visible:border-b-4 focus-visible:ring-0 ${errors.email ? "border-red-500" : ""}`}
                       required
                     />
                     {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
@@ -109,8 +119,8 @@ export default function SignUp() {
                       type="password"
                       placeholder="Password"
                       value={data.password}
-                      onChange={(e) => setData("password", e.target.value)}
-                      className="w-full rounded-none border-0 border-b border-gray-300 bg-transparent px-0 py-3 transition-all duration-500 placeholder:text-gray-500 focus-visible:border-b-4 focus-visible:ring-0"
+                      onChange={handleChange("password")}
+                      className={`w-full rounded-none border-0 border-b border-gray-300 bg-transparent px-0 py-3 placeholder:text-gray-500 focus-visible:border-b-4 focus-visible:ring-0 ${errors.password ? "border-red-500" : ""}`}
                       required
                     />
                     {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password}</p>}
