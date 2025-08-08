@@ -23,7 +23,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import AdminLayout from "@/layouts/admin-layout";
-import { router } from "@inertiajs/react";
+import { router, useForm } from "@inertiajs/react";
 import {
   Check,
   ChevronLeft,
@@ -49,6 +49,17 @@ interface VendorType {
   status: string;
   logo: string;
 }
+
+type VendorFormType = {
+  name: string;
+  email: string;
+  password: string;
+  store_name: string;
+  phone: string;
+  address: string;
+  description: string;
+  status: string;
+};
 
 const vendorStats = [
   {
@@ -77,17 +88,20 @@ const vendorStats = [
   },
 ];
 
+// ! super-admin cant create vendor yet. backend logic is complex
 export default function Vendors({ vendors }: { vendors: VendorType[] }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [formData, setFormData] = useState({
+  const { data, setData, post, processing, errors } = useForm<VendorFormType>({
+    name: "",
+    password: "",
     store_name: "",
     email: "",
     phone: "",
     address: "",
     description: "",
-    status: "Pending",
+    status: "approved",
   });
 
   const filteredVendors = vendors.filter(
@@ -101,32 +115,18 @@ export default function Vendors({ vendors }: { vendors: VendorType[] }) {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedVendors = filteredVendors.slice(startIndex, startIndex + itemsPerPage);
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send the data to your backend
-    console.log("Creating vendor:", formData);
+    post(route("vendor.apply.store"));
+    console.log(data, errors);
     setIsDialogOpen(false);
-    setFormData({
-      store_name: "",
-      email: "",
-      phone: "",
-      address: "",
-      description: "",
-      status: "Pending",
-    });
   };
 
   const handleApproveVendor = (vendorId: number) => {
-    console.log("Approving vendor:", vendorId);
     router.post(route("super-admin.approve-vendor", { vendorId }));
   };
 
   const handleRejectVendor = (vendorId: number) => {
-    console.log("Rejecting vendor:", vendorId);
     router.post(route("super-admin.reject-vendor", { vendorId }));
   };
 
@@ -146,94 +146,129 @@ export default function Vendors({ vendors }: { vendors: VendorType[] }) {
                 Add Vendor
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="min-w-[55vw]">
               <DialogHeader>
                 <DialogTitle>Add New Vendor</DialogTitle>
                 <DialogDescription>
                   Create a new vendor account. Fill in the required information below.
                 </DialogDescription>
               </DialogHeader>
-              <form onSubmit={handleSubmit}>
-                <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="store_name" className="text-right">
-                      Store Name
-                    </Label>
-                    <Input
-                      id="store_name"
-                      value={formData.store_name}
-                      onChange={(e) => handleInputChange("store_name", e.target.value)}
-                      className="col-span-3"
-                      required
-                    />
+              <form className="w-full" onSubmit={handleSubmit}>
+                <div className="flex w-full gap-4">
+                  <div className="flex w-1/2 flex-col gap-3">
+                    <div className="w-full items-center gap-4">
+                      <Label htmlFor="name" className="text-right">
+                        Name*
+                      </Label>
+                      <Input
+                        id="name"
+                        name="name"
+                        value={data.name}
+                        onChange={(e) => setData("name", e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className="w-full items-center gap-4">
+                      <Label htmlFor="email" className="text-right">
+                        Email*
+                      </Label>
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        value={data.email}
+                        onChange={(e) => setData("email", e.target.value)}
+                        className="col-span-3"
+                        required
+                      />
+                    </div>
+                    <div className="w-full items-center gap-4">
+                      <Label htmlFor="password" className="text-right">
+                        Password*
+                      </Label>
+                      <Input
+                        id="password"
+                        name="password"
+                        type="password"
+                        onChange={(e) => setData("password", e.target.value)}
+                        className="col-span-3"
+                        required
+                      />
+                    </div>
                   </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="email" className="text-right">
-                      Email
-                    </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange("email", e.target.value)}
-                      className="col-span-3"
-                      required
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="phone" className="text-right">
-                      Phone
-                    </Label>
-                    <Input
-                      id="phone"
-                      value={formData.phone}
-                      onChange={(e) => handleInputChange("phone", e.target.value)}
-                      className="col-span-3"
-                      required
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="address" className="text-right">
-                      Address
-                    </Label>
-                    <Textarea
-                      id="address"
-                      value={formData.address}
-                      onChange={(e) => handleInputChange("address", e.target.value)}
-                      className="col-span-3"
-                      rows={3}
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="description" className="text-right">
-                      Description
-                    </Label>
-                    <Textarea
-                      id="description"
-                      value={formData.description}
-                      onChange={(e) => handleInputChange("description", e.target.value)}
-                      className="col-span-3"
-                      rows={3}
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="status" className="text-right">
-                      Status
-                    </Label>
-                    <Select value={formData.status} onValueChange={(value) => handleInputChange("status", value)}>
-                      <SelectTrigger className="col-span-3">
-                        <SelectValue placeholder="Select status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Active">Active</SelectItem>
-                        <SelectItem value="Pending">Pending</SelectItem>
-                        <SelectItem value="Inactive">Inactive</SelectItem>
-                      </SelectContent>
-                    </Select>
+                  <div className="flex w-1/2 flex-col gap-3">
+                    <div className="w-full items-center gap-4">
+                      <Label htmlFor="store_name" className="text-right">
+                        Store Name*
+                      </Label>
+                      <Input
+                        id="store_name"
+                        name="store_name"
+                        value={data.store_name}
+                        onChange={(e) => setData("store_name", e.target.value)}
+                        className="col-span-3"
+                        required
+                      />
+                    </div>
+                    <div className="w-full items-center gap-4">
+                      <Label htmlFor="phone" className="text-right">
+                        Phone
+                      </Label>
+                      <Input
+                        id="phone"
+                        name="phone"
+                        value={data.phone}
+                        onChange={(e) => setData("phone", e.target.value)}
+                        className="col-span-3"
+                      />
+                    </div>
+                    <div className="w-full items-center gap-4">
+                      <Label htmlFor="address" className="text-right">
+                        Address
+                      </Label>
+                      <Textarea
+                        id="address"
+                        name="address"
+                        value={data.address}
+                        onChange={(e) => setData("address", e.target.value)}
+                        className="col-span-3"
+                        rows={3}
+                      />
+                    </div>
+                    <div className="w-full items-center gap-4">
+                      <Label htmlFor="description" className="text-right">
+                        Description
+                      </Label>
+                      <Textarea
+                        id="description"
+                        name="description"
+                        value={data.description}
+                        onChange={(e) => setData("description", e.target.value)}
+                        className="col-span-3"
+                        rows={3}
+                      />
+                    </div>
+                    <div className="w-full items-center gap-4">
+                      <Label htmlFor="status" className="text-right">
+                        Status
+                      </Label>
+                      <Select name="status" value={data.status} onValueChange={(value) => setData("status", value)}>
+                        <SelectTrigger className="col-span-3">
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="approved">Approved</SelectItem>
+                          <SelectItem value="pending">Pending</SelectItem>
+                          <SelectItem value="rejected">Rejected</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
                 </div>
-                <DialogFooter>
-                  <Button type="submit">Create Vendor</Button>
+                <DialogFooter className="mt-6">
+                  <Button disabled={processing} type="submit">
+                    Create Vendor
+                  </Button>
                 </DialogFooter>
               </form>
             </DialogContent>
@@ -259,8 +294,15 @@ export default function Vendors({ vendors }: { vendors: VendorType[] }) {
         {/* Search and Filters */}
         <Card>
           <CardHeader>
-            <CardTitle>Vendor List</CardTitle>
-            <CardDescription>A list of all vendors in your marketplace</CardDescription>
+            <div className="flex w-full items-start justify-between">
+              <div className="">
+                <CardTitle>Vendor List</CardTitle>
+                <CardDescription>A list of all vendors in your marketplace</CardDescription>
+              </div>
+              <Button className="ml-auto bg-gray-100" variant="outline">
+                Rejected Vendors
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="mb-4 flex items-center space-x-2">
@@ -288,127 +330,138 @@ export default function Vendors({ vendors }: { vendors: VendorType[] }) {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {paginatedVendors.map((vendor: VendorType) => (
-                  <TableRow key={vendor.id}>
-                    <TableCell>
-                      <div className="flex items-center space-x-3">
-                        <Avatar>
-                          <AvatarImage src={vendor.logo || "/images/placeholder.svg"} />
-                          <AvatarFallback>
-                            {vendor.store_name
-                              .split(" ")
-                              .map((n: any) => n[0])
-                              .join("")}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <div className="font-medium">{vendor.store_name}</div>
-                          <div className="text-sm text-muted-foreground">ID: {vendor.id}</div>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="space-y-1">
-                        <div className="flex items-center text-sm">
-                          <Mail className="mr-1 h-3 w-3" />
-                          {vendor.email}
-                        </div>
-                        <div className="flex items-center text-sm text-muted-foreground">
-                          <Phone className="mr-1 h-3 w-3" />
-                          {vendor.phone || "N/A"}
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          vendor.status === "Active"
-                            ? "default"
-                            : vendor.status === "Pending"
-                              ? "secondary"
-                              : "destructive"
-                        }
-                      >
-                        {vendor.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>N/A</TableCell>
-                    <TableCell>N/A</TableCell>
-                    <TableCell>N/A</TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => handleApproveVendor(vendor.id)}>
-                            <Check className="mr-2 h-4 w-4" />
-                            Approve
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleRejectVendor(vendor.id)}>
-                            <X className="mr-2 h-4 w-4" />
-                            Reject
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Eye className="mr-2 h-4 w-4" />
-                            View Details
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Edit className="mr-2 h-4 w-4" />
-                            Edit Vendor
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="text-red-600">
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Delete Vendor
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                {/* show no vendor found message */}
+                {paginatedVendors.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="h-24 text-center text-gray-400">
+                      No vendors found.
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : (
+                  paginatedVendors.map((vendor: VendorType) => (
+                    <TableRow key={vendor.id}>
+                      <TableCell>
+                        <div className="flex items-center space-x-3">
+                          <Avatar>
+                            <AvatarImage src={vendor.logo || "/images/placeholder.svg"} />
+                            <AvatarFallback>
+                              {vendor.store_name
+                                .split(" ")
+                                .map((n: any) => n[0])
+                                .join("")}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <div className="font-medium">{vendor.store_name}</div>
+                            <div className="text-sm text-muted-foreground">ID: {vendor.id}</div>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="space-y-1">
+                          <div className="flex items-center text-sm">
+                            <Mail className="mr-1 h-3 w-3" />
+                            {vendor.email}
+                          </div>
+                          <div className="flex items-center text-sm text-muted-foreground">
+                            <Phone className="mr-1 h-3 w-3" />
+                            {vendor.phone || "N/A"}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={
+                            vendor.status === "Active"
+                              ? "default"
+                              : vendor.status === "Pending"
+                                ? "secondary"
+                                : "destructive"
+                          }
+                        >
+                          {vendor.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>N/A</TableCell>
+                      <TableCell>N/A</TableCell>
+                      <TableCell>N/A</TableCell>
+                      <TableCell>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => handleApproveVendor(vendor.id)}>
+                              <Check className="mr-2 h-4 w-4" />
+                              Approve
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleRejectVendor(vendor.id)}>
+                              <X className="mr-2 h-4 w-4" />
+                              Reject
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <Eye className="mr-2 h-4 w-4" />
+                              View Details
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <Edit className="mr-2 h-4 w-4" />
+                              Edit Vendor
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="text-red-600">
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Delete Vendor
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
-            <div className="flex items-center justify-between space-x-2 py-4">
-              <div className="text-sm text-muted-foreground">
-                Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredVendors.length)} of{" "}
-                {filteredVendors.length} vendors
-              </div>
-              <div className="flex items-center space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                  disabled={currentPage === 1}
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                  Previous
-                </Button>
-                <div className="flex items-center space-x-1">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                    <Button
-                      key={page}
-                      variant={currentPage === page ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setCurrentPage(page)}
-                      className="h-8 w-8 p-0"
-                    >
-                      {page}
-                    </Button>
-                  ))}
+            {paginatedVendors.length > 5 && (
+              <div className="flex items-center justify-between space-x-2 py-4">
+                <div className="text-sm text-muted-foreground">
+                  Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredVendors.length)} of{" "}
+                  {filteredVendors.length} vendors
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                  disabled={currentPage === totalPages}
-                >
-                  Next
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
+                <div className="flex items-center space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    Previous
+                  </Button>
+                  <div className="flex items-center space-x-1">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <Button
+                        key={page}
+                        variant={currentPage === page ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setCurrentPage(page)}
+                        className="h-8 w-8 p-0"
+                      >
+                        {page}
+                      </Button>
+                    ))}
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
-            </div>
+            )}
           </CardContent>
         </Card>
       </div>

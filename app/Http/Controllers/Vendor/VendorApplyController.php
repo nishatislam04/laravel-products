@@ -62,7 +62,7 @@ class VendorApplyController extends Controller {
             'license_expiry' => $validatedData['license_expiry'],
         ]);
 
-        return redirect()->route('vendor-admin.dashboard')->with('success', 'Vendor application submitted successfully!');
+        return redirect()->route('home.page')->with('success', 'Vendor application submitted successfully!');
     }
 
     public function whenUserExists($request) {

@@ -93,10 +93,6 @@ const navigationItems = [
 ];
 
 export default function VendorLayout({ children, title = "Vendor Panel" }: VendorLayoutProps) {
-  const handleLogout = () => {
-    router.post(route("signout"));
-  };
-
   return (
     <>
       <Head title={title} />
@@ -170,7 +166,7 @@ export default function VendorLayout({ children, title = "Vendor Panel" }: Vendo
                       Store Settings
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => handleLogout()}>Log out</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.post(route("signout"))}>Sign out</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </SidebarMenuItem>

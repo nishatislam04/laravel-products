@@ -17,6 +17,7 @@ return new class extends Migration {
 
             // Store branding
             $table->string('store_name')->unique();
+            $table->text('description')->nullable();
             $table->string('slug')->unique();
             $table->string('logo')->nullable();
             $table->string('banner')->nullable();

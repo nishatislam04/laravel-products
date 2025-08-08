@@ -26,7 +26,7 @@ class AuthController extends Controller {
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials, true)) {
-            return redirect()->route('home');
+            return redirect()->route('home.page');
         }
 
         return back()->withErrors([
@@ -53,7 +53,7 @@ class AuthController extends Controller {
 
         Auth::login($user, true);
 
-        return redirect()->route('home');
+        return redirect()->route('home.page');
     }
 
     /**
@@ -77,6 +77,6 @@ class AuthController extends Controller {
 
         $request->session()->regenerateToken();
 
-        return redirect()->route('home');
+        return redirect()->route('home.page');
     }
 }

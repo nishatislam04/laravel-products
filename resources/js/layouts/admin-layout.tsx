@@ -25,7 +25,7 @@ import {
   SidebarProvider,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, router } from "@inertiajs/react";
 import {
   BarChart3,
   Bell,
@@ -169,7 +169,7 @@ export default function AdminLayout({ children, title = "Admin Panel" }: AdminLa
                       Settings
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>Log out</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.post(route("signout"))}>Sign out</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </SidebarMenuItem>

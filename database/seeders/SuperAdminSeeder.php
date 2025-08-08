@@ -22,6 +22,7 @@ class SuperAdminSeeder extends Seeder {
             [
                 'name' => 'Nishat Islam',
                 'password' => Hash::make('12345678'),
+                'status' => 'active',
             ]
         );
 
