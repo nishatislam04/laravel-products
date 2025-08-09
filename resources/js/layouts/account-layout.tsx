@@ -3,6 +3,7 @@
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Link, usePage } from "@inertiajs/react";
 import {
@@ -135,10 +136,10 @@ export default function AccountLayout({ children }: AccountLayoutProps) {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex h-screen flex-col overflow-y-hidden bg-white">
       <Header />
 
-      <main className="flex-1">
+      <main className="flex-1 overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           {/* Welcome Message */}
           <div className="mb-8 flex items-center justify-between">
@@ -197,8 +198,10 @@ export default function AccountLayout({ children }: AccountLayoutProps) {
             </div>
 
             {/* Main Content Area */}
-            <div className="lg:col-span-3">
-              <div className="bg-white">{children}</div>
+            <div className="lg:col-span-3 flex flex-col">
+              <ScrollArea className="flex-1">
+                <div className="bg-white p-1">{children}</div>
+              </ScrollArea>
             </div>
           </div>
         </div>

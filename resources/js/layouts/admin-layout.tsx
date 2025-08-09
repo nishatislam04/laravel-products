@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Sidebar,
   SidebarContent,
@@ -178,7 +179,7 @@ export default function AdminLayout({ children, title = "Admin Panel" }: AdminLa
           <SidebarRail />
         </Sidebar>
 
-        <SidebarInset>
+        <SidebarInset className="flex h-screen flex-col overflow-y-hidden">
           <header className="flex h-15 w-full shrink-0 items-center justify-between gap-2 border-b px-4">
             <div className="flex w-full items-center justify-end gap-2">
               <div className="relative max-w-md flex-1">
@@ -191,7 +192,9 @@ export default function AdminLayout({ children, title = "Admin Panel" }: AdminLa
             </div>
           </header>
 
-          <main className="flex-1 p-6">{children}</main>
+          <ScrollArea className="flex-1 overflow-y-auto p-6">
+            {children}
+          </ScrollArea>
         </SidebarInset>
       </SidebarProvider>
     </>

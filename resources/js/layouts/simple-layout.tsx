@@ -1,4 +1,5 @@
 import { Head } from "@inertiajs/react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { ReactNode } from "react";
 
 interface SimpleLayoutProps {
@@ -10,7 +11,9 @@ export default function SimpleLayout({ children, title = "Laravel" }: SimpleLayo
   return (
     <>
       <Head title={title} />
-      <div className="min-h-screen bg-gray-50">{children}</div>
+      <div className="h-screen overflow-y-hidden bg-gray-50">
+        <ScrollArea className="h-full">{children}</ScrollArea>
+      </div>
     </>
   );
 }
