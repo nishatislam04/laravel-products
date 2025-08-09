@@ -1,4 +1,3 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
@@ -11,36 +10,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import AdminLayout from "@/layouts/admin-layout";
 import { cn } from "@/lib/utils";
 import { useForm } from "@inertiajs/react";
-import {
-  Check,
-  ChevronLeft,
-  ChevronRight,
-  ChevronsUpDown,
-  Edit,
-  Eye,
-  Folder,
-  MoreHorizontal,
-  Plus,
-  Search,
-  Tag,
-  Trash2,
-} from "lucide-react";
+import { Check, ChevronsUpDown, Folder, Plus, Search, Tag } from "lucide-react";
 import React, { useState } from "react";
 
 // Mock category data
@@ -147,6 +127,7 @@ type FormCategory = {
 };
 
 export default function Categories({ categories }: { categories: CategoryType[] }) {
+  console.log(categories);
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryInput, setCategoryInput] = useState("");
   const [categoryValues, setCategoryValues] = useState("");
@@ -179,15 +160,15 @@ export default function Categories({ categories }: { categories: CategoryType[] 
   });
 
   const itemsPerPage = 5;
-  const filteredCategories = categories.filter(
-    (category) =>
-      category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      category.description.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  // const filteredCategories = categories.filter(
+  //   (category) =>
+  //     category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     category.description.toLowerCase().includes(searchTerm.toLowerCase()),
+  // );
 
-  const totalPages = Math.ceil(filteredCategories.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedCategories = filteredCategories.slice(startIndex, startIndex + itemsPerPage);
+  // const totalPages = Math.ceil(filteredCategories.length / itemsPerPage);
+  // const startIndex = (currentPage - 1) * itemsPerPage;
+  // const paginatedCategories = filteredCategories.slice(startIndex, startIndex + itemsPerPage);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -354,11 +335,15 @@ export default function Categories({ categories }: { categories: CategoryType[] 
                         <Tooltip>
                           <TooltipTrigger>Category 📢</TooltipTrigger>
                           <TooltipContent className="space-y-2">
-                            <h1>This is about nested category block</h1>
+                            <h1>This is about creating nested category block</h1>
                             <ul className="list-disc pl-2">
-                              <li>If no category is selected, the new category will be Level 1</li>
-                              <li>If you select a Level 1 category, the new category will be Level 2</li>
-                              <li>If you select a Level 2 category, the new category will be Level 3</li>
+                              <li>If no category is selected, the new category will be parent category</li>
+                              <li>
+                                If you select a Level 1 category, the new category will be Level 2 (child of Level 1)
+                              </li>
+                              <li>
+                                If you select a Level 2 category, the new category will be Level 3 (child of Level 2)
+                              </li>
                               <li>Categories with the same numbering prefix are siblings.</li>
                             </ul>
                           </TooltipContent>
@@ -395,7 +380,7 @@ export default function Categories({ categories }: { categories: CategoryType[] 
                                       if (errors.parent_id) clearErrors("parent_id");
                                     }}
                                   >
-                                    {category.name}
+                                    {category.label}
                                     <Check
                                       className={cn(
                                         "ml-auto",
@@ -411,7 +396,11 @@ export default function Categories({ categories }: { categories: CategoryType[] 
                       </Popover>
                     </div>
                     {/* sort order */}
-                    <div className="flex justify-between">
+                    {/* ! sort_order is too complex for us. we will bring this feature later */}
+                    <p className="mt-8 text-sm text-gray-400 italic">
+                      sort order is too complex for us. we will bring this feature later
+                    </p>
+                    {/* <div className="flex justify-between">
                       <div className="">
                         <Label htmlFor="sort_order" className="text-right">
                           Sort Order
@@ -427,7 +416,7 @@ export default function Categories({ categories }: { categories: CategoryType[] 
                       <div className="flex items-center self-end">
                         <DropdownMenu>
                           <DropdownMenuTrigger>
-                            <Button>show current order state</Button>
+                            <p className="rounded-sm bg-gray-100 p-2 text-gray-700">show current order state</p>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent className="w-[200px]">
                             <DropdownMenuItem>Profile</DropdownMenuItem>
@@ -437,7 +426,7 @@ export default function Categories({ categories }: { categories: CategoryType[] 
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </section>
                 <DialogFooter className="my-4">
@@ -496,8 +485,8 @@ export default function Categories({ categories }: { categories: CategoryType[] 
                   <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody>
-                {paginatedCategories.map((category) => (
+              {/* <TableBody>
+                {paginatedCategories.map((category: any) => (
                   <TableRow key={category.id}>
                     <TableCell>
                       <div className="flex items-center space-x-3">
@@ -551,11 +540,11 @@ export default function Categories({ categories }: { categories: CategoryType[] 
                     </TableCell>
                   </TableRow>
                 ))}
-              </TableBody>
+              </TableBody> */}
             </Table>
 
             {/* Pagination */}
-            <div className="flex items-center justify-between space-x-2 py-4">
+            {/* <div className="flex items-center justify-between space-x-2 py-4">
               <div className="text-sm text-muted-foreground">
                 Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredCategories.length)} of{" "}
                 {filteredCategories.length} categories
@@ -593,7 +582,7 @@ export default function Categories({ categories }: { categories: CategoryType[] 
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
-            </div>
+            </div> */}
           </CardContent>
         </Card>
       </div>

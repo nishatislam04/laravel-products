@@ -31,7 +31,8 @@ return new class extends Migration {
             $table->text('description')->nullable();
 
             // Sorting & status
-            $table->unsignedInteger('sort_order')->default(0); // For menu ordering
+            // it is too complex for us. we will handle it later
+            // $table->unsignedInteger('sort_order')->default(0); // For menu ordering
             $table->enum('status', ['active', 'inactive'])->default('active');
 
             $table->timestamps();

@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder {
             CategorySeeder::class,
             VendorSeeder::class,
             BrandSeeder::class,
-            ProductSeeder::class,
+            // ProductSeeder::class,
             RoleSeeder::class,
             SuperAdminSeeder::class,
         ]);

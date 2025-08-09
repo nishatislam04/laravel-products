@@ -31,10 +31,41 @@ class SuperAdminPageController extends Controller {
     }
 
     public function categorySection() {
-        $categories = Category::all();
+        // Get top-level categories with children recursively
+        $categories = Category::whereNull('parent_id')
+            ->with(['children' => function ($query) {
+                $query->orderBy('name');
+            }, 'children.children' => function ($query) {
+                $query->orderBy('name');
+            }]) // load 2-level deep; you can chain more for deeper nesting
+            ->orderBy('name')
+            ->get();
+
+        $formattedCategories = $this->getIndentedCategories($categories);
+
         return Inertia::render('super-admin/categories', [
-            'categories' => $categories,
+            'categories' => $formattedCategories,
         ]);
+    }
+
+    private function getIndentedCategories($categories, $prefix = '') {
+        $result = [];
+
+        foreach ($categories as $category) {
+            $result[] = [
+                'id' => $category->id,
+                'label' => $prefix . $category->name
+            ];
+
+            if ($category->children && $category->children->isNotEmpty()) {
+                $result = array_merge(
+                    $result,
+                    $this->getIndentedCategories($category->children, $prefix . '— ')
+                );
+            }
+        }
+
+        return $result;
     }
 
     public function productSection() {
