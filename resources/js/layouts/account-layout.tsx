@@ -199,7 +199,7 @@ export default function AccountLayout({ children }: AccountLayoutProps) {
 
             {/* Main Content Area */}
             <div className="lg:col-span-3 flex flex-col">
-              <ScrollArea className="flex-1">
+              <ScrollArea className="flex-1" width={2.5}>
                 <div className="bg-white p-1">{children}</div>
               </ScrollArea>
             </div>

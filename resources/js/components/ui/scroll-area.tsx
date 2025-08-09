@@ -3,7 +3,11 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-function ScrollArea({ className, children, ...props }: React.ComponentProps<typeof ScrollAreaPrimitive.Root>) {
+interface ScrollAreaProps extends React.ComponentProps<typeof ScrollAreaPrimitive.Root> {
+    width?: number;
+}
+
+function ScrollArea({ className, children, width, ...props }: ScrollAreaProps) {
     return (
         <ScrollAreaPrimitive.Root data-slot="scroll-area" className={cn("relative", className)} {...props}>
             <ScrollAreaPrimitive.Viewport
@@ -12,21 +16,25 @@ function ScrollArea({ className, children, ...props }: React.ComponentProps<type
             >
                 {children}
             </ScrollAreaPrimitive.Viewport>
-            <ScrollBar />
+            <ScrollBar width={width} />
             <ScrollAreaPrimitive.Corner />
         </ScrollAreaPrimitive.Root>
     );
 }
 
 // ! add scroll width size props
-function ScrollBar({ className, orientation = "vertical", ...props }: React.ComponentProps<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>) {
+interface ScrollBarProps extends React.ComponentProps<typeof ScrollAreaPrimitive.ScrollAreaScrollbar> {
+    width?: number;
+}
+
+function ScrollBar({ className, orientation = "vertical", width = 0, ...props }: ScrollBarProps) {
     return (
         <ScrollAreaPrimitive.ScrollAreaScrollbar
             data-slot="scroll-area-scrollbar"
             orientation={orientation}
             className={cn(
                 "flex touch-none p-px transition-colors select-none",
-                orientation === "vertical" && `h-full w-0 border-l border-l-transparent`,
+                orientation === "vertical" && `h-full w-${width} border-l border-l-transparent`,
                 orientation === "horizontal" && "h-2.5 flex-col border-t border-t-transparent",
                 className,
             )}

@@ -12,7 +12,7 @@ export default function SimpleLayout({ children, title = "Laravel" }: SimpleLayo
     <>
       <Head title={title} />
       <div className="h-screen overflow-y-hidden bg-gray-50">
-        <ScrollArea className="h-full">{children}</ScrollArea>
+        <ScrollArea className="h-full" width={2.5}>{children}</ScrollArea>
       </div>
     </>
   );

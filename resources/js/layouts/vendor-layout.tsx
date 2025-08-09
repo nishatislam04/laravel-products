@@ -206,7 +206,7 @@ export default function VendorLayout({ children, title = "Vendor Panel" }: Vendo
             </div>
           </header>
 
-          <ScrollArea className="flex-1 overflow-y-auto p-6">
+          <ScrollArea className="flex-1 overflow-y-auto p-6" width={2.5}>
             {children}
           </ScrollArea>
         </SidebarInset>

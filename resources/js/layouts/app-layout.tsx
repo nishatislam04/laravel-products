@@ -7,7 +7,7 @@ interface AppLayoutProps {
 
 export default ({ children, ...props }: AppLayoutProps) => (
   <div {...props} id="app-layout" className="h-screen overflow-y-hidden">
-    <ScrollArea className="h-full w-full">
+    <ScrollArea className="h-full w-full" width={2.5}>
         {children}
     </ScrollArea>
   </div>
