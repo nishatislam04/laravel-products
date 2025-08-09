@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import {
   Dialog,
   DialogContent,
@@ -18,11 +19,28 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import AdminLayout from "@/layouts/admin-layout";
-import { ChevronLeft, ChevronRight, Edit, Eye, Folder, MoreHorizontal, Plus, Search, Tag, Trash2 } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useForm } from "@inertiajs/react";
+import {
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsUpDown,
+  Edit,
+  Eye,
+  Folder,
+  MoreHorizontal,
+  Plus,
+  Search,
+  Tag,
+  Trash2,
+} from "lucide-react";
 import React, { useState } from "react";
 
 // Mock category data
@@ -111,16 +129,53 @@ const categoryStats = [
   },
 ];
 
-export default function Categories() {
+type CategoryType = {
+  id: number;
+  name: string;
+};
+
+type FormCategory = {
+  name: string;
+  status: string;
+  description: string;
+  image: File | undefined;
+  icon: File | undefined;
+  meta_title: string;
+  meta_description: string;
+  parent_id: string;
+  sort_order: string;
+};
+
+export default function Categories({ categories }: { categories: CategoryType[] }) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [categoryInput, setCategoryInput] = useState("");
+  const [categoryValues, setCategoryValues] = useState("");
+  const [openCategory, setOpenCategory] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [formData, setFormData] = useState({
+  const {
+    data,
+    setData,
+    post,
+    processing,
+    errors,
+    isDirty,
+    setDefaults,
+    reset,
+    setError,
+    clearErrors,
+    progress,
+    transform,
+  } = useForm<FormCategory>({
     name: "",
-    slug: "",
     description: "",
-    parent: "",
-    status: "Active",
+    status: "",
+    image: undefined,
+    icon: undefined,
+    meta_title: "",
+    meta_description: "",
+    parent_id: "",
+    sort_order: "",
   });
 
   const itemsPerPage = 5;
@@ -134,21 +189,26 @@ export default function Categories() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedCategories = filteredCategories.slice(startIndex, startIndex + itemsPerPage);
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Creating category:", formData);
-    setIsDialogOpen(false);
-    setFormData({
-      name: "",
-      slug: "",
-      description: "",
-      parent: "",
-      status: "Active",
+
+    post(route("vendor-admin.products.store"), {
+      forceFormData: true,
+      onSuccess: () => {
+        setIsDialogOpen(false); // close modal on success
+        reset();
+      },
+      onError: () => {
+        // optionally do something on error
+      },
     });
+  };
+
+  const handleChange = (field: keyof FormCategory) => (e: any) => {
+    let value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+
+    setData(field, value);
+    if (errors[field]) clearErrors(field);
   };
 
   return (
@@ -167,84 +227,223 @@ export default function Categories() {
                 Add Category
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
+            <DialogContent className="max-h-[90vh] min-h-[90vh] max-w-[70vw] min-w-[70vw] overflow-y-auto p-0">
+              <DialogHeader className="bg-white px-6 py-6">
                 <DialogTitle>Add New Category</DialogTitle>
                 <DialogDescription>
                   Create a new product category. Fill in the required information below.
                 </DialogDescription>
               </DialogHeader>
-              <form onSubmit={handleSubmit}>
-                <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="name" className="text-right">
-                      Name
-                    </Label>
-                    <Input
-                      id="name"
-                      value={formData.name}
-                      onChange={(e) => handleInputChange("name", e.target.value)}
-                      className="col-span-3"
-                      required
-                    />
+              <form className="p-6 pt-0" onSubmit={handleSubmit}>
+                <section className="grid grid-cols-12 gap-4">
+                  {/* basic container */}
+                  <div className="col-span-6 space-y-2 rounded-sm border border-gray-200 p-4">
+                    <h3 className="mb-2 text-lg font-semibold tracking-tight">Basic Info</h3>
+                    <div className="">
+                      <Label htmlFor="name" className="text-right">
+                        Name
+                      </Label>
+                      <Input
+                        id="name"
+                        value={data.name}
+                        onChange={(e) => handleChange("name")}
+                        className="col-span-3"
+                        required
+                      />
+                    </div>
+                    <div className="">
+                      <Label htmlFor="status" className="text-right">
+                        Status
+                      </Label>
+                      <Select value={data.status} onValueChange={(value) => handleChange("status")}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Active">Active</SelectItem>
+                          <SelectItem value="Inactive">Inactive</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    {/* description */}
+                    <div className="">
+                      <Label htmlFor="description" className="text-right">
+                        Description
+                      </Label>
+                      <Textarea
+                        id="description"
+                        value={data.description}
+                        onChange={(e) => handleChange("description")}
+                        className="col-span-3"
+                        rows={3}
+                      />
+                    </div>
                   </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="slug" className="text-right">
-                      Slug
-                    </Label>
-                    <Input
-                      id="slug"
-                      value={formData.slug}
-                      onChange={(e) => handleInputChange("slug", e.target.value)}
-                      className="col-span-3"
-                      required
-                    />
+                  {/* image container */}
+                  <div className="col-span-6 space-y-5 rounded-sm border border-gray-200 p-4">
+                    <h3 className="mb-2 text-lg font-semibold tracking-tight">Image</h3>
+                    <div className="my-6">
+                      <Label htmlFor="image" className="text-right">
+                        Image*
+                      </Label>
+                      <Input
+                        id="image"
+                        type="file"
+                        name="image"
+                        className={errors.image ? "border-red-500" : ""}
+                        onChange={(e) => {
+                          setData("image", e.target.files?.[0]);
+                          if (errors.image) clearErrors("image");
+                        }}
+                        // required
+                      />
+                      {errors.image && <p className="text-sm text-red-500">{errors.image}</p>}
+                    </div>
+                    <div className="my-6">
+                      <Label htmlFor="icon" className="text-right">
+                        Icon*
+                      </Label>
+                      <Input
+                        id="icon"
+                        type="file"
+                        name="icon"
+                        className={errors.icon ? "border-red-500" : ""}
+                        onChange={(e) => {
+                          setData("icon", e.target.files?.[0]);
+                          if (errors.icon) clearErrors("icon");
+                        }}
+                        // required
+                      />
+                      {errors.icon && <p className="text-sm text-red-500">{errors.icon}</p>}
+                    </div>
                   </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="description" className="text-right">
-                      Description
-                    </Label>
-                    <Textarea
-                      id="description"
-                      value={formData.description}
-                      onChange={(e) => handleInputChange("description", e.target.value)}
-                      className="col-span-3"
-                      rows={3}
-                    />
+                  {/* meta container */}
+                  <div className="col-span-6 rounded-sm border border-gray-200 p-4">
+                    <h3 className="mb-2 text-lg font-semibold tracking-tight">Meta & SEO</h3>
+                    <div className="my-6">
+                      <Label htmlFor="meta_title" className="text-right">
+                        Meta Title
+                      </Label>
+                      <Input
+                        id="meta_title"
+                        value={data.meta_title}
+                        onChange={(e) => handleChange("meta_title")}
+                        className="col-span-3"
+                        required
+                      />
+                    </div>
+                    <div className="my-6">
+                      <Label htmlFor="meta_description" className="text-right">
+                        Meta Description
+                      </Label>
+                      <Textarea
+                        id="meta_description"
+                        value={data.meta_description}
+                        onChange={(e) => handleChange("meta_description")}
+                        className="col-span-3"
+                        rows={3}
+                      />
+                    </div>
                   </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="parent" className="text-right">
-                      Parent Category
-                    </Label>
-                    <Select value={formData.parent} onValueChange={(value) => handleInputChange("parent", value)}>
-                      <SelectTrigger className="col-span-3">
-                        <SelectValue placeholder="Select parent category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="">None (Root Category)</SelectItem>
-                        <SelectItem value="Electronics">Electronics</SelectItem>
-                        <SelectItem value="Clothing">Clothing</SelectItem>
-                        <SelectItem value="Books">Books</SelectItem>
-                      </SelectContent>
-                    </Select>
+
+                  {/* miscs container */}
+                  <div className="col-span-6 rounded-sm border border-gray-200 p-4">
+                    <h3 className="mb-2 text-lg font-semibold tracking-tight">Miscs</h3>
+                    <div className="my-6 flex flex-col items-start gap-2">
+                      <Label htmlFor="category" className="text-right">
+                        <Tooltip>
+                          <TooltipTrigger>Category 📢</TooltipTrigger>
+                          <TooltipContent className="space-y-2">
+                            <h1>This is about nested category block</h1>
+                            <ul className="list-disc pl-2">
+                              <li>If no category is selected, the new category will be Level 1</li>
+                              <li>If you select a Level 1 category, the new category will be Level 2</li>
+                              <li>If you select a Level 2 category, the new category will be Level 3</li>
+                              <li>Categories with the same numbering prefix are siblings.</li>
+                            </ul>
+                          </TooltipContent>
+                        </Tooltip>
+                      </Label>
+                      <Popover open={openCategory} onOpenChange={setOpenCategory}>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            aria-expanded={openCategory}
+                            className="w-[250px] justify-between"
+                          >
+                            {categoryValues ? categoryValues : "Select category..."}
+                            <ChevronsUpDown className="opacity-50" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[250px] p-0">
+                          <Command>
+                            <CommandInput placeholder="Search category..." className="h-9" />
+                            <CommandList>
+                              <CommandEmpty>No category found.</CommandEmpty>
+                              <CommandGroup>
+                                {categories.map((category: any) => (
+                                  <CommandItem
+                                    key={category.name}
+                                    value={category.name}
+                                    onSelect={(currentValue) => {
+                                      setCategoryInput(currentValue === categoryInput ? "" : currentValue);
+                                      setCategoryValues((prev) => (prev !== currentValue ? currentValue : ""));
+                                      setOpenCategory(false);
+
+                                      setData("parent_id", category.id); // better to use id instead of name
+                                      if (errors.parent_id) clearErrors("parent_id");
+                                    }}
+                                  >
+                                    {category.name}
+                                    <Check
+                                      className={cn(
+                                        "ml-auto",
+                                        categoryInput === category.name ? "opacity-100" : "opacity-0",
+                                      )}
+                                    />
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                    {/* sort order */}
+                    <div className="flex justify-between">
+                      <div className="">
+                        <Label htmlFor="sort_order" className="text-right">
+                          Sort Order
+                        </Label>
+                        <Input
+                          id="sort_order"
+                          value={data.sort_order}
+                          onChange={(e) => handleChange("sort_order")}
+                          type="number"
+                          required
+                        />
+                      </div>
+                      <div className="flex items-center self-end">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger>
+                            <Button>show current order state</Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent className="w-[200px]">
+                            <DropdownMenuItem>Profile</DropdownMenuItem>
+                            <DropdownMenuItem>Billing</DropdownMenuItem>
+                            <DropdownMenuItem>Team</DropdownMenuItem>
+                            <DropdownMenuItem>Subscription</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="status" className="text-right">
-                      Status
-                    </Label>
-                    <Select value={formData.status} onValueChange={(value) => handleInputChange("status", value)}>
-                      <SelectTrigger className="col-span-3">
-                        <SelectValue placeholder="Select status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Active">Active</SelectItem>
-                        <SelectItem value="Inactive">Inactive</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button type="submit">Create Category</Button>
+                </section>
+                <DialogFooter className="my-4">
+                  <Button className="mt-2" disabled={processing} type="submit">
+                    {processing ? "Creating..." : "Create Category"}
+                  </Button>
                 </DialogFooter>
               </form>
             </DialogContent>

@@ -250,14 +250,6 @@ export default function VendorProducts({
 
   // Auto-generate slug from store name
   // ! generate slug on server
-  // const handleNameChange = (value: string) => {
-  //   setData("name", value);
-  //   const slug = value
-  //     .toLowerCase()
-  //     .replace(/[^a-z0-9]+/g, "-")
-  //     .replace(/(^-|-$)/g, "");
-  //   setData("slug", slug);
-  // };
 
   const itemsPerPage = 5;
   const filteredProducts = vendorProducts.filter(
@@ -272,7 +264,6 @@ export default function VendorProducts({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(data);
 
     post(route("vendor-admin.products.store"), {
       forceFormData: true,
@@ -284,9 +275,6 @@ export default function VendorProducts({
         // optionally do something on error
       },
     });
-
-    console.log(errors);
-    // setIsDialogOpen(false);
   };
 
   // const handleChange = (field: keyof FormProduct) => (e: React.ChangeEvent<Element>) => {

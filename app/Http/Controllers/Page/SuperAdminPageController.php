@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Vendor;
+use App\Models\Category;
 
 class SuperAdminPageController extends Controller {
 
@@ -30,7 +31,10 @@ class SuperAdminPageController extends Controller {
     }
 
     public function categorySection() {
-        return Inertia::render('super-admin/categories');
+        $categories = Category::all();
+        return Inertia::render('super-admin/categories', [
+            'categories' => $categories,
+        ]);
     }
 
     public function productSection() {
