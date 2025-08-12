@@ -1,14 +1,19 @@
-import { ScrollArea } from "@/components/ui/scroll-area";
+import BaseLayout from "@/components/layouts/base-layout";
 import { type ReactNode } from "react";
 
 interface AppLayoutProps {
   children: ReactNode;
+  title?: string;
 }
 
-export default ({ children, ...props }: AppLayoutProps) => (
-  <div {...props} id="app-layout" className="h-screen overflow-y-hidden">
-    <ScrollArea className="h-full w-full" width={2.5}>
-        {children}
-    </ScrollArea>
+/**
+ * Simple app layout using the base layout component
+ * Provides basic scroll functionality with minimal structure
+ */
+export default ({ children, title, ...props }: AppLayoutProps) => (
+  <div {...props} id="app-layout">
+    <BaseLayout title={title} withScrollArea={true} scrollWidth={2.5}>
+      {children}
+    </BaseLayout>
   </div>
 );
