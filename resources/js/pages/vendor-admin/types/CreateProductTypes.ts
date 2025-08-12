@@ -1,25 +1,23 @@
-// Centralized types for Vendor Admin pages
-
-export type FormProduct = {
+export type CreateFormProduct = {
   name: string;
   slug: string;
   description: string;
-  thumbnail: File | undefined | null;
+  thumbnail?: File | null | undefined;
+  images: File[];
   category_id: string;
   brand_id: string;
+  price: string;
   sale_price: string;
-  sale_start: string;
-  sale_end: string;
-  stock_quantity: string;
+  sale_start: string; // ISO string
+  sale_end: string;   // ISO string
+  sku: string;
+  stock: string;
+  stock_quantity?: string; // keeping for compatibility if used elsewhere
   stock_status: string;
-  images: File[];
   weight: string;
   length: string;
   width: string;
   height: string;
-  sku: string;
-  price: string;
-  stock: string;
   return_days: string;
   warranty_type: string;
   warranty_period: string;

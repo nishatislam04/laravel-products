@@ -10,7 +10,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import VendorLayout from "@/layouts/vendor-layout";
-import ProductDialog from "./components/ProductDialog";
 import {
   AlertTriangle,
   ChevronLeft,
@@ -25,7 +24,8 @@ import {
   Trash2,
   TrendingUp,
 } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
+import CreateProductDialog from "./components/CreateProductDialog";
 
 // Mock product data for vendor
 const vendorProducts = [
@@ -175,7 +175,7 @@ export default function VendorProducts({
               <Plus className="mr-2 h-4 w-4" />
               Add Product
             </Button>
-            <ProductDialog
+            <CreateProductDialog
               open={isDialogOpen}
               onOpenChange={setIsDialogOpen}
               categories={categories}

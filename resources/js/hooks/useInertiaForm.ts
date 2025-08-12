@@ -6,7 +6,7 @@ export type SubmitMethod = "post" | "put" | "patch" | "delete" | "get";
 
 export type SubmitOptions = Parameters<ReturnType<typeof useForm>["post"]>[1];
 
-export interface UseAppFormReturn<T> {
+export interface UseInertiaFormReturn<T> {
   data: T;
   setData: <K extends keyof T>(key: K, value: T[K]) => void;
   errors: Record<string, string>;
@@ -38,10 +38,10 @@ export interface UseAppFormReturn<T> {
   ) => (e: React.FormEvent<HTMLFormElement> | Event) => void;
 }
 
-export function useAppForm<T extends Record<string, any>>(initialValues: T): UseAppFormReturn<T> {
+export function useInertiaForm<T extends Record<string, any>>(initialValues: T): UseInertiaFormReturn<T> {
   const form = useForm<T>(initialValues);
 
-  const submit: UseAppFormReturn<T>["submit"] = (method, url, options) => {
+  const submit: UseInertiaFormReturn<T>["submit"] = (method, url, options) => {
     switch (method) {
       case "post":
         form.post(url, options);
@@ -63,7 +63,7 @@ export function useAppForm<T extends Record<string, any>>(initialValues: T): Use
     }
   };
 
-  const handleSubmit: UseAppFormReturn<T>["handleSubmit"] = (method, url, options) => (e) => {
+  const handleSubmit: UseInertiaFormReturn<T>["handleSubmit"] = (method, url, options) => (e) => {
     e.preventDefault();
     submit(method, url, options);
   };
