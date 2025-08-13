@@ -24,7 +24,7 @@ return new class extends Migration {
 
             // Contact & location
             $table->string('email');
-            $table->string('phone')->nullable();
+            $table->string('phone')->unique();
             $table->text('address')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();

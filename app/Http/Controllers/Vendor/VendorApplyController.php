@@ -15,6 +15,8 @@ use Inertia\Inertia;
  */
 class VendorApplyController extends Controller {
 
+    // create slug in form request
+
     public function index() {
         $user = Auth::user();
         return Inertia::render('vendor-admin/vendor-apply', [
@@ -71,10 +73,10 @@ class VendorApplyController extends Controller {
     public function whenUserExists($request) {
         return $request->validate([
             'store_name' => 'required|string|max:255|unique:vendors,store_name',
-            'slug' => 'required|string|max:255|unique:vendors,slug',
+            // 'slug' => 'required|string|max:255|unique:vendors,slug',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'phone' => 'nullable|numeric|unique:vendors,phone',
+            'phone' => 'required|numeric|unique:vendors,phone',
             'address' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:255',
             'state' => 'nullable|string|max:255',
@@ -95,7 +97,7 @@ class VendorApplyController extends Controller {
             'email' => 'required|email|unique:vendors,email|unique:users,email',
             'password' => 'required|string|min:8',
             'store_name' => 'required|string|max:255|unique:vendors,store_name',
-            'slug' => 'required|string|max:255|unique:vendors,slug',
+            // 'slug' => 'required|string|max:255|unique:vendors,slug',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'banner' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'phone' => 'nullable|numeric|unique:vendors,phone',
