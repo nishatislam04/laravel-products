@@ -24,8 +24,9 @@ import {
   Trash2,
   TrendingUp,
 } from "lucide-react";
-import { useState } from "react";
-import CreateProductDialog from "./components/CreateProductDialog";
+import { lazy, Suspense, useState } from "react";
+
+const CreateProductDialogLazy = lazy(() => import("./components/CreateProductDialog"));
 
 // Mock product data for vendor
 const vendorProducts = [
@@ -175,17 +176,18 @@ export default function VendorProducts({
               <Plus className="mr-2 h-4 w-4" />
               Add Product
             </Button>
-            <CreateProductDialog
-              open={isDialogOpen}
-              onOpenChange={setIsDialogOpen}
-              categories={categories}
-              brands={brands}
-              stockStatusEnum={stockStatusEnum}
-              warrentTypeEnum={warrentTypeEnum}
-            />
+            <Suspense fallback={<p className="">loading</p>}>
+              <CreateProductDialogLazy
+                open={isDialogOpen}
+                onOpenChange={setIsDialogOpen}
+                categories={categories}
+                brands={brands}
+                stockStatusEnum={stockStatusEnum}
+                warrentTypeEnum={warrentTypeEnum}
+              />
+            </Suspense>
           </div>
         </div>
-        
 
         {/* Stats Cards */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
