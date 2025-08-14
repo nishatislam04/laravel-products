@@ -8,7 +8,6 @@ use App\Models\Vendor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Resend\Laravel\Facades\Resend;
 
 class VendorApplyServices
 {
@@ -44,12 +43,6 @@ class VendorApplyServices
     // $user->update(['otp' => $otp]);
 
     Mail::to($user->email)->send(new VendorOtpMail($user, $otp));
-    // Resend::emails()->send([
-    //   'from' => 'onboarding@resend.dev',
-    //   'to' => [$user->email],
-    //   'subject' => 'Vendor Otp',
-    //   'html' => (new VendorOtpMail($user, $otp))->render(),
-    // ]);
 
     return $vendor;
   }
