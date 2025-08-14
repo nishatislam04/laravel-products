@@ -44,7 +44,7 @@ return new class extends Migration {
 
             // Store settings
             $table->boolean('is_active')->default(false);
-            $table->enum('status', VendorStatusEnum::values())->default(VendorStatusEnum::PENDING);
+            $table->enum('status', VendorStatusEnum::values())->default(VendorStatusEnum::NEED_OTP);
             $table->text('admin_note')->nullable();
 
             // Commission

@@ -9,6 +9,7 @@ enum VendorStatusEnum: string implements BaseEnumInterface
     case PENDING = 'pending';
     case APPROVED = 'approved';
     case REJECTED = 'rejected';
+    case NEED_OTP = 'need_otp';
 
     public function label(): string
     {
@@ -16,6 +17,7 @@ enum VendorStatusEnum: string implements BaseEnumInterface
             self::PENDING => 'Pending',
             self::APPROVED => 'Approved',
             self::REJECTED => 'Rejected',
+            self::NEED_OTP => 'Need OTP',
         };
     }
 

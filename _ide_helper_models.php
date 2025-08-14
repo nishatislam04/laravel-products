@@ -249,8 +249,8 @@ namespace App\Models{
  * @property string|null $national_id
  * @property string|null $trade_license
  * @property string|null $license_expiry
- * @property int $is_active
- * @property string $status
+ * @property bool $is_active
+ * @property \App\Enums\Vendors\VendorStatusEnum $status
  * @property string|null $admin_note
  * @property string $commission_rate
  * @property int $total_products
