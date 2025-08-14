@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Enums\Vendors\VendorStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Vendor extends Model {
+class Vendor extends Model
+{
     use HasFactory;
 
     protected $fillable = [
@@ -37,7 +39,13 @@ class Vendor extends Model {
         'rating',
     ];
 
-    public function user() {
+    protected $casts = [
+        'is_active' => 'boolean',
+        'status' => VendorStatusEnum::class,
+    ];
+
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 }

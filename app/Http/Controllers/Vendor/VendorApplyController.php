@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Vendor;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreVendorApplyRequest;
 use App\Services\VendorApplyServices;
-use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
 
 /**
  * This controller is all about vendor apply management
@@ -20,15 +18,12 @@ class VendorApplyController extends Controller
         $this->vendorApplyServices = $vendorApplyServices;
     }
 
-    public function index()
-    {
-        $user = Auth::user();
-
-        return Inertia::render('vendor-admin/vendor-apply', [
-            'user' => $user,
-        ]);
-    }
-
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \App\Http\Requests\StoreVendorApplyRequest  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(StoreVendorApplyRequest $request)
     {
         $validatedData = $request->validated();

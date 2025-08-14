@@ -1,14 +1,15 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Page\PublicPageController;
-use App\Http\Controllers\Vendor\VendorApplyController;
 use App\Http\Controllers\Page\SuperAdminPageController;
 use App\Http\Controllers\Page\VendorAdminPageController;
+use App\Http\Controllers\Page\VendorApplyPageController;
 use App\Http\Controllers\Product\ProductController;
+use App\Http\Controllers\Vendor\VendorApplyController;
 use App\Http\Controllers\Vendor\VendorManageController;
+use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
 Route::get('/', [PublicPageController::class, 'index'])->name('home.page');
 
@@ -21,9 +22,8 @@ Route::post('/signout', [AuthController::class, 'signout'])->name('signout');
 Route::get('/contact', [PublicPageController::class, 'contact'])->name('contact.page');
 Route::get('/about', [PublicPageController::class, 'about'])->name('about.page');
 
-Route::get('/vendor-apply', [VendorApplyController::class, 'index'])->name('vendor.apply.page');
+Route::get('/vendor-apply', [VendorApplyPageController::class, 'index'])->name('vendor.apply.page');
 Route::post('/vendor-apply', [VendorApplyController::class, 'store'])->name('vendor.apply.store');
-
 
 Route::get('/super-admin/overview', [SuperAdminPageController::class, 'overviewSection'])->name('super-admin.overview.page');
 Route::get('/super-admin/vendors', [SuperAdminPageController::class, 'vendorSection'])->name('super-admin.vendors.page');
@@ -37,7 +37,6 @@ Route::get('/super-admin/settings', [SuperAdminPageController::class, 'settingsS
 
 Route::post('/super-admin/approve-vendor', [VendorManageController::class, 'approveVendor'])->name('super-admin.approve-vendor');
 Route::post('/super-admin/reject-vendor', [VendorManageController::class, 'rejectVendor'])->name('super-admin.reject-vendor');
-
 
 Route::get('/wishlist', function () {
     return Inertia::render('wishlist');
@@ -99,7 +98,6 @@ Route::get('/account/help-center', function () {
     return Inertia::render('account/help-center');
 })->name('help-center.page');
 
-
 Route::get('/vendor-admin/overview', [VendorAdminPageController::class, 'overviewSection'])->name('vendor-admin.overview.page');
 Route::get('/vendor-admin/staffs', [VendorAdminPageController::class, 'staffsSection'])->name('vendor-admin.staffs.page');
 Route::get('/vendor-admin/products', [VendorAdminPageController::class, 'productsSection'])->name('vendor-admin.products.page');
@@ -110,7 +108,6 @@ Route::get('/vendor-admin/reviews', [VendorAdminPageController::class, 'reviewsS
 Route::get('/vendor-admin/settings', [VendorAdminPageController::class, 'settingsSection'])->name('vendor-admin.settings.page');
 
 Route::post('/vendor-admin/products/store', [ProductController::class, 'store'])->name('vendor-admin.products.store');
-
 
 // vendor-admin
 // Route::get('/vendor-admin/dashboard', function () {
