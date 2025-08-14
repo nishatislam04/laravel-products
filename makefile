@@ -30,6 +30,11 @@ migrate-seed:
 seed:
 	docker exec $(PHP_CONTAINER) php artisan db:seed
 
+ide-helper:
+	docker exec $(PHP_CONTAINER) php artisan ide-helper:generate
+	docker exec $(PHP_CONTAINER) php artisan ide-helper:meta
+	docker exec $(PHP_CONTAINER) php artisan ide-helper:models --nowrite
+
 tinker:
 	docker exec -it $(PHP_CONTAINER) php artisan tinker
 
