@@ -2,10 +2,13 @@
 
 namespace App\Services;
 
+use App\Mail\VendorOtpMail;
 use App\Models\User;
 use App\Models\Vendor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Resend\Laravel\Facades\Resend;
 
 class VendorApplyServices
 {
@@ -36,6 +39,17 @@ class VendorApplyServices
       ...$data,
       'user_id' => $user->id,
     ]);
+
+    $otp = rand(1000, 9999);
+    // $user->update(['otp' => $otp]);
+
+    Mail::to($user->email)->send(new VendorOtpMail($user, $otp));
+    // Resend::emails()->send([
+    //   'from' => 'onboarding@resend.dev',
+    //   'to' => [$user->email],
+    //   'subject' => 'Vendor Otp',
+    //   'html' => (new VendorOtpMail($user, $otp))->render(),
+    // ]);
 
     return $vendor;
   }
