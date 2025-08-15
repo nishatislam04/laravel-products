@@ -66,6 +66,7 @@ trait GeneratesOTP
             'otp_status' => VendorOtpStatusEnum::COMPLETE,
         ]);
 
+        session()->forget('otp_vendor_id');
         return ['status' => true, 'message' => 'OTP verified successfully'];
     }
 

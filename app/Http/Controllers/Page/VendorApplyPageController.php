@@ -12,8 +12,17 @@ class VendorApplyPageController extends Controller
     {
         $user = Auth::user();
 
-        return Inertia::render('vendor-admin/vendor-apply', [
-            'user' => $user,
+        return Inertia::render('vendor-apply/vendor-apply', [
+            'user' => $user
+        ]);
+    }
+
+    public function showOtpPage()
+    {
+        $vendorId = session('otp_vendor_id');
+
+        return Inertia::render('vendor-apply/vendor-apply-otp', [
+            'vendor_id' => $vendorId
         ]);
     }
 }

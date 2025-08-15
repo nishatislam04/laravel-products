@@ -317,7 +317,7 @@ export const VendorApplyForm: React.FC<{ user?: User | null }> = ({ user }) => {
               id="license_expiry"
               label="License Expiry Date"
               value={data.license_expiry}
-              onChange={handleChange("license_expiry") as any}
+              onChange={handleChange("license_expiry")}
               error={errors.license_expiry}
             />
           </div>

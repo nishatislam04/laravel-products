@@ -42,6 +42,9 @@ class VendorApplyServices
       'user_id' => $user->id,
     ]);
 
+    // store vendor in session
+    session()->put('otp_vendor_id', $vendor->id);
+
     $otp = $this->generateOtp($vendor);
 
     Mail::to($user->email)->send(new VendorOtpMail($user, $otp));
