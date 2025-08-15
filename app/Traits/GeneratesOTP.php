@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Enums\Vendors\VendorOtpStatusEnum;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 trait GeneratesOTP
 {
@@ -12,23 +13,28 @@ trait GeneratesOTP
      *
      * @param  \App\Models\Vendor  $vendor
      * @param  int  $expiryMinutes
-     * @return int
+     * @param  int  $maxAttempts
+     * @return array
      */
-    public function generateOtp($vendor, $expiryMinutes = 5)
+    public function generateOtp($vendor, $expiryMinutes = 5, $maxAttempts = 3)
     {
-        // Generate random 6-digit number
         $otp = random_int(100000, 999999);
 
-        // Save hashed OTP and timestamps
-        $vendor->update([
-            'otp_code' => Hash::make($otp),  // hashed for security
+        $data = $vendor->update([
+            'otp_code' => Hash::make($otp),
             'otp_created_at' => now(),
             'otp_expires_at' => now()->addMinutes($expiryMinutes),
             'otp_attempts' => 0,
             'otp_last_sent_at' => now(),
+            'otp_max_attempts' => $maxAttempts,
         ]);
 
-        return $otp;
+        return [
+            'otp_code' => $otp,
+            'otp_expires_at' => $vendor->otp_expires_at,
+            'otp_attempts' => $vendor->otp_attempts,
+            'otp_max_attempts' => $vendor->otp_max_attempts,
+        ];
     }
 
     /**
@@ -40,21 +46,23 @@ trait GeneratesOTP
      */
     public function validateOtp($vendor, $inputOtp)
     {
-        $maxAttempts = 3;
         // Expired?
         if (now()->greaterThan($vendor->otp_expires_at)) {
-            return ['status' => false, 'message' => 'OTP expired'];
+            // ! update otp realted fields
+
+            return ['status' => false, 'data' => ['message' => 'OTP expired', 'maxAttempts' => $vendor->otp_max_attempts, 'attempts' => $vendor->otp_attempts, 'expiresAt' => $vendor->otp_expires_at]];
         }
 
-        // Too many attempts?
-        if ($vendor->otp_attempts >= $maxAttempts) {
-            return ['status' => false, 'message' => 'Too many incorrect attempts'];
+        // hit max attempts
+        if ($vendor->otp_attempts >= $vendor->otp_max_attempts) {
+            // ! update otp realted fields
+            return ['status' => false, 'data' => ['message' => 'Too many incorrect attempts', 'maxAttempts' => $vendor->otp_max_attempts, 'attempts' => $vendor->otp_attempts, 'expiresAt' => $vendor->otp_expires_at]];
         }
 
         // Check OTP. when does not match
         if (!Hash::check($inputOtp, $vendor->otp_code)) {
             $vendor->increment('otp_attempts');
-            return ['status' => false, 'message' => 'Invalid OTP'];
+            return ['status' => false, 'data' => ['message' => 'Invalid OTP', 'maxAttempts' => $vendor->otp_max_attempts, 'attempts' => $vendor->otp_attempts, 'expiresAt' => $vendor->otp_expires_at]];
         }
 
         // OTP valid — clear it
@@ -67,7 +75,7 @@ trait GeneratesOTP
         ]);
 
         session()->forget('otp_vendor_id');
-        return ['status' => true, 'message' => 'OTP verified successfully'];
+        return ['status' => true, 'data' => ['message' => 'OTP verified successfully']];
     }
 
     /**

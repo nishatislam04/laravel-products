@@ -261,7 +261,8 @@ namespace App\Models{
  * @property string|null $otp_expires_at
  * @property int $otp_attempts
  * @property string|null $otp_last_sent_at
- * @property mixed $otp_status
+ * @property \App\Enums\Vendors\VendorOtpStatusEnum $otp_status
+ * @property int $otp_max_attempts
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\User|null $user
@@ -291,6 +292,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereOtpCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereOtpExpiresAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereOtpLastSentAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereOtpMaxAttempts($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereOtpStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor wherePhone($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor wherePostalCode($value)

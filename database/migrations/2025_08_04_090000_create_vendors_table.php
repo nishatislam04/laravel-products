@@ -63,6 +63,7 @@ return new class extends Migration {
             $table->unsignedTinyInteger('otp_attempts')->default(0);
             $table->timestamp('otp_last_sent_at')->nullable();
             $table->enum('otp_status', VendorOtpStatusEnum::values())->default(VendorOtpStatusEnum::INCOMPLETE);
+            $table->unsignedTinyInteger('otp_max_attempts')->default(3);
 
             // Timestamps
             $table->timestamps();

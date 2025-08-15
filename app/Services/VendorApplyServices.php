@@ -18,9 +18,9 @@ class VendorApplyServices
    * Store a new vendor application.
    *
    * @param array $data Validated request data
-   * @return \App\Models\Vendor
+   * @return array
    */
-  public function storeVendorApplication(array $data): Vendor
+  public function storeVendorApplication(array $data): array
   {
     $existingUser = Auth::user();
 
@@ -42,13 +42,15 @@ class VendorApplyServices
       'user_id' => $user->id,
     ]);
 
-    // store vendor in session
+    // store vendor in session. to update otp data later
     session()->put('otp_vendor_id', $vendor->id);
 
-    $otp = $this->generateOtp($vendor);
+    $expirey_minutes = 30;  // for test
+    $max_attempts = 2;
+    $otp = $this->generateOtp($vendor, $expirey_minutes, $max_attempts);
 
-    Mail::to($user->email)->send(new VendorOtpMail($user, $otp));
+    Mail::to($user->email)->send(new VendorOtpMail($user, $otp['otp_code'], $otp['otp_expires_at']->diffForHumans()));
 
-    return $vendor;
+    return [...$otp, 'otp_code' => null];
   }
 }

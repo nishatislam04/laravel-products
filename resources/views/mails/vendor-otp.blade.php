@@ -19,7 +19,7 @@
                     <!-- Body -->
                     <tr>
                         <td style="padding:30px; color:#111827; font-size:16px; line-height:1.5;">
-                            <p style="margin:0 0 15px;">Hi {{ $userName }} ({{ $email }}),</p>
+                            <p style="margin:0 0 15px;">Hi {{ $userName }},</p>
                             <p style="margin:0 0 15px;">We received your request to create a vendor account. Please use the OTP code below to verify your email address:</p>
 
                             <p style="margin:20px 0; text-align:center;">
@@ -28,7 +28,7 @@
                                 </span>
                             </p>
 
-                            <p style="margin:0 0 15px;">This OTP will expire in <strong>5 minutes</strong>. Do not share it with anyone for security reasons.</p>
+                            <p style="margin:0 0 15px;">This OTP will expire in <strong>{{ $otp_expires_at }}</strong>. Do not share it with anyone for security reasons.</p>
                             <p style="margin:0;">If you didn’t request this, please ignore this email.</p>
                         </td>
                     </tr>

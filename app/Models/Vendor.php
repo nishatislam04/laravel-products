@@ -39,6 +39,7 @@ class Vendor extends Model
         'total_orders',
         'rating',
         'otp_code',
+        'otp_max_attempts',
         'otp_created_at',
         'otp_expires_at',
         'otp_attempts',
@@ -50,6 +51,9 @@ class Vendor extends Model
         'is_active' => 'boolean',
         'status' => VendorStatusEnum::class,
         'otp_status' => VendorOtpStatusEnum::class,
+        'otp_created_at' => 'datetime',
+        'otp_expires_at' => 'datetime',
+        'otp_last_sent_at' => 'datetime',
     ];
 
     public function user()

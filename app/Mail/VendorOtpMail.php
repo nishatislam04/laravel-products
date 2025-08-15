@@ -19,7 +19,8 @@ class VendorOtpMail extends Mailable
      */
     public function __construct(
         protected User $user,
-        protected $otp
+        protected $otp,
+        protected $otp_expires_at
     ) {
         //
     }
@@ -47,6 +48,7 @@ class VendorOtpMail extends Mailable
                 'userName' => $this->user->name,
                 'email' => $this->user->email,
                 'otp' => $this->otp,
+                'otp_expires_at' => $this->otp_expires_at,
             ],
         );
     }
