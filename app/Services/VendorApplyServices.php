@@ -5,12 +5,15 @@ namespace App\Services;
 use App\Mail\VendorOtpMail;
 use App\Models\User;
 use App\Models\Vendor;
+use App\Traits\GeneratesOTP;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
 class VendorApplyServices
 {
+  use GeneratesOTP;
+
   /**
    * Store a new vendor application.
    *
@@ -39,8 +42,7 @@ class VendorApplyServices
       'user_id' => $user->id,
     ]);
 
-    $otp = rand(1000, 9999);
-    // $user->update(['otp' => $otp]);
+    $otp = $this->generateOtp($vendor);
 
     Mail::to($user->email)->send(new VendorOtpMail($user, $otp));
 

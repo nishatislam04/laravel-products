@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Vendors\VendorOtpStatusEnum;
 use App\Enums\Vendors\VendorStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -54,6 +55,14 @@ return new class extends Migration {
             $table->integer('total_products')->default(0);
             $table->integer('total_orders')->default(0);
             $table->float('rating')->default(0);
+
+            // otp
+            $table->string('otp_code')->nullable();
+            $table->timestamp('otp_created_at')->nullable();
+            $table->timestamp('otp_expires_at')->nullable();
+            $table->unsignedTinyInteger('otp_attempts')->default(0);
+            $table->timestamp('otp_last_sent_at')->nullable();
+            $table->enum('otp_status', VendorOtpStatusEnum::values())->default(VendorOtpStatusEnum::INCOMPLETE);
 
             // Timestamps
             $table->timestamps();

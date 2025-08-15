@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Vendors\VendorOtpStatusEnum;
 use App\Enums\Vendors\VendorStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -37,11 +38,18 @@ class Vendor extends Model
         'total_products',
         'total_orders',
         'rating',
+        'otp_code',
+        'otp_created_at',
+        'otp_expires_at',
+        'otp_attempts',
+        'otp_last_sent_at',
+        'otp_status',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
         'status' => VendorStatusEnum::class,
+        'otp_status' => VendorOtpStatusEnum::class,
     ];
 
     public function user()

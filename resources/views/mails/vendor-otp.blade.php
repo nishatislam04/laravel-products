@@ -28,7 +28,7 @@
                                 </span>
                             </p>
 
-                            <p style="margin:0 0 15px;">This OTP will expire in <strong>10 minutes</strong>. Do not share it with anyone for security reasons.</p>
+                            <p style="margin:0 0 15px;">This OTP will expire in <strong>5 minutes</strong>. Do not share it with anyone for security reasons.</p>
                             <p style="margin:0;">If you didn’t request this, please ignore this email.</p>
                         </td>
                     </tr>

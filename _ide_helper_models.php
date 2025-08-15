@@ -256,6 +256,12 @@ namespace App\Models{
  * @property int $total_products
  * @property int $total_orders
  * @property float $rating
+ * @property string|null $otp_code
+ * @property string|null $otp_created_at
+ * @property string|null $otp_expires_at
+ * @property int $otp_attempts
+ * @property string|null $otp_last_sent_at
+ * @property mixed $otp_status
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\User|null $user
@@ -280,6 +286,12 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereLocation($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereLogo($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereNationalId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereOtpAttempts($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereOtpCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereOtpCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereOtpExpiresAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereOtpLastSentAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereOtpStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor wherePhone($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor wherePostalCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Vendor whereRating($value)
