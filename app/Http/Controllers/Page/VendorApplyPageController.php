@@ -25,24 +25,57 @@ class VendorApplyPageController extends Controller
         $vendorId = session('otp_vendor_id');
         $vendor = Vendor::find($vendorId);
 
-        if ($vendor->otp_status === VendorOtpStatusEnum::COMPLETE)
+        // CHECK OTP STATUS
+        $this->checkOtpStatus($vendor);
+
+        // CALCULATE TIME LEFT
+        $timeLeft = $this->calculateTimeLeft($vendor);
+
+        // CHECK RESEND COOLDOWN
+        $resendCooldownData = $this->checkResendCooldown($vendor);
+
+        return Inertia::render('vendor-apply/vendor-apply-otp', [
+            'vendor_id' => $vendorId,
+            'otp_metaData' => [
+                'attempts' => $vendor?->otp_attempts,
+                'maxAttempts' => $vendor?->otp_max_attempts,
+                'expiresAt' => $timeLeft,
+                'canResend' => $resendCooldownData['canResend'],
+                'resendCooldown' => $resendCooldownData['resendCooldown'],
+            ]
+        ]);
+    }
+
+    private function checkOtpStatus($vendor)
+    {
+        if ($vendor->otp_status === VendorOtpStatusEnum::COMPLETE) {
+            session()->forget('otp_vendor_id');
+
             return Inertia::render('vendor-apply/vendor-apply-otp', [
-                'vendor_id' => $vendorId,
+                'vendor_id' => $vendor->id,
                 'otp_metaData' => [
-                    'attempts' => $vendor?->otp_attempts,
-                    'maxAttempts' => $vendor?->otp_max_attempts,
-                    'expiresAt' => $vendor?->otp_expires_at,
-                    'canResend' => $vendor?->otp_last_sent_at,
+                    'attempts' => $vendor->otp_attempts,
+                    'maxAttempts' => $vendor->otp_max_attempts,
+                    'expiresAt' => $vendor->otp_expires_at,
+                    'canResend' => $vendor->otp_last_sent_at,
                     'resendCooldown' => $vendor?->otp_resend_cooldown_seconds,
                 ]
             ])->with('success', 'Vendor otp verified successfully!');
+        }
+    }
 
+    private function calculateTimeLeft($vendor)
+    {
         $expiresAt = $vendor?->otp_expires_at;
-        $timeLeft = max(
+
+        return max(
             0,
             (int) Carbon::now()->diffInSeconds(Carbon::parse($expiresAt), false)  // cast to int
         );
+    }
 
+    private function checkResendCooldown($vendor)
+    {
         $now = Carbon::now();
         $canResend = false;
         $resendCooldown = 0;  // seconds until unlock
@@ -71,15 +104,9 @@ class VendorApplyPageController extends Controller
             $canResend = true;
         }
 
-        return Inertia::render('vendor-apply/vendor-apply-otp', [
-            'vendor_id' => $vendorId,
-            'otp_metaData' => [
-                'attempts' => $vendor?->otp_attempts,
-                'maxAttempts' => $vendor?->otp_max_attempts,
-                'expiresAt' => $timeLeft,
-                'canResend' => $canResend,
-                'resendCooldown' => $resendCooldown,
-            ]
-        ]);
+        return [
+            'canResend' => $canResend,
+            'resendCooldown' => $resendCooldown,
+        ];
     }
 }

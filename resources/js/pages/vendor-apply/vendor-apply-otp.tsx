@@ -77,8 +77,6 @@ export default function VendorOTPPage({ vendor_id, otp_metaData }: { vendor_id: 
 
         if (+error?.otp_attempts >= +error?.otp_maxAttempts) {
           setShowMaxAttemptsModal(true);
-        } else {
-          setError(`Invalid OTP. ${+error?.otp_maxAttempts - +error?.otp_attempts} attempts remaining.`);
         }
 
         setOtp("");

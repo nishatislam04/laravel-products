@@ -62,16 +62,20 @@ class VendorApplyController extends Controller
 
         $result = $this->validateOtp($vendor, $validatedData['otp_code']);
 
-        if ($result['status'] === false) {
-            return back()->withErrors([
-                'otp_code' => $result['data']['message'],
-                'otp_attempts' => (string) $result['data']['attempts'],
-                'otp_maxAttempts' => (string) $result['data']['maxAttempts'],
-                'otp_expiresAt' => (string) $result['data']['expiresAt'],
-            ]);
-        }
+        if ($result['status'] === false)
+            return $this->redirectUponFail($result);
 
         return redirect()->back()->with('success', 'Vendor otp verified successfully!');
+    }
+
+    private function redirectUponFail($result)
+    {
+        return back()->withErrors([
+            'otp_code' => $result['data']['message'],
+            'otp_attempts' => (string) $result['data']['attempts'],
+            'otp_maxAttempts' => (string) $result['data']['maxAttempts'],
+            'otp_expiresAt' => (string) $result['data']['expiresAt'],
+        ]);
     }
 
     /**

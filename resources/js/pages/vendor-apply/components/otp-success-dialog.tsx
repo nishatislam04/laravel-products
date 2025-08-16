@@ -25,13 +25,11 @@ export default function OtpSuccessDialog({ showSuccessModal, setShowSuccessModal
             <DialogTitle>Verification Successful</DialogTitle>
           </div>
           <DialogDescription>
-            Your OTP has been verified successfully. Now your vendor need to be approved via a admin user.
+            Your OTP has been verified successfully. Now your vendor need to be approved via a admin user. Once
+            approved, you will be notified via email.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="flex gap-2">
-          <Button onClick={() => setShowSuccessModal(false)} className="min-w-24">
-            OK
-          </Button>
           <Button onClick={() => router.visit(route("home.page"))} className="min-w-24">
             Go to shopping
           </Button>

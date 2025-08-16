@@ -4,13 +4,21 @@ namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
 use App\Models\Role;
-use Illuminate\Http\Request;
 use App\Models\Vendor;
+use Illuminate\Http\Request;
 
-class VendorManageController extends Controller {
+class VendorManageController extends Controller
+{
+    /**
+     * Approve a vendor in super admin panel
+     */
+    public function approveVendor(Request $request)
+    {
+        $validatedData = $request->validate([
+            'vendorId' => 'required|numeric|exists:vendors,id',
+        ]);
 
-    public function approveVendor(Request $request) {
-        $vendor = Vendor::find($request->vendorId);
+        $vendor = Vendor::find($validatedData['vendorId']);
         $user = $vendor->user;
         $roles = Role::where('name', 'vendor_admin')->first();
 
@@ -24,17 +32,26 @@ class VendorManageController extends Controller {
         $user->status = 'active';
         $user->save();
 
-        // will send user an email here
+        // !@todo - will send user an email here
 
         return redirect()->route('super-admin.vendors.page')->with('success', 'Vendor approved successfully!');
     }
 
-    public function rejectVendor(Request $request) {
-        $vendor = Vendor::find($request->vendorId);
+    /**
+     * Reject a vendor in super admin panel
+     */
+    public function rejectVendor(Request $request)
+    {
+        $validatedData = $request->validate([
+            'vendorId' => 'required|numeric|exists:vendors,id',
+        ]);
+
+        $vendor = Vendor::find($validatedData['vendorId']);
+
         $vendor->status = 'rejected';
         $vendor->save();
 
-        // will send user an email here
+        // !@todo - will send user an email here
 
         return redirect()->route('super-admin.vendors.page')->with('success', 'Vendor rejected successfully!');
     }
