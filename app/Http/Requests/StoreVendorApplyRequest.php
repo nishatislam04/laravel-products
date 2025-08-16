@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class StoreVendorApplyRequest extends FormRequest
@@ -33,9 +34,9 @@ class StoreVendorApplyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => auth()->check() ? 'nullable|string|max:255' : 'required|string|max:255',
-            'email' => auth()->check() ? 'nullable|email' : 'required|email|unique:vendors,email|unique:users,email',
-            'password' => auth()->check() ? 'nullable|string|min:8' : 'required|string|min:8',
+            'name' => Auth::check() ? 'nullable|string|max:255' : 'required|string|max:255',
+            'email' => Auth::check() ? 'nullable|email' : 'required|email|unique:vendors,email|unique:users,email',
+            'password' => Auth::check() ? 'nullable|string|min:8' : 'required|string|min:8',
             'store_name' => 'required|string|max:255|unique:vendors,store_name',
             'slug' => 'required|string|max:255|unique:vendors,slug',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',

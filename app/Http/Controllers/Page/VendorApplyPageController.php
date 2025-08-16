@@ -40,17 +40,17 @@ class VendorApplyPageController extends Controller
 
             if ($vendor->otp_attempts >= $vendor->otp_max_attempts) {
                 // Max attempts reached → 1 hour cooldown
-                if ($secondsSinceLastSend >= 3600) {
+                if ($secondsSinceLastSend >= $vendor->otp_resend_cooldown_max_attempts_seconds) {
                     $canResend = true;
                 } else {
-                    $resendCooldown = 3600 - $secondsSinceLastSend;
+                    $resendCooldown = $vendor->otp_resend_cooldown_max_attempts_seconds - $secondsSinceLastSend;
                 }
             } else {
                 // Not max attempts → 3 minutes cooldown
-                if ($secondsSinceLastSend >= 180) {
+                if ($secondsSinceLastSend >= $vendor->otp_resend_cooldown_seconds) {
                     $canResend = true;
                 } else {
-                    $resendCooldown = 180 - $secondsSinceLastSend;
+                    $resendCooldown = $vendor->otp_resend_cooldown_seconds - $secondsSinceLastSend;
                 }
             }
         } else {

@@ -27,6 +27,7 @@ Route::post('/vendor-apply', [VendorApplyController::class, 'store'])->name('ven
 
 Route::get('/vendor-apply/otp', [VendorApplyPageController::class, 'showOtpPage'])->name('vendor.apply.otp.page');
 Route::post('/vendor-apply/otp', [VendorApplyController::class, 'storeOtp'])->name('vendor.apply.otp.store');
+Route::post('/vendor-apply/otp/resend', [VendorApplyController::class, 'resendOtp'])->name('vendor.apply.otp.resend');
 
 Route::get('/super-admin/overview', [SuperAdminPageController::class, 'overviewSection'])->name('super-admin.overview.page');
 Route::get('/super-admin/vendors', [SuperAdminPageController::class, 'vendorSection'])->name('super-admin.vendors.page');

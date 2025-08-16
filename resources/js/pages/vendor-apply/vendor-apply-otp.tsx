@@ -26,8 +26,6 @@ type OtpMetaData = {
 };
 
 export default function VendorOTPPage({ vendor_id, otp_metaData }: { vendor_id: number; otp_metaData: OtpMetaData }) {
-  console.log("otp_metaData", otp_metaData);
-
   const [otp, setOtp] = useState("");
   const [attempts, setAttempts] = useState(otp_metaData.attempts || 0);
   const [timeLeft, setTimeLeft] = useState(otp_metaData.expiresAt || 0);
@@ -91,16 +89,20 @@ export default function VendorOTPPage({ vendor_id, otp_metaData }: { vendor_id: 
           setOtp("");
         },
       });
-    } catch (error) {
+    } catch (_) {
       setError("Network error. Please try again.");
-      console.log(error);
     }
   };
 
-  // Resend OTP
-  const handleResendOtp = () => {
+  function handleResendOtp() {
+    // REFRESH THE CURRENT PAGE
     router.visit(route("vendor.apply.otp.page"), { preserveState: false });
-  };
+  }
+
+  function handleClickResendButton() {
+    // RESEND OTP CONTROLLER
+    router.visit(route("vendor.apply.otp.resend"), { method: "post", data: { vendor_id: vendor_id } });
+  }
 
   const isExpired = timeLeft <= 0;
   const isMaxAttempts = attempts >= maxAttempts;
@@ -160,9 +162,9 @@ export default function VendorOTPPage({ vendor_id, otp_metaData }: { vendor_id: 
 
           <OtpResendButton
             processing={processing}
-            handleResendOtp={handleResendOtp}
             canResend={otp_metaData.canResend}
             resendCooldown={otp_metaData.resendCooldown}
+            handleClickResendButton={handleClickResendButton}
           />
         </CardContent>
       </Card>

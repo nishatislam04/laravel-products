@@ -23,11 +23,11 @@
   - otp_status (incomplete, complete)
   - otp_expires_at (30 min) (current otp expires time)
   - otp_attempts (3) (current otp attempts)
-  - otp_max_attempts (5) (maximum an otp can be attempted)
+  - otp_max_attempts (5) (maximum a single otp can be attempted)
   - otp_last_sent_at (when the last otp was sent)
   - otp_created_at (when the otp was created)
-  - otp_resend_cooldown_seconds (300) (default 5 min)
-  - otp_resend_cooldown_max_attempts_seconds (3600) (1 hr)
+  - otp_resend_cooldown_seconds (300) (default 5 min) (when max attempts not hit)
+  - otp_resend_cooldown_max_attempts_seconds (3600) (1 hr) (when max attempts hit)
 
 - otp resend flow
 

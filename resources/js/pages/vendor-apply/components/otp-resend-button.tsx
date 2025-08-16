@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 
 type Props = {
   processing: boolean;
-  handleResendOtp: () => void;
   canResend: boolean;
   resendCooldown: number;
+  handleClickResendButton: () => void;
 };
 
-export default function OtpResendButton({ processing, handleResendOtp, canResend, resendCooldown }: Props) {
+export default function OtpResendButton({ processing, canResend, resendCooldown, handleClickResendButton }: Props) {
   const [cooldown, setCooldown] = useState(Math.ceil(resendCooldown));
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export default function OtpResendButton({ processing, handleResendOtp, canResend
   if (canResend) {
     return (
       <div className="text-center">
-        <Button variant="outline" onClick={handleResendOtp} disabled={processing}>
+        <Button variant="outline" onClick={handleClickResendButton} disabled={processing}>
           Resend OTP
         </Button>
       </div>
@@ -49,7 +49,7 @@ export default function OtpResendButton({ processing, handleResendOtp, canResend
 
   return (
     <div className="text-center">
-      <Button variant="outline" onClick={handleResendOtp} disabled={processing}>
+      <Button variant="outline" onClick={handleClickResendButton} disabled={processing}>
         Resend OTP
       </Button>
     </div>
