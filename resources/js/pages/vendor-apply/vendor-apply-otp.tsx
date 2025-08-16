@@ -47,7 +47,6 @@ export default function VendorOTPPage({ vendor_id, otp_metaData }: { vendor_id: 
     }
   }, [timeLeft]);
 
-  // Submit OTP
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
