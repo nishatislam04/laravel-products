@@ -71,7 +71,7 @@ class VendorApplyController extends Controller
             ]);
         }
 
-        return redirect()->route('home.page')->with('success', 'Vendor otp verified successfully!');
+        return redirect()->back()->with('success', 'Vendor otp verified successfully!');
     }
 
     /**

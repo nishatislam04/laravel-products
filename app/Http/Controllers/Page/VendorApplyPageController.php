@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Page;
 
+use App\Enums\Vendors\VendorOtpStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Vendor;
 use Carbon\Carbon;
@@ -23,6 +24,18 @@ class VendorApplyPageController extends Controller
     {
         $vendorId = session('otp_vendor_id');
         $vendor = Vendor::find($vendorId);
+
+        if ($vendor->otp_status === VendorOtpStatusEnum::COMPLETE)
+            return Inertia::render('vendor-apply/vendor-apply-otp', [
+                'vendor_id' => $vendorId,
+                'otp_metaData' => [
+                    'attempts' => $vendor?->otp_attempts,
+                    'maxAttempts' => $vendor?->otp_max_attempts,
+                    'expiresAt' => $vendor?->otp_expires_at,
+                    'canResend' => $vendor?->otp_last_sent_at,
+                    'resendCooldown' => $vendor?->otp_resend_cooldown_seconds,
+                ]
+            ])->with('success', 'Vendor otp verified successfully!');
 
         $expiresAt = $vendor?->otp_expires_at;
         $timeLeft = max(

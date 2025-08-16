@@ -1,9 +1,9 @@
 import type React from "react";
 
+import { InputOtp } from "@/components/form/InputOtp";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { router, useForm } from "@inertiajs/react";
 import { AlertCircle } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -67,33 +67,26 @@ export default function VendorOTPPage({ vendor_id, otp_metaData }: { vendor_id: 
 
     setError("");
 
-    try {
-      post(route("vendor.apply.otp.store"), {
-        onSuccess: (success) => {
-          setShowSuccessModal(true);
-          console.log("onSuccess block", success);
-        },
-        onError: (error) => {
-          console.log("onError block", error);
+    post(route("vendor.apply.otp.store"), {
+      onSuccess: (_) => {
+        setShowSuccessModal(true);
+      },
+      onError: (error) => {
+        setAttempts(+error?.otp_attempts);
+        setMaxAttempts(+error?.otp_maxAttempts);
 
-          setAttempts(+error?.otp_attempts);
-          setMaxAttempts(+error?.otp_maxAttempts);
+        if (+error?.otp_attempts >= +error?.otp_maxAttempts) {
+          setShowMaxAttemptsModal(true);
+        } else {
+          setError(`Invalid OTP. ${+error?.otp_maxAttempts - +error?.otp_attempts} attempts remaining.`);
+        }
 
-          if (+error?.otp_attempts >= +error?.otp_maxAttempts) {
-            setShowMaxAttemptsModal(true);
-          } else {
-            setError(`Invalid OTP. ${+error?.otp_maxAttempts - +error?.otp_attempts} attempts remaining.`);
-          }
-
-          setOtp("");
-        },
-      });
-    } catch (_) {
-      setError("Network error. Please try again.");
-    }
+        setOtp("");
+      },
+    });
   };
 
-  function handleResendOtp() {
+  function refreshPage() {
     // REFRESH THE CURRENT PAGE
     router.visit(route("vendor.apply.otp.page"), { preserveState: false });
   }
@@ -119,24 +112,13 @@ export default function VendorOTPPage({ vendor_id, otp_metaData }: { vendor_id: 
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex justify-center gap-2">
-              <InputOTP
-                name="otp_code"
-                maxLength={6}
+              <InputOtp
                 value={otp}
                 onChange={(value) => {
                   setOtp(value);
                   setData("otp_code", value);
                 }}
-              >
-                <InputOTPGroup>
-                  <InputOTPSlot index={0} />
-                  <InputOTPSlot index={1} />
-                  <InputOTPSlot index={2} />
-                  <InputOTPSlot index={3} />
-                  <InputOTPSlot index={4} />
-                  <InputOTPSlot index={5} />
-                </InputOTPGroup>
-              </InputOTP>
+              />
             </div>
             {errors.otp_code && <p className="m-2 block text-sm text-destructive">{errors.otp_code}</p>}
             {errors.vendor_id && <p className="m-2 block text-sm text-destructive">{errors.vendor_id}</p>}
@@ -148,6 +130,7 @@ export default function VendorOTPPage({ vendor_id, otp_metaData }: { vendor_id: 
               </Alert>
             )}
 
+            {/* show attempts state */}
             {attempts > 0 && (
               <div className="text-center text-sm font-semibold text-muted-foreground">
                 Attempts: {attempts}/{maxAttempts}
@@ -175,7 +158,7 @@ export default function VendorOTPPage({ vendor_id, otp_metaData }: { vendor_id: 
       <OtpMaxAttemptDialog
         showMaxAttemptsModal={showMaxAttemptsModal}
         setShowMaxAttemptsModal={setShowMaxAttemptsModal}
-        handleResendOtp={handleResendOtp}
+        refreshPage={refreshPage}
       />
     </div>
   );

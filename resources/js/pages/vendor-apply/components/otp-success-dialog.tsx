@@ -7,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { router } from "@inertiajs/react";
 import { CheckCircle } from "lucide-react";
 
 interface OtpSuccessDialogProps {
@@ -24,12 +25,15 @@ export default function OtpSuccessDialog({ showSuccessModal, setShowSuccessModal
             <DialogTitle>Verification Successful</DialogTitle>
           </div>
           <DialogDescription>
-            Your OTP has been verified successfully. You can now proceed with your vendor registration.
+            Your OTP has been verified successfully. Now your vendor need to be approved via a admin user.
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter>
-          <Button onClick={() => setShowSuccessModal(false)} className="w-full">
+        <DialogFooter className="flex gap-2">
+          <Button onClick={() => setShowSuccessModal(false)} className="min-w-24">
             OK
+          </Button>
+          <Button onClick={() => router.visit(route("home.page"))} className="min-w-24">
+            Go to shopping
           </Button>
         </DialogFooter>
       </DialogContent>

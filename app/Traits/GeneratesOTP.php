@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Enums\Vendors\VendorOtpStatusEnum;
+use App\Enums\Vendors\VendorStatusEnum;
 use App\Models\Vendor;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -99,14 +100,19 @@ trait GeneratesOTP
         // OTP valid. clear it
         $vendor->update([
             'otp_code' => null,
+            'otp_length' => 0,
             'otp_created_at' => null,
             'otp_expires_at' => null,
             'otp_attempts' => 0,
             'otp_last_sent_at' => null,
+            'otp_max_attempts' => 0,
+            'otp_resend_cooldown_seconds' => 0,
+            'otp_resend_cooldown_max_attempts_seconds' => 0,
             'otp_status' => VendorOtpStatusEnum::COMPLETE,
+            'status' => VendorStatusEnum::PENDING,
         ]);
 
-        session()->forget('otp_vendor_id');
+        // session()->forget('otp_vendor_id'); // maybe flush it later
 
         return ['status' => true, 'data' => ['message' => 'OTP verified successfully']];
     }

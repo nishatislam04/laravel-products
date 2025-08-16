@@ -12,13 +12,13 @@ import { AlertCircle } from "lucide-react";
 interface OtpMaxAttemptDialogProps {
   showMaxAttemptsModal: boolean;
   setShowMaxAttemptsModal: (value: boolean) => void;
-  handleResendOtp: () => void;
+  refreshPage: () => void;
 }
 
 export default function OtpMaxAttemptDialog({
   showMaxAttemptsModal,
   setShowMaxAttemptsModal,
-  handleResendOtp,
+  refreshPage,
 }: OtpMaxAttemptDialogProps) {
   return (
     <Dialog open={showMaxAttemptsModal} onOpenChange={setShowMaxAttemptsModal}>
@@ -29,14 +29,15 @@ export default function OtpMaxAttemptDialog({
             <DialogTitle>Maximum Attempts Reached</DialogTitle>
           </div>
           <DialogDescription>
-            You have exceeded the maximum number of verification attempts. Please request a new OTP to continue.
+            You have exceeded the maximum number of verification attempts. Please wait an hour to request a new OTP
+            again.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Button
             onClick={() => {
               setShowMaxAttemptsModal(false);
-              handleResendOtp();
+              refreshPage();
             }}
             className="w-full"
           >
