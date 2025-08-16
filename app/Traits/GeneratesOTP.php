@@ -44,8 +44,6 @@ trait GeneratesOTP
 
         $vendor = Vendor::find($vendor->id);
 
-        Log::info($vendor);
-
         return [
             'otp_code' => $otp,
             'otp_expires_at' => $vendor->otp_expires_at,

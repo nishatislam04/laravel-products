@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\SendOtpEmailJob;
 use App\Mail\VendorOtpMail;
 use App\Models\User;
 use App\Models\Vendor;
@@ -47,7 +48,7 @@ class VendorApplyServices
 
         $otp = $this->generateOtp($vendor);
 
-        Mail::to($user->email)->send(new VendorOtpMail($user, $otp['otp_code'], $otp['otp_expires_at']->diffForHumans()));
+        SendOtpEmailJob::dispatch($user, $otp, $otp['otp_expires_at']);
 
         return [...$otp, 'otp_code' => null];
     }
