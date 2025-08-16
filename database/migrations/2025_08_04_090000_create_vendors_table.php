@@ -57,13 +57,17 @@ return new class extends Migration {
             $table->float('rating')->default(0);
 
             // otp
+            // ! implement rate limit with ip. later
+            $table->unsignedTinyInteger('otp_length')->default(6);
             $table->string('otp_code')->nullable();
             $table->timestamp('otp_created_at')->nullable();
             $table->timestamp('otp_expires_at')->nullable();
             $table->unsignedTinyInteger('otp_attempts')->default(0);
             $table->timestamp('otp_last_sent_at')->nullable();
             $table->enum('otp_status', VendorOtpStatusEnum::values())->default(VendorOtpStatusEnum::INCOMPLETE);
-            $table->unsignedTinyInteger('otp_max_attempts')->default(3);
+            $table->unsignedTinyInteger('otp_max_attempts')->default(5);
+            $table->unsignedInteger('otp_resend_cooldown_seconds')->default(300);  // default 5 min
+            $table->unsignedInteger('otp_resend_cooldown_max_attempts_seconds')->default(3600);  // 1 hr
 
             // Timestamps
             $table->timestamps();
