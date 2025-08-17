@@ -1,4 +1,4 @@
-.PHONY: artisan migrate migrate-fresh migrate-seed seed tinker cache-clear composer-install npm-install npm-dev npm-build down flush flush-hard build
+.PHONY: artisan migrate migrate-fresh migrate-seed seed tinker cache-clear composer-install npm-install npm-dev npm-build down flush flush-hard build ide-helper dump-autoload
 
 PHP_CONTAINER =  laravel-products-php-fpm-1
 
@@ -50,11 +50,6 @@ tinker:
 # make artisan cmd="make:model QrCode -mfs"
 artisan:
 	docker exec -it $(PHP_CONTAINER) php artisan $(cmd)
-
-cache-clear:
-	docker exec $(PHP_CONTAINER) php artisan config:clear
-	docker exec $(PHP_CONTAINER) php artisan route:clear
-	docker exec $(PHP_CONTAINER) php artisan view:clear	
 
 composer-install:
 	docker exec $(PHP_CONTAINER) composer install

@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Filename
@@ -11,7 +10,7 @@ return [
     |
     */
 
-    'filename' => '_ide_helper.php',
+    "filename" => "_ide_helper.php",
 
     /*
     |--------------------------------------------------------------------------
@@ -22,7 +21,7 @@ return [
     |
     */
 
-    'models_filename' => '_ide_helper_models.php',
+    "models_filename" => "_ide_helper_models.php",
 
     /*
     |--------------------------------------------------------------------------
@@ -34,7 +33,7 @@ return [
     | `.phpstorm.meta.php/laravel_ide_Helper.php'.
     |
     */
-    'meta_filename' => '.phpstorm.meta.php',
+    "meta_filename" => ".phpstorm.meta.php",
 
     /*
     |--------------------------------------------------------------------------
@@ -45,7 +44,7 @@ return [
     |
     */
 
-    'include_fluent' => true,
+    "include_fluent" => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -59,7 +58,7 @@ return [
     |
     */
 
-    'include_factory_builders' => true,
+    "include_factory_builders" => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -70,7 +69,7 @@ return [
     |
     */
 
-    'write_model_magic_where' => true,
+    "write_model_magic_where" => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -81,7 +80,7 @@ return [
     |
     */
 
-    'write_model_external_builder_methods' => true,
+    "write_model_external_builder_methods" => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -93,8 +92,8 @@ return [
     |
     */
 
-    'write_model_relation_count_properties' => true,
-    'write_model_relation_exists_properties' => true,
+    "write_model_relation_count_properties" => true,
+    "write_model_relation_exists_properties" => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -109,7 +108,7 @@ return [
     |
     */
 
-    'write_eloquent_model_mixins' => false,
+    "write_eloquent_model_mixins" => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -121,11 +120,11 @@ return [
     |
     */
 
-    'include_helpers' => true,
+    "include_helpers" => true,
 
-    'helper_files' => [
-        base_path() . '/vendor/laravel/framework/src/Illuminate/Support/helpers.php',
-        base_path() . '/vendor/laravel/framework/src/Illuminate/Foundation/helpers.php',
+    "helper_files" => [
+        base_path() . "/vendor/laravel/framework/src/Illuminate/Support/helpers.php",
+        base_path() . "/vendor/laravel/framework/src/Illuminate/Foundation/helpers.php"
     ],
 
     /*
@@ -141,9 +140,7 @@ return [
     |
     */
 
-    'model_locations' => [
-        'app',
-    ],
+    "model_locations" => ["app"],
 
     /*
     |--------------------------------------------------------------------------
@@ -154,7 +151,7 @@ return [
     |
     */
 
-    'ignored_models' => [
+    "ignored_models" => [
         // App\MyModel::class,
     ],
 
@@ -169,7 +166,7 @@ return [
     |
     */
 
-    'model_hooks' => [
+    "model_hooks" => [
         // App\Support\IdeHelper\MyModelHook::class
     ],
 
@@ -182,12 +179,13 @@ return [
     |
     */
 
-    'extra' => [
-        'Eloquent' => ['Illuminate\Database\Eloquent\Builder', 'Illuminate\Database\Query\Builder'],
-        'Session' => ['Illuminate\Session\Store'],
+    "extra" => [
+        "Eloquent" => ["Illuminate\Database\Eloquent\Builder", "Illuminate\Database\Query\Builder"],
+        "Session" => ["Illuminate\Session\Store"],
+        "Auth" => ["Illuminate\Auth\AuthManager", "Illuminate\Contracts\Auth\Guard"]
     ],
 
-    'magic' => [],
+    "magic" => [],
 
     /*
     |--------------------------------------------------------------------------
@@ -199,8 +197,8 @@ return [
     |
     */
 
-    'interfaces' => [
-        // App\MyInterface::class => App\MyImplementation::class,
+    "interfaces" => [
+        Illuminate\Contracts\Auth\Authenticatable::class => App\Models\User::class
     ],
 
     /*
@@ -227,7 +225,7 @@ return [
      | Note, it is currently an all-or-nothing option.
      |
      */
-    'model_camel_case_properties' => false,
+    "model_camel_case_properties" => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -237,9 +235,9 @@ return [
     | Cast the given "real type" to the given "type".
     |
     */
-    'type_overrides' => [
-        'integer' => 'int',
-        'boolean' => 'bool',
+    "type_overrides" => [
+        "integer" => "int",
+        "boolean" => "bool"
     ],
 
     /*
@@ -251,7 +249,7 @@ return [
     | magic methods and properties.
     |
     */
-    'include_class_docblocks' => false,
+    "include_class_docblocks" => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -263,7 +261,7 @@ return [
     | or there is an import (use className) of the class.
     |
     */
-    'force_fqn' => false,
+    "force_fqn" => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -274,7 +272,7 @@ return [
     | e.g. `Collection<User>` instead of `Collection|User[]`.
     |
     */
-    'use_generics_annotations' => true,
+    "use_generics_annotations" => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -286,8 +284,8 @@ return [
     |      `\Illuminate\Support\Str::class => 'string'`
     |
     */
-    'macro_default_return_types' => [
-        Illuminate\Http\Client\Factory::class => Illuminate\Http\Client\PendingRequest::class,
+    "macro_default_return_types" => [
+        Illuminate\Http\Client\Factory::class => Illuminate\Http\Client\PendingRequest::class
     ],
 
     /*
@@ -300,7 +298,7 @@ return [
     | class name of the relationship, e.g. `'relationName' => RelationShipClass::class`.
     |
     */
-    'additional_relation_types' => [],
+    "additional_relation_types" => [],
 
     /*
     |--------------------------------------------------------------------------
@@ -314,7 +312,7 @@ return [
     | e.g. `'relationName' => 'many'`.
     |
     */
-    'additional_relation_return_types' => [],
+    "additional_relation_return_types" => [],
 
     /*
     |--------------------------------------------------------------------------
@@ -337,7 +335,7 @@ return [
     |
     */
 
-    'enforce_nullable_relationships' => true,
+    "enforce_nullable_relationships" => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -347,8 +345,5 @@ return [
     | The specified commands should run after migrations are finished running.
     |
     */
-    'post_migrate' => [
-        'ide-helper:models --nowrite',
-    ],
-
+    "post_migrate" => ["ide-helper:models --nowrite"]
 ];
