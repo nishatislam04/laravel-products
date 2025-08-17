@@ -12,7 +12,7 @@ use Inertia\Inertia;
 
 class AuthController extends Controller {
     public function showSigninForm() {
-        return Inertia::render('auth/sign-in');
+        return Inertia::render("auth/sign-in");
     }
 
     /**
@@ -22,24 +22,24 @@ class AuthController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function signin(Request $request) {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only("email", "password");
 
         $request->validate([
-            'email' => 'required|string|email|max:255',
-            'password' => 'required|string|min:8',
+            "email" => "required|string|email|max:255",
+            "password" => "required|string|min:8"
         ]);
 
         if (Auth::attempt($credentials, true)) {
-            return redirect()->route('home.page');
+            return redirect()->route("home.page");
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
+            "email" => "The provided credentials do not match our records."
         ]);
     }
 
     public function showSignupForm() {
-        return Inertia::render('auth/sign-up');
+        return Inertia::render("auth/sign-up");
     }
 
     /**
@@ -49,21 +49,21 @@ class AuthController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function signup(Request $request) {
-        $credentials = $request->only('name', 'email', 'password');
+        $credentials = $request->only("name", "email", "password");
 
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email',
-            'password' => 'required|string|min:8',
+            "name" => "required|string|max:255",
+            "email" => "required|string|email|max:255|unique:users,email",
+            "password" => "required|string|min:8"
         ]);
 
         $user = $this->createUserForSignup($credentials);
 
-        $user->roles()->attach(Role::where('name', 'user')->first());
+        $user->roles()->attach(Role::where("name", "user")->first());
 
         Auth::login($user, true);
 
-        return redirect()->route('home.page');
+        return redirect()->route("home.page");
     }
 
     /**
@@ -74,9 +74,9 @@ class AuthController extends Controller {
      */
     public function createUserForSignup($credentials) {
         return User::create([
-            'name' => $credentials['name'],
-            'email' => $credentials['email'],
-            'password' => Hash::make($credentials['password']),
+            "name" => $credentials["name"],
+            "email" => $credentials["email"],
+            "password" => Hash::make($credentials["password"])
         ]);
     }
 
@@ -87,6 +87,6 @@ class AuthController extends Controller {
 
         $request->session()->regenerateToken();
 
-        return redirect()->route('home.page');
+        return redirect()->route("home.page");
     }
 }

@@ -15,7 +15,8 @@ export default function OtpTimer({ timeLeft }: OtpTimerProps) {
   return (
     <div className="flex items-center justify-center gap-2 text-sm">
       <Clock className="h-4 w-4" />
-      <span className={`font-mono ${timeLeft <= 60 ? "text-destructive" : "text-muted-foreground"}`}>
+      <span
+        className={`font-mono ${timeLeft <= 60 ? "text-destructive" : "text-muted-foreground"}`}>
         Expires at: <span className="font-semibold">{formatTime(timeLeft)}</span>
       </span>
     </div>

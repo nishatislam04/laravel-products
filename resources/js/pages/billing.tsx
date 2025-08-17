@@ -52,10 +52,7 @@ export default function Billing() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleApplyCoupon = () => {
@@ -89,10 +86,14 @@ export default function Billing() {
             <div>
               <h1 className="mb-8 text-3xl font-bold text-gray-900">Billing Details</h1>
 
-              <form onSubmit={handlePlaceOrder} className="space-y-6">
+              <form
+                onSubmit={handlePlaceOrder}
+                className="space-y-6">
                 {/* First Name */}
                 <div className="space-y-2">
-                  <Label htmlFor="firstName" className="text-sm text-gray-600">
+                  <Label
+                    htmlFor="firstName"
+                    className="text-sm text-gray-600">
                     First Name<span className="text-red-500">*</span>
                   </Label>
                   <Input
@@ -108,7 +109,9 @@ export default function Billing() {
 
                 {/* Company Name */}
                 <div className="space-y-2">
-                  <Label htmlFor="companyName" className="text-sm text-gray-600">
+                  <Label
+                    htmlFor="companyName"
+                    className="text-sm text-gray-600">
                     Company Name
                   </Label>
                   <Input
@@ -123,7 +126,9 @@ export default function Billing() {
 
                 {/* Street Address */}
                 <div className="space-y-2">
-                  <Label htmlFor="streetAddress" className="text-sm text-gray-600">
+                  <Label
+                    htmlFor="streetAddress"
+                    className="text-sm text-gray-600">
                     Street Address<span className="text-red-500">*</span>
                   </Label>
                   <Input
@@ -139,7 +144,9 @@ export default function Billing() {
 
                 {/* Apartment */}
                 <div className="space-y-2">
-                  <Label htmlFor="apartment" className="text-sm text-gray-600">
+                  <Label
+                    htmlFor="apartment"
+                    className="text-sm text-gray-600">
                     Apartment, floor, etc. (optional)
                   </Label>
                   <Input
@@ -154,7 +161,9 @@ export default function Billing() {
 
                 {/* Town/City */}
                 <div className="space-y-2">
-                  <Label htmlFor="townCity" className="text-sm text-gray-600">
+                  <Label
+                    htmlFor="townCity"
+                    className="text-sm text-gray-600">
                     Town/City<span className="text-red-500">*</span>
                   </Label>
                   <Input
@@ -170,7 +179,9 @@ export default function Billing() {
 
                 {/* Phone Number */}
                 <div className="space-y-2">
-                  <Label htmlFor="phoneNumber" className="text-sm text-gray-600">
+                  <Label
+                    htmlFor="phoneNumber"
+                    className="text-sm text-gray-600">
                     Phone Number<span className="text-red-500">*</span>
                   </Label>
                   <Input
@@ -186,7 +197,9 @@ export default function Billing() {
 
                 {/* Email Address */}
                 <div className="space-y-2">
-                  <Label htmlFor="emailAddress" className="text-sm text-gray-600">
+                  <Label
+                    htmlFor="emailAddress"
+                    className="text-sm text-gray-600">
                     Email Address<span className="text-red-500">*</span>
                   </Label>
                   <Input
@@ -208,7 +221,9 @@ export default function Billing() {
                     onCheckedChange={(checked) => setSaveInfo(checked)}
                     className="data-[state=checked]:border-red-500 data-[state=checked]:bg-red-500"
                   />
-                  <Label htmlFor="saveInfo" className="text-sm text-gray-700">
+                  <Label
+                    htmlFor="saveInfo"
+                    className="text-sm text-gray-700">
                     Save this information for faster check-out next time
                   </Label>
                 </div>
@@ -220,7 +235,9 @@ export default function Billing() {
               {/* Order Items */}
               <div className="mb-6 space-y-4">
                 {orderItems.map((item) => (
-                  <div key={item.id} className="flex items-center justify-between">
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded bg-gray-100">
                         <img
@@ -254,13 +271,25 @@ export default function Billing() {
 
               {/* Payment Methods */}
               <div className="mb-6">
-                <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod} className="space-y-3">
+                <RadioGroup
+                  value={paymentMethod}
+                  onValueChange={setPaymentMethod}
+                  className="space-y-3">
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="bank" id="bank" />
-                    <Label htmlFor="bank" className="flex items-center space-x-2">
+                    <RadioGroupItem
+                      value="bank"
+                      id="bank"
+                    />
+                    <Label
+                      htmlFor="bank"
+                      className="flex items-center space-x-2">
                       <span>Bank</span>
                       <div className="ml-2 flex items-center space-x-1">
-                        <img src="/images/placeholder.svg?height=20&width=30&text=Visa" alt="Visa" className="h-5" />
+                        <img
+                          src="/images/placeholder.svg?height=20&width=30&text=Visa"
+                          alt="Visa"
+                          className="h-5"
+                        />
                         <img
                           src="/images/placeholder.svg?height=20&width=30&text=MC"
                           alt="Mastercard"
@@ -275,7 +304,10 @@ export default function Billing() {
                     </Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="cash" id="cash" />
+                    <RadioGroupItem
+                      value="cash"
+                      id="cash"
+                    />
                     <Label htmlFor="cash">Cash on delivery</Label>
                   </div>
                 </RadioGroup>
@@ -294,8 +326,7 @@ export default function Billing() {
                   size="lg"
                   type="button"
                   className="bg-red-500 px-6 text-white hover:bg-red-600"
-                  onClick={handleApplyCoupon}
-                >
+                  onClick={handleApplyCoupon}>
                   Apply Coupon
                 </Button>
               </div>
@@ -305,8 +336,7 @@ export default function Billing() {
                 size="lg"
                 type="submit"
                 className="mt-4 w-full bg-red-500 py-6 text-lg font-medium text-white hover:bg-red-600"
-                onClick={handlePlaceOrder}
-              >
+                onClick={handlePlaceOrder}>
                 Place Order
               </Button>
             </div>

@@ -30,24 +30,9 @@
   "tailwindFunctions": ["clsx", "cn"],
   "tailwindStylesheet": "resources/css/app.css",
   "overrides": [
-    {
-      "files": "*.md",
-      "options": {
-        "printWidth": 80
-      }
-    },
-    {
-      "files": "*.yml",
-      "options": {
-        "tabWidth": 2
-      }
-    },
-    {
-      "files": "*.json",
-      "options": {
-        "printWidth": 120
-      }
-    },
+    { "files": "*.md", "options": { "printWidth": 80 } },
+    { "files": "*.yml", "options": { "tabWidth": 2 } },
+    { "files": "*.json", "options": { "printWidth": 120 } },
     {
       "files": "**/*.php",
       "options": {
@@ -70,10 +55,7 @@
         "formatInsideEcho": true,
         "spacesAfterDirective": 0,
         "spacesAfterControlDirective": 1,
-        "phpOptions": {
-          "singleQuote": false,
-          "phpVersion": "8.4"
-        }
+        "phpOptions": { "singleQuote": false, "phpVersion": "8.4" }
       }
     }
   ]
