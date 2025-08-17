@@ -30,6 +30,15 @@ migrate-seed:
 seed:
 	docker exec $(PHP_CONTAINER) php artisan db:seed
 
+clear-cache:
+	docker exec $(PHP_CONTAINER) php artisan config:clear
+	docker exec $(PHP_CONTAINER) php artisan route:clear
+	docker exec $(PHP_CONTAINER) php artisan view:clear
+	docker exec $(PHP_CONTAINER) php artisan cache:clear
+
+dump-autoload:
+	composer dump-autoload
+
 ide-helper:
 	docker exec $(PHP_CONTAINER) php artisan ide-helper:generate
 	docker exec $(PHP_CONTAINER) php artisan ide-helper:meta

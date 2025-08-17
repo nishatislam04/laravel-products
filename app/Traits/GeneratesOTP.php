@@ -99,10 +99,10 @@ trait GeneratesOTP
         $vendor->update([
             'otp_code' => null,
             'otp_length' => 0,
-            'otp_created_at' => null,
+            // 'otp_created_at' => null,
             'otp_expires_at' => null,
             'otp_attempts' => 0,
-            'otp_last_sent_at' => null,
+            // 'otp_last_sent_at' => null,
             'otp_max_attempts' => 0,
             'otp_resend_cooldown_seconds' => 0,
             'otp_resend_cooldown_max_attempts_seconds' => 0,

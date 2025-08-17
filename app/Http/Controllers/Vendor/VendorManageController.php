@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Vendor;
 
+use App\Enums\Vendors\VendorStatusEnum;
+use App\Events\VendorStatusChanged;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\Vendor;
@@ -19,20 +21,10 @@ class VendorManageController extends Controller
         ]);
 
         $vendor = Vendor::find($validatedData['vendorId']);
-        $user = $vendor->user;
+
         $roles = Role::where('name', 'vendor_admin')->first();
 
-        $vendor->status = 'approved';
-        $vendor->save();
-
-        $user->roles()->sync([
-            $roles->id
-        ]);
-
-        $user->status = 'active';
-        $user->save();
-
-        // !@todo - will send user an email here
+        $this->approveVendorLogic($vendor, $roles);
 
         return redirect()->route('super-admin.vendors.page')->with('success', 'Vendor approved successfully!');
     }
@@ -48,11 +40,31 @@ class VendorManageController extends Controller
 
         $vendor = Vendor::find($validatedData['vendorId']);
 
-        $vendor->status = 'rejected';
-        $vendor->save();
-
-        // !@todo - will send user an email here
+        $this->rejectVendorLogic($vendor);
 
         return redirect()->route('super-admin.vendors.page')->with('success', 'Vendor rejected successfully!');
+    }
+
+    private function approveVendorLogic($vendor, $roles)
+    {
+        $vendor->status = VendorStatusEnum::APPROVED;
+        $vendor->save();
+
+        $vendor->user->roles()->sync([
+            $roles->id
+        ]);
+
+        $vendor->user->status = 'active';
+        $vendor->user->save();
+
+        event(new VendorStatusChanged($vendor, "approved"));
+    }
+
+    private function rejectVendorLogic($vendor)
+    {
+        $vendor->status = VendorStatusEnum::REJECTED;
+        $vendor->save();
+
+        event(new VendorStatusChanged($vendor, "rejected"));
     }
 }

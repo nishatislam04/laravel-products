@@ -1,12 +1,12 @@
-import type React from "react";
-
 import { InputOtp } from "@/components/form/InputOtp";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { router, useForm } from "@inertiajs/react";
 import { AlertCircle } from "lucide-react";
+import type React from "react";
 import { useEffect, useState } from "react";
+
 import OtpMaxAttemptDialog from "./components/otp-max-attempt-dialog";
 import OtpResendButton from "./components/otp-resend-button";
 import OtpSuccessDialog from "./components/otp-success-dialog";

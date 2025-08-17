@@ -15,7 +15,7 @@ services:
       - laravel-development
     depends_on:
       php-fpm:
-        condition: service_started  # Wait for php-fpm to start
+        condition: service_started # Wait for php-fpm to start
 
   php-fpm:
     # For the php-fpm service, we will create a custom image to install the necessary PHP extensions and setup proper permissions.
@@ -43,11 +43,11 @@ services:
     networks:
       - laravel-development
     depends_on:
-      mysql:  
-        condition: service_started  # Wait for postgres to start
+      mysql:
+        condition: service_started # Wait for postgres to start
 
   workspace:
-   # For the workspace service, we will also create a custom image to install and setup all the necessary stuff.
+    # For the workspace service, we will also create a custom image to install and setup all the necessary stuff.
     build:
       context: .
       dockerfile: ./docker/development/workspace/Dockerfile
@@ -62,10 +62,10 @@ services:
         XDEBUG_LOG: /dev/stdout
         XDEBUG_LOG_LEVEL: 0
     ports:
-      - '${VITE_PORT:-5173}:5173'
+      - "${VITE_PORT:-5173}:5173"
     command: sh -c "npm install && npm run dev"
-    tty: true  # Enables an interactive terminal
-    stdin_open: true  # Keeps standard input open for 'docker exec'
+    tty: true # Enables an interactive terminal
+    stdin_open: true # Keeps standard input open for 'docker exec'
     env_file:
       - .env
     volumes:
@@ -74,7 +74,7 @@ services:
       - laravel-development
 
   queue:
-    build: 
+    build:
       context: .
       dockerfile: ./docker/development/workspace/Dockerfile
     command: >

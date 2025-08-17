@@ -1,3 +1,17 @@
-# resources/js/components/ui/*
+resources/js/components/ui/*
 resources/js/ziggy.js
 resources/views/mail/*
+vendor
+node_modules
+public
+storage
+bootstrap/cache
+bootstrap/ssr
+coverage
+dist
+.build
+.next
+.yarn
+composer.lock
+package-lock.json
+pnpm-lock.yaml

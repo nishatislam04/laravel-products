@@ -258,10 +258,10 @@ namespace App\Models{
  * @property float $rating
  * @property int $otp_length
  * @property string|null $otp_code
- * @property \Illuminate\Support\Carbon|null $otp_created_at
+ * @property \Illuminate\Support\Carbon $otp_created_at
  * @property \Illuminate\Support\Carbon|null $otp_expires_at
  * @property int $otp_attempts
- * @property \Illuminate\Support\Carbon|null $otp_last_sent_at
+ * @property \Illuminate\Support\Carbon $otp_last_sent_at
  * @property \App\Enums\Vendors\VendorOtpStatusEnum $otp_status
  * @property int $otp_max_attempts
  * @property int $otp_resend_cooldown_seconds

@@ -8,19 +8,19 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class PublicPageController extends Controller {
-    public function index() {
-        $user = Auth::user();
+  public function index() {
+    $user = Auth::user();
 
-        return Inertia::render('public-pages/index', [
-            'user' => $user,
-        ]);
-    }
+    return Inertia::render("public-pages/index", [
+      "user" => $user
+    ]);
+  }
 
-    public function contact() {
-        return Inertia::render('public-pages/contact');
-    }
+  public function contact() {
+    return Inertia::render("public-pages/contact");
+  }
 
-    public function about() {
-        return Inertia::render('public-pages/about');
-    }
+  public function about() {
+    return Inertia::render("public-pages/about");
+  }
 }
